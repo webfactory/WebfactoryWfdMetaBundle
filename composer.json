@@ -1,0 +1,7 @@
+{
+    "name": "webfactory/wfdmeta-bundle",
+    "autoload": {
+        "psr-0": { "Webfactory\\Bundle\\WfdMetaBundle": "" }
+    },
+    "target-dir": "Webfactory/Bundle/WfdMetaBundle"
+}

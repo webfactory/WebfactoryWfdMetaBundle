@@ -1,0 +1,42 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <parameters>
+        <parameter key="webfactory.wfd_meta.provider.class">Webfactory\Bundle\WfdMetaBundle\Provider</parameter>
+        <parameter key="webfactory.wfd_meta.caching.event_listener.class">Webfactory\Bundle\WfdMetaBundle\Caching\EventListener</parameter>
+        <parameter key="webfactory.wfd_meta.refreshing_router.class">Webfactory\Bundle\WfdMetaBundle\Routing\RefreshingRouter</parameter>
+    </parameters>
+
+    <services>
+        <service id="webfactory.wfd_meta.provider" class="%webfactory.wfd_meta.provider.class%">
+            <argument type="service" id="database_connection"/>
+        </service>
+
+        <service id="webfactory.wfd_meta.caching.event_listener"
+                 class="%webfactory.wfd_meta.caching.event_listener.class%" public="false">
+            <argument type="service" id="annotation_reader"/>
+            <argument type="service" id="webfactory.wfd_meta.provider"/>
+            <tag name="kernel.event_listener" event="kernel.controller" method="onKernelController"/>
+            <tag name="kernel.event_listener" event="kernel.response" method="onKernelResponse"/>
+        </service>
+
+        <service id="webfactory.wfd_meta.refreshing_router" class="%webfactory.wfd_meta.refreshing_router.class%"
+                 public="false" parent="router.default">
+
+            <call method="setWfdMetaProvider">
+                <argument type="service" id="webfactory.wfd_meta.provider"/>
+            </call>
+            <call method="setLogger">
+                <argument type="service">
+                    <service parent="monolog.logger_prototype">
+                        <argument index="0">wfd_meta_bundle.refreshing_router</argument>
+                    </service>
+                </argument>
+            </call>
+        </service>
+
+    </services>
+</container>
