@@ -15,16 +15,14 @@
             <argument type="service" id="database_connection"/>
         </service>
 
-        <service id="webfactory.wfd_meta.caching.event_listener"
-                 class="%webfactory.wfd_meta.caching.event_listener.class%" public="false">
+        <service id="webfactory.wfd_meta.caching.event_listener" class="%webfactory.wfd_meta.caching.event_listener.class%">
             <argument type="service" id="annotation_reader"/>
             <argument type="service" id="webfactory.wfd_meta.provider"/>
             <tag name="kernel.event_listener" event="kernel.controller" method="onKernelController"/>
             <tag name="kernel.event_listener" event="kernel.response" method="onKernelResponse"/>
         </service>
 
-        <service id="webfactory.wfd_meta.refreshing_router" class="%webfactory.wfd_meta.refreshing_router.class%"
-                 public="false" parent="router.default">
+        <service id="webfactory.wfd_meta.refreshing_router" class="%webfactory.wfd_meta.refreshing_router.class%" public="false" parent="router.default">
 
             <call method="setWfdMetaProvider">
                 <argument type="service" id="webfactory.wfd_meta.provider"/>
