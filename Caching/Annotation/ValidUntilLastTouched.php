@@ -7,7 +7,7 @@ namespace Webfactory\Bundle\WfdMetaBundle\Caching\Annotation;
  */
 class ValidUntilLastTouched {
 
-    protected $tableIdConstants;
+    protected $tables = array();
 
     public function __construct($values) {
         foreach ($values as $key => $value) {
@@ -20,11 +20,15 @@ class ValidUntilLastTouched {
     }
 
     public function setTableIdConstants($tableIdConstants) {
-        $this->tableIdConstants = $tableIdConstants;
+        $this->tables = array_merge($this->tables, array_map(function ($x) { return constant($x); }, $tableIdConstants));
     }
 
-    public function getTableIdConstants() {
-        return $this->tableIdConstants;
+    public function setTables($tables) {
+        $this->tables = array_merge($this->tables, $tables);
+    }
+
+    public function getTables() {
+        return $this->tables;
     }
 
 }
