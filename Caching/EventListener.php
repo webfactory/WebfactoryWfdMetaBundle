@@ -68,12 +68,7 @@ class EventListener {
 
     protected function getLastTouched(ValidUntilLastTouched $configuration) {
         if ($ts = $this->provider->getLastTouched(
-            array_map(
-                function($constant) {
-                    return constant($constant);
-                },
-                (array) $configuration->getTableIdConstants()
-            )
+            $configuration->getTables()
         ))
             return new \DateTime("@$ts");
     }
