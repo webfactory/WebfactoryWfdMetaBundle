@@ -3,6 +3,9 @@
     "autoload": {
         "psr-0": { "Webfactory\\Bundle\\WfdMetaBundle": "" }
     },
+    "require": {
+        "symfony/symfony": ">=2.1.0"
+    },
     "target-dir": "Webfactory/Bundle/WfdMetaBundle",
     "extra": {
         "branch-alias": {
