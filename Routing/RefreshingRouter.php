@@ -50,7 +50,7 @@ class RefreshingRouter extends \Symfony\Bundle\FrameworkBundle\Routing\Router {
         $cacheClass = $this->options["{$what}_cache_class"];
 
         if (null === $this->options['cache_dir'] || null === $cacheClass) {
-            return $this->$what = new $this->options["{$what}_class"]($this->getRouteCollection(), $this->context, $this->defaults);
+            return $this->$what = new $this->options["{$what}_class"]($this->getRouteCollection(), $this->context);
         }
 
         $ts = $this->metaProvider->getLastTouched(array_keys($this->tableDeps));
@@ -75,7 +75,7 @@ class RefreshingRouter extends \Symfony\Bundle\FrameworkBundle\Routing\Router {
         }
 
         if (!class_exists($cacheClass)) require $cache;
-        return $this->$what = new $cacheClass($this->context, $this->defaults);
+        return $this->$what = new $cacheClass($this->context);
     }
 
 

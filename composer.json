@@ -3,5 +3,10 @@
     "autoload": {
         "psr-0": { "Webfactory\\Bundle\\WfdMetaBundle": "" }
     },
-    "target-dir": "Webfactory/Bundle/WfdMetaBundle"
+    "target-dir": "Webfactory/Bundle/WfdMetaBundle",
+    "extra": {
+        "branch-alias": {
+            "dev-master": "2.1.x-dev"
+        }
+    }
 }
