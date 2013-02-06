@@ -14,30 +14,21 @@ class Provider {
     }
 
     public function getLastTouched($tables) {
-        if($noneCached = $this->findNoneCached($tables)) {
-            $this->cache = array_merge(
-                $this->cache,
-                $this->fetchNoneCached($noneCached)
-            );
+        $flip = array_flip($tables);
+
+        if ($cacheMiss = array_diff_key($flip, $this->cache)) {
+            $this->cache(array_keys($cacheMiss));
         }
-        
-        return $this->findLastestTimestamp($tables);
+
+        return max(array_intersect_key($this->cache, $flip));
     }
-    
-    protected function findNoneCached($tables) {
-        $noneCached = array();
-        foreach ($tables as $table) {
-            if(!isset($this->cache[$table])) {
-                $noneCached[] = $table;
-            }
-        }
-        return $noneCached;
-    }
-    
-    protected function fetchNoneCached($noneCached) {
+
+    protected function cache($namesOrIds) {
         $ids = array();
         $names = array();
-        foreach ((array)$noneCached as $t) {
+
+        foreach ((array)$namesOrIds as $t) {
+            $this->cache[$t] = 0; // prevent re-query
             if (is_numeric($t))
                 $ids[] = $t;
             else
@@ -52,30 +43,13 @@ class Provider {
                 . ($ids ? ('t.id IN (' . implode(', ', array_fill(0, count($ids), '?')) . ')') : '')
                 . (($ids && $names) ? ' OR ' : '')
                 . ($names ? ('t.tablename IN (' . implode(', ', array_fill(0, count($names), '?')). ')') : '') .'
-            GROUP BY t.tablename, t.id'
+            GROUP BY t.id'
         , array_merge($ids, $names));
         
-        $tables = array();
-        foreach($noneCached as $t) {
-            foreach($result as $table) {
-                if(($table['tablename'] == $t) || ($table['id'] == $t)) {
-                    $tables[$t] = $table['timestamp'];
-                }
-            }
+        foreach ($result as $row) {
+            $this->cache[$row['id']] = $this->cache[$row['tablename']] = $row['timestamp'];
         }
-        
-        return $tables;
-    }
-    
-    protected function findLastestTimestamp($tables) {
-        $lastestTimestamp = 0;
-        foreach($tables as $table) {
-            $timestamp = $this->cache[$table];
-            if ($lastestTimestamp < $timestamp) {
-                $lastestTimestamp = $timestamp;
-            }
-        }
-        return $lastestTimestamp;
+
     }
 
 }
