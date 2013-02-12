@@ -14,20 +14,22 @@ class WebfactoryWfdMetaExtension extends Extension {
         $loader->load('services.xml');
 
         $enableRouter = false;
-        $refreshingRouterId = 'webfactory.wfd_meta.refreshing_router';
-
-        $definition = $container->getDefinition($refreshingRouterId);
+        $routingServicesDefinitions = array(
+            $container->getDefinition($refreshingRouterId = 'webfactory.wfd_meta.refreshing_router'),
+            $container->getDefinition('webfactory.reverse_route_index_factory')
+        );
 
         foreach ($configs as $subConfig) {
             if (isset($subConfig['refresh_router_tables'])) {
                 $enableRouter = true;
-                $definition->addMethodCall('addWfdTableDependency', array($subConfig['refresh_router_tables']));
+                foreach ($routingServicesDefinitions as $definition) {
+                    $definition->addMethodCall('addWfdTableDependency', array($subConfig['refresh_router_tables']));
+                }
             }
         }
 
         if ($enableRouter)
             $container->setAlias('router', $refreshingRouterId);
-
     }
 
 }
