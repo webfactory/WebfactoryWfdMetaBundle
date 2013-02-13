@@ -2,12 +2,12 @@
 
 namespace Webfactory\Bundle\WfdMetaBundle\Routing;
 use Webfactory\Bundle\WfdMetaBundle\Provider;
-use Webfactory\Bundle\WfdMetaBundle\Routing\ReverseRouteIndex;
+use Webfactory\Bundle\WfdMetaBundle\Routing\InvertedRouteIndex;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\Log\LoggerInterface;
 use Webfactory\Bundle\WfdMetaBundle\Util\ExpirableConfigCache;
 
-class ReverseRouteIndexFactory {
+class InvertedRouteIndexFactory {
 
     protected $metaProvider;
     protected $container;
@@ -49,8 +49,7 @@ class ReverseRouteIndexFactory {
                 if (!$cache->isFresh()) {
                     $self->debug("Building the reverse route index");
 
-                    $index = new ReverseRouteIndex();
-                    $index->index($container->get('router')->getRouteCollection());
+                    $index = new InvertedRouteIndex($container->get('router')->getRouteCollection());
 
                     $cache->write("<?php return unserialize(<<<EOD\n" . serialize($index) . "\nEOD\n);");
 

@@ -31,11 +31,11 @@ class Extension extends \Twig_Extension {
             $parameters['_locale'] = $locale;
             $parameters['_language'] = \Locale::getPrimaryLanguage($locale);
 
-            return $this->container->get('webfactory.reverse_router')->generate($parameters);
+            return $this->container->get('webfactory.route_searching_router')->generate($parameters);
 
         } catch(\Exception $e) {
 
-            return $this->container->get('webfactory.reverse_router')->generate(array('_locale' => $locale));
+            return $this->container->get('webfactory.route_searching_router')->generate(array('_locale' => $locale));
 
         }
     }

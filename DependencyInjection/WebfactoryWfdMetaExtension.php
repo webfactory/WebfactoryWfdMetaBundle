@@ -16,7 +16,7 @@ class WebfactoryWfdMetaExtension extends Extension {
         $enableRouter = false;
         $routingServicesDefinitions = array(
             $container->getDefinition($refreshingRouterId = 'webfactory.wfd_meta.refreshing_router'),
-            $container->getDefinition('webfactory.reverse_route_index_factory')
+            $container->getDefinition('webfactory.inverted_route_index_factory')
         );
 
         foreach ($configs as $subConfig) {

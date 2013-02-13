@@ -5,12 +5,13 @@ namespace Webfactory\Bundle\WfdMetaBundle\Routing;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
-class ReverseRouteIndex {
+class InvertedRouteIndex {
 
-    protected $index = array();
+    protected $defaultIndex = array();
+    protected $variableIndex = array();
     protected $initialWorkingSet = array();
 
-    public function index(RouteCollection $rc) {
+    public function __construct(RouteCollection $rc) {
         foreach ($rc->all() as $name => $route) {
             $this->addRoute($name, $route);
         }
@@ -20,28 +21,28 @@ class ReverseRouteIndex {
         $workingSet = $this->initialWorkingSet;
 
         foreach ($params as $key => $value) {
-            $defaultMatches = (array)@$this->index["$key=$value"];
-            $variableMatches = (array)@$this->index["$key=*"];
+            $defaultMatches = (array)@$this->defaultIndex["$key=$value"];
+            $variableMatches = (array)@$this->variableIndex[$key];
 
             // If we do not find any route, that knows this parameter, we simply ignore it (so it will be appended to as query string)
             if (!$defaultMatches && !$variableMatches)
                 continue;
 
-            // From here on, only routes, that know the parameter can be a valid result
+            // From here on, only routes, that know the parameter and that are still in the working set can be a valid result
             $possibleRoutes = array_flip(array_merge($defaultMatches, $variableMatches));
             $workingSet = array_intersect_key($workingSet, $possibleRoutes);
 
+            // We only need the matching information for those routes that are in the working set
+            $inWorkingSetCallback = function($routeName) use ($workingSet) { return isset($workingSet[$routeName]); };
+            $defaultMatches = array_filter($defaultMatches, $inWorkingSetCallback);
+            $variableMatches = array_filter($variableMatches, $inWorkingSetCallback);
+
             // We add some information to the working set, so that we can weight multiple valid results
             foreach ($defaultMatches as $routeName) {
-                if (isset($workingSet[$routeName])) {
-                    $workingSet[$routeName]['numberOfMatchedDefaults']++;
-                }
+                $workingSet[$routeName]['numberOfMatchedDefaults']++;
             }
             foreach ($variableMatches as $routeName) {
-                if (isset($workingSet[$routeName])) {
-                    $workingSet[$routeName]['numberOfUnboundVariables']--;
-                    $workingSet[$routeName]['numberOfMatchedVariables']++;
-                }
+                $workingSet[$routeName]['numberOfUnboundVariables']--;
             }
         }
 
@@ -50,14 +51,23 @@ class ReverseRouteIndex {
             return $information['numberOfUnboundVariables'] == 0;
         });
 
-        // We now sort the results by the weighted information
+        // We now sort the results by the weighted information (ascending or descending)
         uasort($workingSet, function($a, $b) {
-            foreach (array('numberOfMatchedDefaults', 'numberOfMatchedVariables') as $weight) {
+            foreach (array(
+                'numberOfMatchedDefaults' => false,
+                'numberOfPathComponents' => true,
+                'routePosition' => true
+            ) as $weight => $ascendingOrder) {
                 if ($a[$weight] == $b[$weight]) continue;
-                return $b[$weight] - $a[$weight];
+
+                if ($ascendingOrder) {
+                    return $a[$weight] - $b[$weight];
+                } else {
+                    return $b[$weight] - $a[$weight];
+                }
             }
 
-            return $a['routePosition'] - $b['routePosition'];
+            return 0;
         });
 
         // The first result in the working set (if any) is our best result
@@ -70,20 +80,16 @@ class ReverseRouteIndex {
         $compiled = $route->compile();
         $this->initialWorkingSet[$name] = array(
             'numberOfMatchedDefaults' => 0,
-            'numberOfMatchedVariables' => 0,
+            'numberOfPathComponents' => count(explode('/', trim($route->getPattern(), '/'))),
             'routePosition' => count($this->initialWorkingSet),
             'numberOfUnboundVariables' => count($compiled->getVariables())
         );
 
         foreach ($compiled->getVariables() as $variable)
-            $this->addIndex("$variable=*", $name);
+            $this->variableIndex[$variable][] = $name;
 
         foreach ($route->getDefaults() as $param => $value)
-            $this->addIndex("$param=$value", $name);
-    }
-
-    protected function addIndex($key, $routeName) {
-        $this->index[$key][] = $routeName;
+            $this->defaultIndex["$param=$value"][] = $name;
     }
 
 }

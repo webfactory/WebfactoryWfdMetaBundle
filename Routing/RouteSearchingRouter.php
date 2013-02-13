@@ -4,19 +4,19 @@ namespace Webfactory\Bundle\WfdMetaBundle\Routing;
 
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
-class ReverseRouter {
+class RouteSearchingRouter {
 
     protected $urlGenerator;
-    protected $reverseRouteIndex;
+    protected $invertedRouteIndex;
 
-    public function __construct(UrlGeneratorInterface $urlGenerator, ReverseRouteIndex $reverseRouteIndex) {
+    public function __construct(UrlGeneratorInterface $urlGenerator, InvertedRouteIndex $invertedRouteIndex) {
         $this->urlGenerator = $urlGenerator;
-        $this->reverseRouteIndex = $reverseRouteIndex;
+        $this->invertedRouteIndex = $invertedRouteIndex;
     }
 
     public function generate($parameters = array()) {
         return $this->urlGenerator->generate(
-            $this->reverseRouteIndex->lookup($parameters),
+            $this->invertedRouteIndex->lookup($parameters),
             $parameters
         );
     }

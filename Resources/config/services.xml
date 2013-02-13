@@ -41,17 +41,17 @@
             </call>
         </service>
 
-        <service id="webfactory.reverse_route_index" class="Webfactory\Bundle\WfdMetaBundle\Routing\ReverseRouteIndex"
-            factory-service="webfactory.reverse_route_index_factory"
+        <service id="webfactory.inverted_route_index" class="Webfactory\Bundle\WfdMetaBundle\Routing\InvertedRouteIndex"
+            factory-service="webfactory.inverted_route_index_factory"
             factory-method="createIndex"
         />
 
-        <service id="webfactory.reverse_router" class="Webfactory\Bundle\WfdMetaBundle\Routing\ReverseRouter">
+        <service id="webfactory.route_searching_router" class="Webfactory\Bundle\WfdMetaBundle\Routing\RouteSearchingRouter">
             <argument type="service" id="router" />
-            <argument type="service" id="webfactory.reverse_route_index" />
+            <argument type="service" id="webfactory.inverted_route_index" />
         </service>
 
-        <service id="webfactory.reverse_route_index_factory" class="Webfactory\Bundle\WfdMetaBundle\Routing\ReverseRouteIndexFactory">
+        <service id="webfactory.inverted_route_index_factory" class="Webfactory\Bundle\WfdMetaBundle\Routing\InvertedRouteIndexFactory">
             <argument type="service" id="webfactory.wfd_meta.provider"/>
             <argument type="service" id="service_container"/>
             <argument type="service" id="logger" on-invalid="null" />
