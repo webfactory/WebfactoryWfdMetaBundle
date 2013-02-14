@@ -13,7 +13,7 @@ class Provider {
         $this->connection = $connection;
     }
 
-    public function getLastTouched($tables) {
+    public function getLastTouched(array $tables) {
         $flip = array_flip($tables);
 
         if ($cacheMiss = array_diff_key($flip, $this->cache)) {
@@ -23,16 +23,21 @@ class Provider {
         return max(array_intersect_key($this->cache, $flip));
     }
 
-    protected function cache($namesOrIds) {
+    protected function cache(array $namesOrIds) {
         $ids = array();
         $names = array();
 
-        foreach ((array)$namesOrIds as $t) {
+        foreach ($namesOrIds as $t) {
             $this->cache[$t] = 0; // prevent re-query
-            if (is_numeric($t))
+            if ($t == '*') {
+                foreach ($this->connection->fetchAll('SELECT id FROM wfd_table') as $row) {
+                    $ids[] = $row['id'];
+                }
+            } elseif (is_numeric($t)) {
                 $ids[] = $t;
-            else
+            } else {
                 $names[] = $t;
+            }
         }
 
         $result = $this->connection->fetchAll('
@@ -50,6 +55,9 @@ class Provider {
             $this->cache[$row['id']] = $this->cache[$row['tablename']] = $row['timestamp'];
         }
 
+        if (in_array('*', $namesOrIds)) {
+            $this->cache['*'] = max($this->cache);
+        }
     }
 
 }
