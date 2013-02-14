@@ -23,19 +23,18 @@ class Extension extends \Twig_Extension {
     }
 
     public function getSwitchLocalePath($locale) {
+        $routeSearchingRouter = $this->container->get('webfactory.route_searching_router');
+        $localeParameters = array('_locale' => $locale);
         try {
 
-            $request = $this->container->get('request');
-
-            $parameters = $request->get('_route_params');
-            $parameters['_locale'] = $locale;
-            $parameters['_language'] = \Locale::getPrimaryLanguage($locale);
-
-            return $this->container->get('webfactory.route_searching_router')->generate($parameters);
+            return $routeSearchingRouter->generate(array_merge(
+                $this->container->get('request')->get('_route_params'),
+                $localeParameters
+            ));
 
         } catch(\Exception $e) {
 
-            return $this->container->get('webfactory.route_searching_router')->generate(array('_locale' => $locale));
+            return $routeSearchingRouter->generate($localeParameters);
 
         }
     }

@@ -2,22 +2,27 @@
 
 namespace Webfactory\Bundle\WfdMetaBundle\Routing;
 
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Bundle\FrameworkBundle\Routing\Router;
 
 class RouteSearchingRouter {
 
-    protected $urlGenerator;
+    protected $router;
     protected $invertedRouteIndex;
 
-    public function __construct(UrlGeneratorInterface $urlGenerator, InvertedRouteIndex $invertedRouteIndex) {
-        $this->urlGenerator = $urlGenerator;
+    public function __construct(Router $router, InvertedRouteIndex $invertedRouteIndex) {
+        $this->router = $router;
         $this->invertedRouteIndex = $invertedRouteIndex;
     }
 
-    public function generate($parameters = array()) {
-        return $this->urlGenerator->generate(
+    public function generate($parameters = array(), $absolute = false) {
+        if (!isset($parameters['_locale']) && ($locale = $this->router->getContext()->getParameter('_locale'))) {
+            $parameters['_locale'] = $locale;
+        }
+
+        return $this->router->generate(
             $this->invertedRouteIndex->lookup($parameters),
-            $parameters
+            $parameters,
+            $absolute
         );
     }
 
