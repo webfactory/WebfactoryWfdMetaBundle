@@ -2,25 +2,26 @@
 
 namespace Webfactory\Bundle\WfdMetaBundle\Routing;
 
-use Symfony\Bundle\FrameworkBundle\Routing\Router;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class RouteSearchingRouter {
 
-    protected $router;
-    protected $invertedRouteIndex;
+    protected $container;
 
-    public function __construct(Router $router, InvertedRouteIndex $invertedRouteIndex) {
-        $this->router = $router;
-        $this->invertedRouteIndex = $invertedRouteIndex;
+    public function __construct(ContainerInterface $container) {
+        $this->container = $container;
     }
 
     public function generate($parameters = array(), $absolute = false) {
-        if (!isset($parameters['_locale']) && ($locale = $this->router->getContext()->getParameter('_locale'))) {
-            $parameters['_locale'] = $locale;
+        $request = $this->container->get('request');
+        $currentParameters = $request->get('_route_params');
+
+        if (!isset($parameters['_locale']) && isset($currentParameters['_locale'])) {
+            $parameters['_locale'] = $currentParameters['_locale'];
         }
 
-        return $this->router->generate(
-            $this->invertedRouteIndex->lookup($parameters),
+        return $this->container->get('router')->generate(
+            $this->container->get('webfactory.inverted_route_index')->lookup($parameters),
             $parameters,
             $absolute
         );

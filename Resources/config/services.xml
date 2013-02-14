@@ -47,8 +47,7 @@
         />
 
         <service id="webfactory.route_searching_router" class="Webfactory\Bundle\WfdMetaBundle\Routing\RouteSearchingRouter">
-            <argument type="service" id="router" />
-            <argument type="service" id="webfactory.inverted_route_index" />
+            <argument type="service" id="service_container" />
         </service>
 
         <service id="webfactory.inverted_route_index_factory" class="Webfactory\Bundle\WfdMetaBundle\Routing\InvertedRouteIndexFactory">

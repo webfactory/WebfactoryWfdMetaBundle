@@ -42,13 +42,13 @@ class InvertedRouteIndex {
                 $workingSet[$routeName]['numberOfMatchedDefaults']++;
             }
             foreach ($variableMatches as $routeName) {
-                $workingSet[$routeName]['numberOfUnboundVariables']--;
+                $workingSet[$routeName]['requiredVariables'] = array_filter($workingSet[$routeName]['requiredVariables'], function($name) use ($key) { return $name != $key; });
             }
         }
 
         // We'll only allow results, that have no unbound variables
         $workingSet = array_filter($workingSet, function($information) {
-            return $information['numberOfUnboundVariables'] == 0;
+            return count($information['requiredVariables']) == 0;
         });
 
         // We now sort the results by the weighted information (ascending or descending)
@@ -78,11 +78,16 @@ class InvertedRouteIndex {
 
     protected function addRoute($name, Route $route) {
         $compiled = $route->compile();
+
         $this->initialWorkingSet[$name] = array(
             'numberOfMatchedDefaults' => 0,
             'numberOfPathComponents' => count(explode('/', trim($route->getPattern(), '/'))),
             'routePosition' => count($this->initialWorkingSet),
-            'numberOfUnboundVariables' => count($compiled->getVariables())
+            'requiredVariables' => array_filter($compiled->getVariables(), function($key) use ($route) {
+                if ($route->hasDefault($key)) return false;
+                if (($regexp = $route->getRequirement($key)) && preg_match("($regexp)", '')) return false;
+                return true;
+            })
         );
 
         foreach ($compiled->getVariables() as $variable)
