@@ -13,16 +13,34 @@ class WebfactoryWfdMetaExtension extends Extension {
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.xml');
 
-        $refreshingRouterId = 'webfactory.wfd_meta.refreshing_router';
+        $this->configureRefreshingRouter($configs, $container, $loader);
+        $this->configureRefreshingTranslator($configs, $container, $loader);
+    }
 
-        $definition = $container->getDefinition($refreshingRouterId);
+    protected function configureRefreshingRouter(array $configs, ContainerBuilder $container, XmlFileLoader $loader) {
+        $loader->load('routing.xml');
 
+        $serviceId = 'webfactory.wfd_meta.refreshing_router';
+        $this->addWfdTableDependencies($configs, $container->getDefinition($serviceId), 'refresh_router_tables');
+
+
+        $container->setAlias('router', $serviceId);
+    }
+
+    protected function configureRefreshingTranslator(array $configs, ContainerBuilder $container, XmlFileLoader $loader) {
+        $loader->load('translation.xml');
+
+        $serviceId = 'webfactory.wfd_meta.refreshing_translator';
+        $this->addWfdTableDependencies($configs, $container->getDefinition($serviceId), 'refreshing_translator_tables');
+
+        $container->setAlias('translator', $serviceId);
+    }
+
+    protected function addWfdTableDependencies(array $configs, $definition, $configKey) {
         foreach ($configs as $subConfig) {
-            $refreshRouterTables = (array) @$subConfig['refresh_router_tables'] ?: '*';
-            $definition->addMethodCall('addWfdTableDependency', array($refreshRouterTables));
+            $tables = (array) @$subConfig[$configKey] ?: '*';
+            $definition->addMethodCall('addWfdTableDependency', array($tables));
         }
-
-        $container->setAlias('router', $refreshingRouterId);
     }
 
 }
