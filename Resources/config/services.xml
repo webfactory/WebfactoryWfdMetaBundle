@@ -15,11 +15,6 @@
             <argument type="service" id="database_connection"/>
         </service>
 
-        <service id="webfactory.wfd_meta_config_resource_wakeup" class="Webfactory\Bundle\WfdMetaBundle\Config\ResourceWakeup">
-            <argument type="service" id="webfactory.wfd_meta.provider" />
-            <tag name="config.resource_wakeup" />
-        </service>
-
         <service id="webfactory.wfd_meta.caching.event_listener" class="%webfactory.wfd_meta.caching.event_listener.class%">
             <argument type="service" id="annotation_reader"/>
             <argument type="service" id="webfactory.wfd_meta.provider"/>
