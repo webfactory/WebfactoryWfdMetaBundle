@@ -40,21 +40,5 @@
                 </argument>
             </call>
         </service>
-
-        <service id="webfactory.inverted_route_index" class="Webfactory\Bundle\WfdMetaBundle\Routing\InvertedRouteIndex"
-            factory-service="webfactory.inverted_route_index_factory"
-            factory-method="createIndex"
-        />
-
-        <service id="webfactory.route_searching_router" class="Webfactory\Bundle\WfdMetaBundle\Routing\RouteSearchingRouter">
-            <argument type="service" id="service_container" />
-        </service>
-
-        <service id="webfactory.inverted_route_index_factory" class="Webfactory\Bundle\WfdMetaBundle\Routing\InvertedRouteIndexFactory">
-            <argument type="service" id="webfactory.wfd_meta.provider"/>
-            <argument type="service" id="service_container"/>
-            <argument type="service" id="logger" on-invalid="null" />
-            <tag name="monolog.logger" channel="webfactory" />
-        </service>
     </services>
 </container>

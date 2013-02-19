@@ -4,12 +4,12 @@
         "psr-0": { "Webfactory\\Bundle\\WfdMetaBundle": "" }
     },
     "require": {
-        "symfony/symfony": ">=2.1.0"
+        "symfony/symfony": "2.*"
     },
     "target-dir": "Webfactory/Bundle/WfdMetaBundle",
     "extra": {
         "branch-alias": {
-            "dev-default": "2.1.x-dev"
+            "dev-default": "2.2.x-dev"
         }
     }
 }
