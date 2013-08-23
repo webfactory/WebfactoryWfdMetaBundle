@@ -61,7 +61,6 @@ class EventListener {
         $response = $event->getResponse();
 
         if (isset($this->mostRecentLastTouchedMap[$request])) {
-            $response->setPublic();
             $response->setLastModified($this->mostRecentLastTouchedMap[$request]);
         }
     }
