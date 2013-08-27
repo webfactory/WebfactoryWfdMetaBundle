@@ -12,6 +12,7 @@
         <service id="webfactory.wfd_meta.caching.event_listener" class="Webfactory\Bundle\WfdMetaBundle\Caching\EventListener">
             <argument type="service" id="annotation_reader"/>
             <argument type="service" id="webfactory.wfd_meta.provider"/>
+            <argument>%kernel.debug%</argument>
             <tag name="kernel.event_listener" event="kernel.controller" method="onKernelController"/>
             <tag name="kernel.event_listener" event="kernel.response" method="onKernelResponse"/>
         </service>

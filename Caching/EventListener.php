@@ -2,6 +2,7 @@
 
 namespace Webfactory\Bundle\WfdMetaBundle\Caching;
 
+use Webfactory\Bundle\WfdMetaBundle\Caching\Annotation\Send304IfNotModified;
 use Webfactory\Bundle\WfdMetaBundle\Provider;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
@@ -13,45 +14,44 @@ class EventListener {
 
     protected $reader;
     protected $provider;
-    protected $mostRecentLastTouchedMap;
+    protected $debug;
+    protected $lastTouchedResults;
 
-    public function __construct(Reader $reader, Provider $provider) {
+    public function __construct(Reader $reader, Provider $provider, $debug) {
         $this->reader = $reader;
         $this->provider = $provider;
-        $this->mostRecentLastTouchedMap = new \SplObjectStorage();
+        $this->debug = $debug;
+        $this->lastTouchedResults = new \SplObjectStorage();
+
     }
 
     public function onKernelController(FilterControllerEvent $event) {
-        if (!is_array($controller = $event->getController())) {
-            return;
-        }
 
-        $request = $event->getRequest();
-        $response = new Response();
+        $lastTouched = $this->findLastTouched($event->getController());
 
-        $object = new \ReflectionObject($controller[0]);
-        $method = $object->getMethod($controller[1]);
+        if (false !== $lastTouched) {
 
-        $mostRecentLastTouched = false;
+            $request = $event->getRequest();
+            $this->lastTouchedResults[$request] = $lastTouched;
 
-        foreach ($this->reader->getMethodAnnotations($method) as $configuration) {
-            if ($configuration instanceof ValidUntilLastTouched) {
-                if ($lt = $this->getLastTouched($configuration)) {
-                    if ($lt > $mostRecentLastTouched) {
-                        $mostRecentLastTouched = $lt;
-                    }
+            /*
+             * Für kernel.debug = 1 senden wir niemals
+             * 304-Responses, anstatt den Kernel auszuführen:
+             *
+             * Das Ergebnis hängt auch von vielen Dingen außerhalb
+             * wfd_meta ab (z. B. template-Code), die wir hier nicht
+             * berücksichtigen können.
+             */
+            if (!$this->debug) {
+
+                $response = new Response();
+                $response->setLastModified($lastTouched);
+
+                if ($response->isNotModified($request)) {
+                    $event->setController(function () use ($response) {
+                        return $response;
+                    });
                 }
-            }
-        }
-
-        if ($mostRecentLastTouched !== false) {
-            $response->setLastModified($mostRecentLastTouched);
-            if ($response->isNotModified($request)) {
-                $event->setController(function() use($response) {
-                    return $response;
-                });
-            } else {
-                $this->mostRecentLastTouchedMap[$request] = $mostRecentLastTouched;
             }
         }
     }
@@ -60,16 +60,48 @@ class EventListener {
         $request = $event->getRequest();
         $response = $event->getResponse();
 
-        if (isset($this->mostRecentLastTouchedMap[$request])) {
-            $response->setLastModified($this->mostRecentLastTouchedMap[$request]);
+        if (isset($this->lastTouchedResults[$request])) {
+            $response->setLastModified($this->lastTouchedResults[$request]);
         }
     }
 
-    protected function getLastTouched(ValidUntilLastTouched $configuration) {
+    protected function getLastTouched(Send304IfNotModified $configuration) {
         if ($ts = $this->provider->getLastTouched(
             $configuration->getTables()
-        ))
+        )
+        ) {
             return new \DateTime("@$ts");
+        }
     }
 
+    protected function findLastTouched($callback) {
+        $lastTouched = false;
+
+        foreach ($this->findAnnotations($callback) as $configuration) {
+            $lastTouched = max($lastTouched, $this->getLastTouched($configuration));
+        }
+
+        return $lastTouched;
+    }
+
+    /**
+     * @return Send304IfNotModified[]
+     */
+    protected function findAnnotations($callback) {
+        $r = array();
+
+        if (is_array($callback)) {
+
+            $object = new \ReflectionObject($callback[0]);
+            $method = $object->getMethod($callback[1]);
+
+            foreach ($this->reader->getMethodAnnotations($method) as $configuration) {
+                if ($configuration instanceof Send304IfNotModified) {
+                    $r[] = $configuration;
+                }
+            }
+        }
+
+        return $r;
+    }
 }
