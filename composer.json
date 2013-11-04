@@ -4,7 +4,9 @@
         "psr-0": { "Webfactory\\Bundle\\WfdMetaBundle": "" }
     },
     "require": {
-        "symfony/symfony": "~2.2"
+        "symfony/symfony": "~2.2",
+        "symfony/monolog-bundle": "~2.2",
+        "symfony/framework-bundle": "~2.2"
     },
     "target-dir": "Webfactory/Bundle/WfdMetaBundle",
     "extra": {
