@@ -6,6 +6,7 @@ use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
+use Symfony\Component\DependencyInjection\Definition;
 
 class WebfactoryWfdMetaExtension extends Extension {
 
@@ -36,11 +37,28 @@ class WebfactoryWfdMetaExtension extends Extension {
         $container->setAlias('translator', $serviceId);
     }
 
-    protected function addWfdTableDependencies(array $configs, $definition, $configKey) {
+    /**
+     * Adds addWfdTableDependency-method calls for the array-fied values of the $configKey in the $configs to the
+     * $definition. If no such value has been found in any of the $configurations, a addWfdTableDependency-method call
+     * for '*' is added, which will be interpreted as a wildcard for all tables later on.
+     *
+     * @param array $configs
+     * @param Definition $definition
+     * @param string $configKey
+     */
+    protected function addWfdTableDependencies(array $configs, Definition $definition, $configKey) {
+        $tables = array();
         foreach ($configs as $subConfig) {
-            $tables = (array) @$subConfig[$configKey] ?: '*';
-            $definition->addMethodCall('addWfdTableDependency', array($tables));
+            if (isset($subConfig[$configKey])) {
+                $tables += (array) $subConfig[$configKey];
+            }
         }
+
+        if (empty($tables)) {
+            $tables = array('*');
+        }
+
+        $definition->addMethodCall('addWfdTableDependency', array($tables));
     }
 
 }
