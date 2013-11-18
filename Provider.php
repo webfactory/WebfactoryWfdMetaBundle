@@ -30,7 +30,10 @@ class Provider {
         foreach ($namesOrIds as $t) {
             $this->cache[$t] = 0; // prevent re-query
             if ($t == '*') {
-                $this->cache['*'] = reset($this->connection->fetchAssoc('SELECT UNIX_TIMESTAMP(MAX(last_touched)) FROM wfd_meta'));
+                $lastTouchOnAnyTable = $this->connection->fetchAssoc(
+                    'SELECT UNIX_TIMESTAMP(MAX(last_touched)) timestamp FROM wfd_meta'
+                );
+                $this->cache['*'] = $lastTouchOnAnyTable['timestamp'];
             } elseif (is_numeric($t)) {
                 $ids[] = $t;
             } else {
