@@ -10,12 +10,9 @@
                 <argument type="service" id="webfactory.wfd_meta.provider"/>
             </call>
             <call method="setLogger">
-                <argument type="service">
-                    <service parent="monolog.logger_prototype">
-                        <argument index="0">wfd_meta_bundle.refreshing_router</argument>
-                    </service>
-                </argument>
+                <argument type="service" id="logger"/>
             </call>
+            <tag name="monolog.logger" channel="wfd_meta_bundle.refreshing_router"/>
         </service>
     </services>
 </container>
