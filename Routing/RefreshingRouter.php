@@ -2,7 +2,9 @@
 
 namespace Webfactory\Bundle\WfdMetaBundle\Routing;
 
-use Webfactory\Bundle\WfdMetaBundle as Bundle;
+use Webfactory\Bundle\WfdMetaBundle\MetaQuery;
+use Webfactory\Bundle\WfdMetaBundle\Util\CriticalSection;
+use Webfactory\Bundle\WfdMetaBundle\Util\ExpirableConfigCache;
 
 /**
  * RefreshingRouter ist wie Symfony\Bundle\FrameworkBundle\Routing\Router mit der
@@ -11,15 +13,21 @@ use Webfactory\Bundle\WfdMetaBundle as Bundle;
  */
 class RefreshingRouter extends \Symfony\Bundle\FrameworkBundle\Routing\Router {
 
-    protected $metaProvider;
-    protected $tableDeps = array();
+    /** @var MetaQuery */
+    protected $metaQuery;
 
-    public function setWfdMetaProvider(Bundle\Provider $p) {
-        $this->metaProvider = $p;
+    public function setMetaQuery(MetaQuery $metaQuery) {
+        $this->metaQuery = $metaQuery;
     }
 
-    public function addWfdTableDependency($tables) {
-        $this->tableDeps += array_fill_keys((array)$tables, true);
+    public function addWfdTableDependency($tables)
+    {
+        trigger_error(
+            'The addWfdTableDependency() setter is deprecated. Configure the MetaQuery instead.',
+            E_USER_DEPRECATED
+        );
+
+        $this->metaQuery->addTable($tables);
     }
 
     /*
@@ -53,17 +61,15 @@ class RefreshingRouter extends \Symfony\Bundle\FrameworkBundle\Routing\Router {
             return $this->$what = new $this->options["{$what}_class"]($this->getRouteCollection(), $this->context);
         }
 
-        $ts = $this->metaProvider->getLastTouched(array_keys($this->tableDeps));
-
-        $cache = new Bundle\Util\ExpirableConfigCache(
+        $cache = new ExpirableConfigCache(
             $this->options['cache_dir'] . '/' . $cacheClass . '.php',
             $this->options['debug'],
-            $ts
+            $this->metaQuery->getLastTouched()
         );
 
         if (!$cache->isFresh()) {
 
-            $cs = new Bundle\Util\CriticalSection(); $cs->setLogger($this->logger);
+            $cs = new CriticalSection(); $cs->setLogger($this->logger);
             $self = $this;
             $cs->execute(__FILE__, function() use ($what, $self, $cache) {
                 if (!$cache->isFresh()) {
@@ -90,7 +96,7 @@ class RefreshingRouter extends \Symfony\Bundle\FrameworkBundle\Routing\Router {
 
 
     // public, weil im Callback ausgeführt (PHP 5.3)
-    public function dumpIntoCache($cache, $what) {
+    public function dumpIntoCache(ExpirableConfigCache $cache, $what) {
         $routeCollection = $this->getRouteCollection();
 
         $dumperClass = $this->getOption("{$what}_dumper_class");

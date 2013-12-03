@@ -1,20 +1,35 @@
 <?xml version="1.0" ?>
 
-<container xmlns="http://symfony.com/schema/dic/services"
-           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<container xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xmlns="http://symfony.com/schema/dic/services"
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <services>
-        <service id="webfactory.wfd_meta.provider" class="Webfactory\Bundle\WfdMetaBundle\Provider">
+
+        <service id="webfactory_wfd_meta.meta_query_factory" class="Webfactory\Bundle\WfdMetaBundle\MetaQueryFactory">
+            <argument type="service" id="webfactory_wfd_meta.provider"/>
+            <argument type="service" id="service_container"/>
+        </service>
+
+
+        <service id="webfactory_wfd_meta.meta_query" abstract="true" class="Webfactory\Bundle\WfdMetaBundle\MetaQuery"
+                 factory-service="webfactory_wfd_meta.meta_query_factory"
+                 factory-method="create"
+                />
+
+        <service id="webfactory_wfd_meta.provider" class="Webfactory\Bundle\WfdMetaBundle\Provider">
             <argument type="service" id="database_connection"/>
         </service>
 
-        <service id="webfactory.wfd_meta.caching.event_listener" class="Webfactory\Bundle\WfdMetaBundle\Caching\EventListener">
+        <service id="webfactory_wfd_meta.caching.event_listener"
+                 class="Webfactory\Bundle\WfdMetaBundle\Caching\EventListener">
             <argument type="service" id="annotation_reader"/>
-            <argument type="service" id="webfactory.wfd_meta.provider"/>
+            <argument type="service" id="webfactory_wfd_meta.meta_query_factory"/>
             <argument>%kernel.debug%</argument>
+
             <tag name="kernel.event_listener" event="kernel.controller" method="onKernelController"/>
             <tag name="kernel.event_listener" event="kernel.response" method="onKernelResponse"/>
         </service>
+
     </services>
 </container>

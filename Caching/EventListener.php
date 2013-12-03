@@ -3,26 +3,27 @@
 namespace Webfactory\Bundle\WfdMetaBundle\Caching;
 
 use Webfactory\Bundle\WfdMetaBundle\Caching\Annotation\Send304IfNotModified;
-use Webfactory\Bundle\WfdMetaBundle\Provider;
+use Webfactory\Bundle\WfdMetaBundle\MetaQueryFactory;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpFoundation\Response;
 use Doctrine\Common\Annotations\Reader;
-use Webfactory\Bundle\WfdMetaBundle\Caching\Annotation\ValidUntilLastTouched;
 
 class EventListener {
 
     protected $reader;
-    protected $provider;
+
+    /** @var MetaQueryFactory */
+    protected $metaQueryFactory;
+
     protected $debug;
     protected $lastTouchedResults;
 
-    public function __construct(Reader $reader, Provider $provider, $debug) {
+    public function __construct(Reader $reader, MetaQueryFactory $metaQueryFactory, $debug) {
         $this->reader = $reader;
-        $this->provider = $provider;
+        $this->metaQueryFactory = $metaQueryFactory;
         $this->debug = $debug;
         $this->lastTouchedResults = new \SplObjectStorage();
-
     }
 
     public function onKernelController(FilterControllerEvent $event) {
@@ -65,26 +66,27 @@ class EventListener {
         }
     }
 
-    protected function getLastTouched(Send304IfNotModified $configuration) {
-        if ($ts = $this->provider->getLastTouched(
-            $configuration->getTables()
-        )
-        ) {
-            return new \DateTime("@$ts");
-        }
+    protected function createMetaQuery() {
+        return $this->metaQueryFactory->create();
     }
 
     protected function findLastTouched($callback) {
-        $lastTouched = false;
 
-        foreach ($this->findAnnotations($callback) as $configuration) {
-            $lastTouched = max($lastTouched, $this->getLastTouched($configuration));
+        $metaQuery = $this->createMetaQuery();
+
+        foreach ($this->findAnnotations($callback) as $annotation) {
+            $annotation->configure($metaQuery);
         }
 
-        return $lastTouched;
+        if ($ts = $metaQuery->getLastTouched()) {
+            return new \DateTime("@$ts");
+        }
+
+        return false;
     }
 
     /**
+     * @param $callback A PHP callback (array) pointing to the method to reflect on.
      * @return Send304IfNotModified[]
      */
     protected function findAnnotations($callback) {

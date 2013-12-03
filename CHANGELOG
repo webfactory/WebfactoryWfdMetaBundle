@@ -1,0 +1,9 @@
+webfactory/wfdmeta-bundle
+=========================
+
+Version 2.2.x-dev
+-----------------
+
+* Einführung des MetaQuery und verwandter Hilfsklassen, über das auch
+  Doctrine Entitätsklassen zur Angabe der Abhängigkeiten verwendet werden
+  können.

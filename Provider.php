@@ -4,6 +4,10 @@ namespace Webfactory\Bundle\WfdMetaBundle;
 
 use Doctrine\DBAL\Connection;
 
+/**
+ * Kapselt die wfd_meta-Tabelle und gibt auf ihrer Basis den Zeitpunkt der letzten Änderung
+ * eines Datensatzes zurück.
+ */
 class Provider {
 
     protected $connection;
@@ -13,14 +17,24 @@ class Provider {
         $this->connection = $connection;
     }
 
+    /**
+     * Gibt den Unix-Timestamp der letzten Änderung in einer der genannten Tabellen zurück.
+     *
+     * @param array $tables Die zu überprüfenden Tabellen, entweder als Tabellenname oder als wfDynamic table-ID.
+     * @return mixed Der Unix-Timestamp der letzten Änderung in einer der Tabellen.
+     */
     public function getLastTouched(array $tables) {
+        if (!$tables) {
+            return 0;
+        }
+
         $flip = array_flip($tables);
 
         if ($cacheMiss = array_diff_key($flip, $this->cache)) {
             $this->cache(array_keys($cacheMiss));
         }
 
-        return max(array_intersect_key($this->cache, $flip));
+        return max((array)array_intersect_key($this->cache, $flip));
     }
 
     protected function cache(array $namesOrIds) {
