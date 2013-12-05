@@ -65,7 +65,9 @@ class CriticalSection {
     }
 
     protected function debug($msg) {
-        if ($this->logger) $this->logger->debug("$msg (PID " . getmypid() . ", microtime " . microtime() . ")");
+        if ($this->logger) {
+            $this->logger->debug($msg, array('pid' => getmypid()));
+        }
     }
 
 }
