@@ -20,7 +20,7 @@ class ExpirableConfigCache extends ConfigCache {
     protected $timestamp, $metaFile, $baseFile;
 
     public function __construct($file, $debug, $timestamp) {
-        parent::__construct("{$file}_{$timestamp}", $debug);
+        parent::__construct($this->getTimestampedFilePath($file, $timestamp), $debug);
         $this->baseFile = $file;
         $this->metaFile = "$file.expire";
         $this->timestamp = $timestamp;
@@ -32,6 +32,10 @@ class ExpirableConfigCache extends ConfigCache {
 
         if ($oldTs <= $this->timestamp) { // <=, weil es sein kann, dass wir den Cache aufgrund anderer Faktoren als dem Timestamp neu machen (think development + geänderte Resourcen)
             parent::write($content, $metadata);
+            copy(
+                $this->getTimestampedFilePath($this->baseFile, $this->timestamp),
+                $this->baseFile
+            );
         }
 
         if ($oldTs < $this->timestamp) { // Wenn wir keine echt neue Generation geschrieben haben, brauchen|dürfen wir das nicht neu schreiben|löschen.
@@ -42,6 +46,17 @@ class ExpirableConfigCache extends ConfigCache {
                 @unlink("{$this->baseFile}_$oldTs.meta");
             }
         }
+    }
 
+    /**
+     * Get the full file system path including the file name for a timestamped version of the $baseFilePath
+     *
+     * @param string $baseFilePath full file system path to the base file
+     * @param int $timestamp
+     * @return string
+     */
+    protected function getTimestampedFilePath($baseFilePath, $timestamp)
+    {
+        return $baseFilePath . '_' . $timestamp;
     }
 }
