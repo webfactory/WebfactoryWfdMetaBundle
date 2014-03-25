@@ -28,13 +28,12 @@ class EventListener {
 
     public function onKernelController(FilterControllerEvent $event) {
 
-        $lastTouched = $this->findLastTouched($event->getController());
+        $lastTouched = $this->calculateLastTouched($event->getController());
 
         if (false !== $lastTouched) {
 
             $request = $event->getRequest();
             $this->lastTouchedResults[$request] = $lastTouched;
-
             /*
              * Für kernel.debug = 1 senden wir niemals
              * 304-Responses, anstatt den Kernel auszuführen:
@@ -70,8 +69,26 @@ class EventListener {
         return $this->metaQueryFactory->create();
     }
 
-    protected function findLastTouched($callback) {
+    protected function calculateLastTouched($callback) {
+        $resetInterval = 0;
 
+        foreach ($this->findAnnotations($callback) as $annotation) {
+            $resetInterval = max($resetInterval, $annotation->getResetInterval());
+        }
+
+        if ($resetInterval === 0) {
+            $resetInterval = 60 * 60 * 24 * 28; //Default: 28 Tage
+        }
+
+        if ($ts = $this->loadLastTouched($callback)) {
+            $ts = time() - ((time() - $ts) % $resetInterval);
+            return new \DateTime("@$ts");
+        }
+
+        return false;
+    }
+
+    protected function loadLastTouched($callback){
         $metaQuery = $this->createMetaQuery();
 
         foreach ($this->findAnnotations($callback) as $annotation) {
@@ -79,7 +96,7 @@ class EventListener {
         }
 
         if ($ts = $metaQuery->getLastTouched()) {
-            return new \DateTime("@$ts");
+            return $ts;
         }
 
         return false;

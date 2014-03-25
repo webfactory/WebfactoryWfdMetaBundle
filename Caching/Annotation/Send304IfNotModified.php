@@ -14,13 +14,17 @@ class Send304IfNotModified
 
     public function __construct($values)
     {
-        if ($wrong = array_diff_key($values, array_flip(array('tables', 'tableIdConstants', 'entities')))) {
+        if ($wrong = array_diff_key($values, array_flip(array('tables', 'tableIdConstants', 'entities', 'resetInterval')))) {
             $key = key($wrong);
-            throw new \Exception('Die Annotation ' . get_class(
-                    $this
-                ) . ' kennt die Eigentschaft "' . $key . '" nicht.');
+            throw new \Exception('Die Annotation ' . get_class($this) . ' kennt die Eigentschaft "' . $key . '" nicht.');
         }
 
+        if (!isset($values['resetInterval'])) {
+            $values['resetInterval'] = false;
+        } else if (!is_int($values['resetInterval'])) {
+            throw new \Exception('Die Annotation ' . get_class($this) . ' erwartet für die Eigenschaft resetInterval einen Integer (in Sekunden).');
+        }
+        
         $this->values = $values;
     }
 
@@ -53,4 +57,10 @@ class Send304IfNotModified
                 ), 0, $e);
         }
     }
+
+    public function getResetInterval()
+    {
+        return $this->values['resetInterval'];
+    }
+    
 }
