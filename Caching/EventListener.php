@@ -17,6 +17,8 @@ class EventListener {
     protected $metaQueryFactory;
 
     protected $debug;
+
+    /** @var \SplObjectStorage */
     protected $lastTouchedResults;
 
     public function __construct(Reader $reader, MetaQueryFactory $metaQueryFactory, $debug) {
@@ -28,31 +30,42 @@ class EventListener {
 
     public function onKernelController(FilterControllerEvent $event) {
 
-        $lastTouched = $this->calculateLastTouched($event->getController());
+        $controller = $event->getController();
+        $request = $event->getRequest();
 
-        if (false !== $lastTouched) {
+        $annotation = $this->findAnnotation($controller);
 
-            $request = $event->getRequest();
-            $this->lastTouchedResults[$request] = $lastTouched;
-            /*
-             * Für kernel.debug = 1 senden wir niemals
-             * 304-Responses, anstatt den Kernel auszuführen:
-             *
-             * Das Ergebnis hängt auch von vielen Dingen außerhalb
-             * wfd_meta ab (z. B. template-Code), die wir hier nicht
-             * berücksichtigen können.
-             */
-            if (!$this->debug) {
+        if (!$annotation) {
+            return;
+        }
 
-                $response = new Response();
-                $response->setLastModified($lastTouched);
+        $lastTouched = $annotation->calculateLastModified($this->metaQueryFactory);
 
-                if ($response->isNotModified($request)) {
-                    $event->setController(function () use ($response) {
-                        return $response;
-                    });
-                }
-            }
+        if (!$lastTouched) {
+            return;
+        }
+
+        $this->lastTouchedResults[$request] = $lastTouched;
+
+        /*
+         * Für kernel.debug = 1 senden wir niemals
+         * 304-Responses, anstatt den Kernel auszuführen:
+         *
+         * Das Ergebnis hängt auch von vielen Dingen außerhalb
+         * wfd_meta ab (z. B. template-Code), die wir hier nicht
+         * berücksichtigen können.
+         */
+        if ($this->debug) {
+            return;
+        }
+
+        $response = new Response();
+        $response->setLastModified($lastTouched);
+
+        if ($response->isNotModified($request)) {
+            $event->setController(function () use ($response) {
+                return $response;
+            });
         }
     }
 
@@ -65,50 +78,11 @@ class EventListener {
         }
     }
 
-    protected function createMetaQuery() {
-        return $this->metaQueryFactory->create();
-    }
-
-    protected function calculateLastTouched($callback) {
-        $resetInterval = 0;
-
-        foreach ($this->findAnnotations($callback) as $annotation) {
-            $resetInterval = max($resetInterval, $annotation->getResetInterval());
-        }
-
-        if ($resetInterval === 0) {
-            $resetInterval = 60 * 60 * 24 * 28; //Default: 28 Tage
-        }
-
-        if ($ts = $this->loadLastTouched($callback)) {
-            $ts = time() - ((time() - $ts) % $resetInterval);
-            return new \DateTime("@$ts");
-        }
-
-        return false;
-    }
-
-    protected function loadLastTouched($callback){
-        $metaQuery = $this->createMetaQuery();
-
-        foreach ($this->findAnnotations($callback) as $annotation) {
-            $annotation->configure($metaQuery);
-        }
-
-        if ($ts = $metaQuery->getLastTouched()) {
-            return $ts;
-        }
-
-        return false;
-    }
-
     /**
      * @param $callback A PHP callback (array) pointing to the method to reflect on.
-     * @return Send304IfNotModified[]
+     * @return Send304IfNotModified|null The annotation, if found. Null otherwise.
      */
-    protected function findAnnotations($callback) {
-        $r = array();
-
+    protected function findAnnotation($callback) {
         if (is_array($callback)) {
 
             $object = new \ReflectionObject($callback[0]);
@@ -116,11 +90,11 @@ class EventListener {
 
             foreach ($this->reader->getMethodAnnotations($method) as $configuration) {
                 if ($configuration instanceof Send304IfNotModified) {
-                    $r[] = $configuration;
+                    return $configuration;
                 }
             }
         }
 
-        return $r;
+        return null;
     }
 }
