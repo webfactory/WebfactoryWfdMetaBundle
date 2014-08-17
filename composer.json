@@ -1,17 +1,13 @@
 {
     "name": "webfactory/wfdmeta-bundle",
+
     "autoload": {
-        "psr-0": { "Webfactory\\Bundle\\WfdMetaBundle": "" }
+        "psr-4": { "Webfactory\\Bundle\\WfdMetaBundle": "" }
     },
+
     "require": {
         "symfony/symfony": "~2.2",
         "symfony/monolog-bundle": "~2.2",
         "symfony/framework-bundle": "~2.2"
-    },
-    "target-dir": "Webfactory/Bundle/WfdMetaBundle",
-    "extra": {
-        "branch-alias": {
-            "dev-default": "2.2.x-dev"
-        }
     }
 }
