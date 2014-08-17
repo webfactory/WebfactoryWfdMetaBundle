@@ -2,7 +2,7 @@
     "name": "webfactory/wfdmeta-bundle",
 
     "autoload": {
-        "psr-4": { "Webfactory\\Bundle\\WfdMetaBundle": "" }
+        "psr-4": { "Webfactory\\Bundle\\WfdMetaBundle\\": "" }
     },
 
     "require": {
