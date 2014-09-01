@@ -23,6 +23,7 @@ class MetaQueryConfigurator
      * This $config structure matches the configuration structure for the bundle.
      *
      * @param array $config The tables and entities to track as previously described.
+     * @return void
      */
     public function configure(ContainerBuilder $container, $serviceId, array $config)
     {

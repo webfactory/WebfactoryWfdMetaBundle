@@ -63,7 +63,7 @@ class EventListener {
         $response->setLastModified($lastTouched);
 
         if ($response->isNotModified($request)) {
-            $event->setController(function () use ($response) {
+            $event->setController( function () use ($response) {
                 return $response;
             });
         }

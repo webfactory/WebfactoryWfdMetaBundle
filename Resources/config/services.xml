@@ -27,9 +27,17 @@
             <argument type="service" id="webfactory_wfd_meta.meta_query_factory"/>
             <argument>%kernel.debug%</argument>
 
-            <tag name="kernel.event_listener" event="kernel.controller" method="onKernelController" priority="-200"/>
+            <tag name="kernel.event_listener" event="kernel.controller" method="onKernelController" priority="-200" />
             <tag name="kernel.event_listener" event="kernel.response" method="onKernelResponse"/>
         </service>
+
+        <service id="webfactory_wfd_meta.controller.template"
+                 class="Webfactory\Bundle\WfdMetaBundle\Controller\TemplateController">
+            <argument type="service" id="templating"/>
+            <argument type="service" id="webfactory_wfd_meta.meta_query_factory"/>
+            <argument>%kernel.debug%</argument>
+         </service>
+
 
     </services>
 </container>
