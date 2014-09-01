@@ -27,7 +27,7 @@
             <argument type="service" id="webfactory_wfd_meta.meta_query_factory"/>
             <argument>%kernel.debug%</argument>
 
-            <tag name="kernel.event_listener" event="kernel.controller" method="onKernelController"/>
+            <tag name="kernel.event_listener" event="kernel.controller" method="onKernelController" priority="-200"/>
             <tag name="kernel.event_listener" event="kernel.response" method="onKernelResponse"/>
         </service>
 
