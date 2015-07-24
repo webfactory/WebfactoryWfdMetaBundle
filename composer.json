@@ -1,5 +1,16 @@
 {
     "name": "webfactory/wfdmeta-bundle",
+    "description": "",
+    "minimum-stability": "stable",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "webfactory GmbH",
+            "email": "info@webfactory.de",
+            "homepage": "http://www.webfactory.de",
+            "role": "Developer"
+        }
+    ],
 
     "autoload": {
         "psr-4": { "Webfactory\\Bundle\\WfdMetaBundle\\": "" }
