@@ -7,3 +7,5 @@ node_modules/
 
 ### PHPStorm
 .idea/
+
+composer.lock
