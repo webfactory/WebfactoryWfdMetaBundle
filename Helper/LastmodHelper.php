@@ -1,16 +1,26 @@
 <?php
+/*
+ * (c) webfactory GmbH <info@webfactory.de>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Webfactory\Bundle\WfdMetaBundle\Helper;
+
 use Webfactory\Bundle\WfdMetaBundle\MetaQuery;
 use Webfactory\Bundle\WfdMetaBundle\MetaQueryFactory;
 
-class LastmodHelper {
+class LastmodHelper
+{
 
     protected $tables;
     protected $tableIdConstants;
     protected $entities;
     protected $resetInterval = 2419200; // Default: 28 Tage
 
-    public function calculateLastModified(MetaQueryFactory $metaQueryFactory) {
+    public function calculateLastModified(MetaQueryFactory $metaQueryFactory)
+    {
         $metaQuery = $metaQueryFactory->create();
         $this->configure($metaQuery);
 
@@ -26,11 +36,14 @@ class LastmodHelper {
         return null;
     }
 
-    protected function configure(MetaQuery $metaQuery) {
+    protected function configure(MetaQuery $metaQuery)
+    {
         try {
 
             if (!$this->tables && !$this->tableIdConstants && !$this->entities) {
-                throw new \RuntimeException(get_class($this) . ' wurde weder mit Tabellennamen, Tabellen-Ids oder Entitätsnamen konfiguriert.');
+                throw new \RuntimeException(
+                    get_class($this).' wurde weder mit Tabellennamen, Tabellen-Ids oder Entitätsnamen konfiguriert.'
+                );
             }
 
             if ($this->tables) {
@@ -53,23 +66,31 @@ class LastmodHelper {
             }
 
         } catch (\Exception $e) {
-            throw new \RuntimeException("Exception während der Konfiguration von MetaQuery durch ".get_class($this), 0, $e);
+            throw new \RuntimeException(
+                "Exception während der Konfiguration von MetaQuery durch ".get_class($this),
+                0,
+                $e
+            );
         }
     }
 
-    public function setResetInterval($resetInterval) {
+    public function setResetInterval($resetInterval)
+    {
         $this->resetInterval = $resetInterval;
     }
 
-    public function setEntities($entities) {
+    public function setEntities($entities)
+    {
         $this->entities = $entities;
     }
 
-    public function setTableIdConstants($tableIdConstants) {
+    public function setTableIdConstants($tableIdConstants)
+    {
         $this->tableIdConstants = $tableIdConstants;
     }
 
-    public function setTables($tables) {
+    public function setTables($tables)
+    {
         $this->tables = $tables;
     }
 
