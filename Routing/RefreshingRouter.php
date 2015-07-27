@@ -17,12 +17,14 @@ use Webfactory\Bundle\WfdMetaBundle\Util\ExpirableConfigCache;
  * Besonderheit, dass er zusätzlich den wfd_meta.last_touched-Timestamp berücksichtigt
  * und seinen Cache invalidiert, wenn darüber Änderungen der Datenbank bemerkt werden.
  */
-class RefreshingRouter extends \Symfony\Bundle\FrameworkBundle\Routing\Router {
+class RefreshingRouter extends \Symfony\Bundle\FrameworkBundle\Routing\Router
+{
 
     /** @var MetaQuery */
     protected $metaQuery;
 
-    public function setMetaQuery(MetaQuery $metaQuery) {
+    public function setMetaQuery(MetaQuery $metaQuery)
+    {
         $this->metaQuery = $metaQuery;
     }
 
@@ -45,18 +47,20 @@ class RefreshingRouter extends \Symfony\Bundle\FrameworkBundle\Routing\Router {
         createAndCache() enthält die Besonderheit dieses Routers.
     */
 
-    public function getMatcher() {
+    public function getMatcher()
+    {
         return $this->createAndCache("matcher");
     }
 
-    public function getGenerator() {
+    public function getGenerator()
+    {
         return $this->createAndCache("generator");
     }
 
     /* ------------- Ende --------------- */
 
-
-    protected function createAndCache($what) {
+    protected function createAndCache($what)
+    {
         if (null !== $this->$what) {
             return $this->$what;
         }
@@ -68,16 +72,17 @@ class RefreshingRouter extends \Symfony\Bundle\FrameworkBundle\Routing\Router {
         }
 
         $cache = new ExpirableConfigCache(
-            $this->options['cache_dir'] . '/' . $cacheClass . '.php',
+            $this->options['cache_dir'].'/'.$cacheClass.'.php',
             $this->options['debug'],
             $this->metaQuery->getLastTouched()
         );
 
         if (!$cache->isFresh()) {
 
-            $cs = new CriticalSection(); $cs->setLogger($this->logger);
+            $cs = new CriticalSection();
+            $cs->setLogger($this->logger);
             $self = $this;
-            $cs->execute(__FILE__, function() use ($what, $self, $cache) {
+            $cs->execute(__FILE__, function () use ($what, $self, $cache) {
                 if (!$cache->isFresh()) {
                     $self->dumpIntoCache($cache, $what);
                 } else {
@@ -86,23 +91,30 @@ class RefreshingRouter extends \Symfony\Bundle\FrameworkBundle\Routing\Router {
             });
         }
 
-        if (!class_exists($cacheClass)) require $cache;
+        if (!class_exists($cacheClass)) {
+            require $cache;
+        }
+
         return $this->$what = new $cacheClass($this->context);
     }
 
-
     protected $logger;
-    public function setLogger(\Symfony\Component\HttpKernel\Log\LoggerInterface $l) {
+
+    public function setLogger(\Symfony\Component\HttpKernel\Log\LoggerInterface $l)
+    {
         $this->logger = $l;
     }
 
-    public function debug($msg) {
-        if ($this->logger) $this->logger->debug("$msg (PID " . getmypid() . ", microtime " . microtime() . ")");
+    public function debug($msg)
+    {
+        if ($this->logger) {
+            $this->logger->debug("$msg (PID ".getmypid().", microtime ".microtime().")");
+        }
     }
 
-
     // public, weil im Callback ausgeführt (PHP 5.3)
-    public function dumpIntoCache(ExpirableConfigCache $cache, $what) {
+    public function dumpIntoCache(ExpirableConfigCache $cache, $what)
+    {
         $routeCollection = $this->getRouteCollection();
 
         $dumperClass = $this->getOption("{$what}_dumper_class");

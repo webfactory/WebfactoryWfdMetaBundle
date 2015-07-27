@@ -47,10 +47,17 @@ class TemplateController
         $this->debug = $debug;
     }
 
-    public function templateAction(Request $request, $template,
-               $maxAge = null, $sharedAge = null, $private = null,
-               $metaTables = null, $metaTableConstants = null, $metaEntities = null, $metaResetInterval = null)
-    {
+    public function templateAction(
+        Request $request,
+        $template,
+        $maxAge = null,
+        $sharedAge = null,
+        $private = null,
+        $metaTables = null,
+        $metaTableConstants = null,
+        $metaEntities = null,
+        $metaResetInterval = null
+    ) {
         /** @var \DateTime $lastmod */
         $lastmod = null;
 
@@ -79,7 +86,6 @@ class TemplateController
 
             $lastmod = $lastmodHelper->calculateLastModified($this->metaQueryFactory);
         }
-
 
         if (!$this->debug && $lastmod) {
             $response = new Response();

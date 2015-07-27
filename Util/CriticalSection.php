@@ -22,18 +22,21 @@ namespace Webfactory\Bundle\WfdMetaBundle\Util;
  * bringt kann er für die gleiche Synchronisationsdatei weitere CriticalSection-Aufrufe
  * ausführen, die nicht blockieren werden.
  */
-class CriticalSection {
+class CriticalSection
+{
 
     protected static $entranceCount = array();
     protected static $semaphore = array();
 
     protected $logger;
 
-    public function setLogger(\Symfony\Component\HttpKernel\Log\LoggerInterface $l) {
+    public function setLogger(\Symfony\Component\HttpKernel\Log\LoggerInterface $l)
+    {
         $this->logger = $l;
     }
 
-    public function execute($file, \Closure $callback) {
+    public function execute($file, \Closure $callback)
+    {
         $tok = ftok($file, 'x');
 
         self::lock($tok);
@@ -41,16 +44,20 @@ class CriticalSection {
         $e = null;
         try {
             $r = $callback();
+        } catch (\Exception $e) { /* fake finally {} */
         }
-        catch (\Exception $e) { /* fake finally {} */ }
 
         self::release($tok);
 
-        if ($e) throw $e;
+        if ($e) {
+            throw $e;
+        }
+
         return $r;
     }
 
-    protected function lock($tok) {
+    protected function lock($tok)
+    {
         if (!@self::$entranceCount[$tok]) {
             $this->debug("Waiting for the lock $tok");
             sem_acquire(self::$semaphore[$tok] = sem_get($tok));
@@ -61,7 +68,8 @@ class CriticalSection {
         self::$entranceCount[$tok]++;
     }
 
-    protected function release($tok) {
+    protected function release($tok)
+    {
         self::$entranceCount[$tok]--;
 
         if (!self::$entranceCount[$tok]) {
@@ -70,7 +78,8 @@ class CriticalSection {
         }
     }
 
-    protected function debug($msg) {
+    protected function debug($msg)
+    {
         if ($this->logger) {
             $this->logger->debug($msg, array('pid' => getmypid()));
         }

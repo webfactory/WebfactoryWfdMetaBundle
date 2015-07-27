@@ -44,7 +44,7 @@ class RefreshingTranslator extends BaseTranslator
     protected function loadCatalogue($locale)
     {
         // Wissen aus der Elternklasse
-        $cacheFile = $this->options['cache_dir'] . '/catalogue.' . $locale . '.php';
+        $cacheFile = $this->options['cache_dir'].'/catalogue.'.$locale.'.php';
 
         // Schauen, ob die Cache-Datei älter als wfd_meta.last_touced ist
         if (file_exists($cacheFile)) {

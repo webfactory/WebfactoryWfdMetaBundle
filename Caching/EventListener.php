@@ -15,7 +15,8 @@ use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpFoundation\Response;
 use Doctrine\Common\Annotations\Reader;
 
-class EventListener {
+class EventListener
+{
 
     protected $reader;
 
@@ -27,14 +28,16 @@ class EventListener {
     /** @var \SplObjectStorage */
     protected $lastTouchedResults;
 
-    public function __construct(Reader $reader, MetaQueryFactory $metaQueryFactory, $debug) {
+    public function __construct(Reader $reader, MetaQueryFactory $metaQueryFactory, $debug)
+    {
         $this->reader = $reader;
         $this->metaQueryFactory = $metaQueryFactory;
         $this->debug = $debug;
         $this->lastTouchedResults = new \SplObjectStorage();
     }
 
-    public function onKernelController(FilterControllerEvent $event) {
+    public function onKernelController(FilterControllerEvent $event)
+    {
 
         $controller = $event->getController();
         $request = $event->getRequest();
@@ -69,13 +72,14 @@ class EventListener {
         $response->setLastModified($lastTouched);
 
         if ($response->isNotModified($request)) {
-            $event->setController( function () use ($response) {
+            $event->setController(function () use ($response) {
                 return $response;
             });
         }
     }
 
-    public function onKernelResponse(FilterResponseEvent $event) {
+    public function onKernelResponse(FilterResponseEvent $event)
+    {
         $request = $event->getRequest();
         $response = $event->getResponse();
 
@@ -88,7 +92,8 @@ class EventListener {
      * @param $callback A PHP callback (array) pointing to the method to reflect on.
      * @return Send304IfNotModified|null The annotation, if found. Null otherwise.
      */
-    protected function findAnnotation($callback) {
+    protected function findAnnotation($callback)
+    {
         if (is_array($callback)) {
 
             $object = new \ReflectionObject($callback[0]);

@@ -46,7 +46,8 @@ class MetaQuery
                 }
                 $this->addTable($meta->getTableName());
             } catch (MappingException $e) {
-                throw new \RuntimeException("webfactory/wfdmeta-bundle: Ein MetaQuery soll für die Klasse '$class' konfiguriert werden, die keine bekannte Doctrine-Entität ist.", 0, $e);
+                throw new \RuntimeException("webfactory/wfdmeta-bundle: Ein MetaQuery soll für die Klasse '$class' konfiguriert werden, die keine bekannte Doctrine-Entität ist.",
+                    0, $e);
             }
         }
     }

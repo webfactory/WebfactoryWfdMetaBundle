@@ -23,10 +23,12 @@ use Symfony\Component\Finder\Finder;
  * liegt und das für den isFresh()-Test vergleichen - der Dateiname alleine reicht
  * schon aus um zu erkennen, dass es die richtige Generation ist.
  */
-class ExpirableConfigCache extends ConfigCache {
+class ExpirableConfigCache extends ConfigCache
+{
     protected $timestamp, $baseFilename, $timestampedFile;
 
-    public function __construct($baseFilename, $debug, $timestamp) {
+    public function __construct($baseFilename, $debug, $timestamp)
+    {
         $this->baseFilename = $baseFilename;
         $this->timestampedFile = "{$baseFilename}_{$timestamp}";
         $this->timestamp = $timestamp;
@@ -34,13 +36,14 @@ class ExpirableConfigCache extends ConfigCache {
         parent::__construct($this->timestampedFile, $debug);
     }
 
-    public function write($content, array $metadata = null) {
+    public function write($content, array $metadata = null)
+    {
         parent::write($content, $metadata);
 
         /*
          * Für das Symfony2-Plugin in PHPStorm einen festen Dateinamen vorhalten,
          * diese Kopie ist ansonsten ohne Relevanz.
-         */ 
+         */
         copy(
             $this->timestampedFile,
             $this->baseFilename
@@ -49,14 +52,15 @@ class ExpirableConfigCache extends ConfigCache {
         $this->cleanup();
     }
 
-    protected function cleanup() {
+    protected function cleanup()
+    {
         $finder = new Finder();
         $basename = basename($this->baseFilename);
         $files = $finder->files()
-                        ->in(dirname($this->baseFilename))
-                        ->depth('== 0')
-                        ->name("#{$basename}_#")
-                        ->notName("#{$basename}_{$this->timestamp}#");
+            ->in(dirname($this->baseFilename))
+            ->depth('== 0')
+            ->name("#{$basename}_#")
+            ->notName("#{$basename}_{$this->timestamp}#");
 
         foreach ($files as $file) {
             @unlink($file->getRealpath());
