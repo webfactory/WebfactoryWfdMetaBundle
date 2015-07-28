@@ -8,7 +8,7 @@ Besides that, alternative implementations of `translator` and `router` are provi
 
 The annotation `@WfdMeta\Send304IfNotModified` allows to return a special 304 return code if no entries were modified.
 
-There is also a Controller-as-a-service webfactory_wfd_meta.controller.template`, which is similar to the [TemplateController des FrameworkBundle](http://symfony.com/doc/current/cookbook/templating/render_without_controller.html) but also considers `wfd_meta` information.
+There is also a Controller-as-a-service `webfactory_wfd_meta.controller.template`, which is similar to the [TemplateController des FrameworkBundle](http://symfony.com/doc/current/cookbook/templating/render_without_controller.html) but also considers `wfd_meta` information.
 
 ## Installation ##
 The bundle is installed like any other Symfony2 bundle.
