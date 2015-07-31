@@ -43,7 +43,7 @@ class RefreshingTranslator extends BaseTranslator
 
     protected function loadCatalogue($locale)
     {
-        // Schauen, ob die Cache-Datei älter als wfd_meta.last_touced ist
+        // Schauen, ob die Cache-Datei älter als wfd_meta.last_touched ist
         foreach ($this->getCacheFiles($locale) as $cacheFile) {
             if (filemtime($cacheFile) < $this->metaQuery->getLastTouched()) {
                 @unlink($cacheFile);
