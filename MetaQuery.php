@@ -27,6 +27,8 @@ class MetaQuery
 
     protected $tables = array();
 
+    protected $entities = array();
+
     public function __construct(Provider $provider, ContainerInterface $container)
     {
         $this->provider = $provider;
@@ -35,21 +37,32 @@ class MetaQuery
 
     public function addEntity($classname)
     {
-        /** @var EntityManager $em */
-        $em = $this->container->get('doctrine.orm.entity_manager');
+        $this->entities[] = $classname;
+    }
 
-        foreach ($classname as $class) {
-            try {
-                $meta = $em->getClassMetadata($class);
-                if (!$meta->isInheritanceTypeNone()) {
-                    $meta = $em->getClassMetadata($meta->rootEntityName);
+    private function setupTablesForEntities()
+    {
+        if ($this->entities) {
+            /** @var EntityManager $em */
+            $em = $this->container->get('doctrine.orm.entity_manager');
+
+            foreach ($this->entities as $classname) {
+                foreach ($classname as $class) {
+                    try {
+                        $meta = $em->getClassMetadata($class);
+                        if (!$meta->isInheritanceTypeNone()) {
+                            $meta = $em->getClassMetadata($meta->rootEntityName);
+                        }
+                        $this->addTable($meta->getTableName());
+                    } catch (MappingException $e) {
+                        throw new \RuntimeException("webfactory/wfdmeta-bundle: Ein MetaQuery soll für die Klasse '$class' konfiguriert werden, die keine bekannte Doctrine-Entität ist.",
+                            0, $e);
+                    }
                 }
-                $this->addTable($meta->getTableName());
-            } catch (MappingException $e) {
-                throw new \RuntimeException("webfactory/wfdmeta-bundle: Ein MetaQuery soll für die Klasse '$class' konfiguriert werden, die keine bekannte Doctrine-Entität ist.",
-                    0, $e);
             }
         }
+
+        $this->entities = array();
     }
 
     public function addTable($tableName)
@@ -61,6 +74,7 @@ class MetaQuery
 
     public function getLastTouched()
     {
+        $this->setupTablesForEntities();
         return $this->provider->getLastTouched(array_keys($this->tables));
     }
 }
