@@ -58,7 +58,7 @@ class CriticalSection
 
     protected function lock($tok)
     {
-        if (!@self::$entranceCount[$tok]) {
+        if (!isset(self::$entranceCount[$tok]) || !self::$entranceCount[$tok]) {
             $this->debug("Waiting for the lock $tok");
             sem_acquire(self::$semaphore[$tok] = sem_get($tok));
             $this->debug("Obtained the lock $tok");
