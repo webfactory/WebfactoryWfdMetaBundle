@@ -8,6 +8,8 @@
 
 namespace Webfactory\Bundle\WfdMetaBundle\Util;
 
+use Symfony\Component\HttpKernel\Log\LoggerInterface;
+
 /**
  * Stellt sicher, dass ein bestimmter Code-Abschnitt *von unterschiedlichen Prozessen
  * auf dem gleichen System* sequentiell durchlaufen wird. Braucht System V Semaphores
@@ -28,9 +30,12 @@ class CriticalSection
     protected static $entranceCount = array();
     protected static $semaphore = array();
 
+    /**
+     * @var LoggerInterface
+     */
     protected $logger;
 
-    public function setLogger(\Symfony\Component\HttpKernel\Log\LoggerInterface $l)
+    public function setLogger(LoggerInterface $l)
     {
         $this->logger = $l;
     }
@@ -58,7 +63,7 @@ class CriticalSection
 
     protected function lock($tok)
     {
-        if (!@self::$entranceCount[$tok]) {
+        if (!isset(self::$entranceCount[$tok]) || !self::$entranceCount[$tok]) {
             $this->debug("Waiting for the lock $tok");
             sem_acquire(self::$semaphore[$tok] = sem_get($tok));
             $this->debug("Obtained the lock $tok");
