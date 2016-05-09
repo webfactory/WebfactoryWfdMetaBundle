@@ -92,7 +92,7 @@ class RefreshingRouter extends \Symfony\Bundle\FrameworkBundle\Routing\Router
         }
 
         if (!class_exists($cacheClass)) {
-            require $cache;
+            require $cache->getPath();
         }
 
         return $this->$what = new $cacheClass($this->context);
