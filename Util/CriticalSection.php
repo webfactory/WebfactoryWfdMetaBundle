@@ -40,6 +40,11 @@ class CriticalSection
         $this->logger = $l;
     }
 
+    /**
+     * @param string $file
+     * @param \Closure $callback
+     * @return mixed Return value of the callback.
+     */
     public function execute($file, \Closure $callback)
     {
         $tok = ftok($file, 'x');
