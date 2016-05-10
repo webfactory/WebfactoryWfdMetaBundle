@@ -46,19 +46,11 @@ class CriticalSection
 
         self::lock($tok);
 
-        $e = null;
         try {
-            $r = $callback();
-        } catch (\Exception $e) { /* fake finally {} */
+            return $callback();
+        } finally {
+            self::release($tok);
         }
-
-        self::release($tok);
-
-        if ($e) {
-            throw $e;
-        }
-
-        return $r;
     }
 
     protected function lock($tok)
