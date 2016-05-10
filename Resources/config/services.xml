@@ -12,10 +12,9 @@
         </service>
 
 
-        <service id="webfactory_wfd_meta.meta_query" abstract="true" class="Webfactory\Bundle\WfdMetaBundle\MetaQuery"
-                 factory-service="webfactory_wfd_meta.meta_query_factory"
-                 factory-method="create"
-                />
+        <service id="webfactory_wfd_meta.meta_query" abstract="true" class="Webfactory\Bundle\WfdMetaBundle\MetaQuery">
+            <factory service="webfactory_wfd_meta.meta_query_factory" method="create" />
+        </service>
 
         <service id="webfactory_wfd_meta.provider" class="Webfactory\Bundle\WfdMetaBundle\Provider">
             <argument type="service" id="database_connection"/>
