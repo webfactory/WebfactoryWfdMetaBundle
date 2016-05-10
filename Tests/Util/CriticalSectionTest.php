@@ -52,6 +52,9 @@ class CriticalSectionTest extends \PHPUnit_Framework_TestCase
         $this->criticalSection->execute(__DIR__ . '/my/virtual/file1', $this->createCallbackThatMustBeInvoked());
     }
 
+    /**
+     *  This ensures that the critical section is re-entrant as documented.
+     */
     public function testCallbackCanAcquireSameLockAgain()
     {
         $this->criticalSection->execute(__DIR__ . '/my/virtual/file1', function () {
