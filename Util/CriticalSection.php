@@ -41,7 +41,7 @@ class CriticalSection
     }
 
     /**
-     * @param string $file
+     * @param string $file File path that is used as lock name.
      * @param \Closure $callback
      * @return mixed Return value of the callback.
      */
