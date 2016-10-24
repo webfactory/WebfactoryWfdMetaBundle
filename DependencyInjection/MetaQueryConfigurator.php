@@ -42,7 +42,7 @@ class MetaQueryConfigurator
         }
 
         if ($config['entities']) {
-            $definition->addMethodCall('addEntity', array($config['entities']));
+            $definition->addMethodCall('addEntityClasses', array($config['entities']));
         }
     }
 }

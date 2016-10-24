@@ -62,7 +62,7 @@ class LastmodHelper
             }
 
             if ($this->entities) {
-                $metaQuery->addEntity($this->entities);
+                $metaQuery->addEntityClasses($this->entities);
             }
 
         } catch (\Exception $e) {
