@@ -46,6 +46,23 @@ class Provider
         return max((array)array_intersect_key($this->cache, $flip));
     }
 
+    /**
+     * Returns the Unix timestamp for the last change of a single row in a given table.
+     *
+     * @param string $tablename  The table containing the data row in question
+     * @param int    $primaryKey The data-id of the row in question
+     *
+     * @return int|null The Unix timestamp for the last change of the given row; null if the information is not available
+     */
+    public function getLastTouchedRow($tablename, $primaryKey)
+    {
+        return $this->connection->fetchColumn('
+            SELECT UNIX_TIMESTAMP(m.last_touched) timestamp
+            FROM wfd_meta m
+            JOIN wfd_table t on m.wfd_table_id = t.id
+            WHERE t.tablename = ? AND m.data_id = ?', [$tablename, $primaryKey]);
+    }
+
     protected function cache(array $namesOrIds)
     {
         $ids = array();

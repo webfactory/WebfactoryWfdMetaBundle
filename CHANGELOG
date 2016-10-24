@@ -1,6 +1,12 @@
 webfactory/wfdmeta-bundle
 =========================
 
+Version 2.6.0
+-----------------
+
+* MetadataFacade stellt eine einfache API für die Abfrage von wfdmeta-Daten bereit (z.B. last touched)
+* DoctrineMetadataHelper berechnet Tabellennamen und Primary Keys für Doctrine-Entitäten
+
 Version 2.2.x-dev
 -----------------
 

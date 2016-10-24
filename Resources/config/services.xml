@@ -6,6 +6,21 @@
 
     <services>
 
+        <service id="webfactory_wfd_meta.doctrine_metadata_helper" class="Webfactory\Bundle\WfdMetaBundle\DoctrineMetadataHelper">
+            <argument type="expression">
+                service("doctrine.orm.entity_manager").getMetadataFactory()
+            </argument>
+        </service>
+
+        <service id="webfactory_wfd_meta.provider" class="Webfactory\Bundle\WfdMetaBundle\Provider">
+            <argument type="service" id="database_connection"/>
+        </service>
+
+        <service id="webfactory_wfd_meta.metadata_facade" class="Webfactory\Bundle\WfdMetaBundle\MetadataFacade">
+            <argument type="service" id="webfactory_wfd_meta.provider"/>
+            <argument type="service" id="webfactory_wfd_meta.doctrine_metadata_helper"/>
+        </service>
+
         <service id="webfactory_wfd_meta.meta_query_factory" class="Webfactory\Bundle\WfdMetaBundle\MetaQueryFactory">
             <argument type="service" id="webfactory_wfd_meta.provider"/>
             <argument type="service" id="service_container"/>
@@ -14,10 +29,6 @@
 
         <service id="webfactory_wfd_meta.meta_query" abstract="true" class="Webfactory\Bundle\WfdMetaBundle\MetaQuery">
             <factory service="webfactory_wfd_meta.meta_query_factory" method="create" />
-        </service>
-
-        <service id="webfactory_wfd_meta.provider" class="Webfactory\Bundle\WfdMetaBundle\Provider">
-            <argument type="service" id="database_connection"/>
         </service>
 
         <service id="webfactory_wfd_meta.caching.event_listener"

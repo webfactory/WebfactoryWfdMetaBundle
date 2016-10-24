@@ -8,8 +8,6 @@
 
 namespace Webfactory\Bundle\WfdMetaBundle;
 
-use Doctrine\Common\Persistence\Mapping\MappingException;
-use Doctrine\ORM\EntityManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -89,20 +87,11 @@ class MetaQuery
     private function setupTablesForEntities()
     {
         if ($this->classnames) {
-            /** @var EntityManager $em */
-            $em = $this->container->get('doctrine.orm.entity_manager');
+            /** @var DoctrineMetadataHelper $metadataHelper */
+            $metadataHelper = $this->container->get('webfactory_wfd_meta.doctrine_metadata_helper');
 
             foreach ($this->classnames as $classname) {
-                try {
-                    $meta = $em->getClassMetadata($classname);
-                    if (!$meta->isInheritanceTypeNone()) {
-                        $meta = $em->getClassMetadata($meta->rootEntityName);
-                    }
-                    $this->addTable($meta->getTableName());
-                } catch (MappingException $e) {
-                    throw new \RuntimeException("webfactory/wfdmeta-bundle: Ein MetaQuery soll für die Klasse '$classname' konfiguriert werden, die keine bekannte Doctrine-Entität ist.",
-                        0, $e);
-                }
+                $this->addTable($metadataHelper->getRootTableName($classname));
             }
         }
 
@@ -121,4 +110,6 @@ class MetaQuery
         $this->setupTablesForEntities();
         return $this->provider->getLastTouched(array_keys($this->tables));
     }
+
+
 }
