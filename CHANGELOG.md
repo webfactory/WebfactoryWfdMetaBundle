@@ -1,10 +1,10 @@
 # CHANGELOG for WebfactoryWfdMetaBundle
 
-## Version 3.1
+## Version 3.1.0
 
 * Added ```Provider->getLastTouchedOfEachRow($tableName)``` and tests. 
 
-## Version 3.0
+## Version 3.0.0
 
 * Removed internal caching in the `Provider` class.  
 * Added the custom `ConfigCacheFactory` implementation and new WfdMetaResource types like `DoctrineEntityClassResource` or `WfdTableResource`. Add instances of these resource to `RouteCollection` and `MessageCatalogue` instances to track changes.
