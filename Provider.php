@@ -44,13 +44,10 @@ class Provider
         foreach ($tableNamesOrIds as $t) {
             if ($t === '*') {
                 $lastTouchOnAnyTable = $this->connection->fetchColumn('SELECT MAX(last_touched) FROM wfd_meta');
-                if ($lastTouchOnAnyTable === null) {
-                    return null;
-                }
+                return $this->getTimestampOrNull($lastTouchOnAnyTable);
+            }
 
-                $lastTouchedObject = new \DateTime($lastTouchOnAnyTable);
-                return $lastTouchedObject->getTimestamp();
-            } elseif (is_numeric($t)) {
+            if (is_numeric($t)) {
                 $ids[] = $t;
             } else {
                 $names[] = $t;
@@ -69,12 +66,7 @@ class Provider
                 array_merge($ids, $names)
             );
 
-            if ($lastTouched === null) {
-                return null;
-            }
-
-            $lastTouchedObject = new \DateTime($lastTouched);
-            return $lastTouchedObject->getTimestamp();
+            return $this->getTimestampOrNull($lastTouched);
         }
     }
 
@@ -96,8 +88,7 @@ class Provider
 
         $idAndVersionPairs = [];
         foreach ($lastTouchedData as $row) {
-            $lastTouchedObject = new \DateTime($row['last_touched']);
-            $idAndVersionPairs[$row['data_id']] = $lastTouchedObject->getTimestamp();
+            $idAndVersionPairs[$row['data_id']] = $this->getTimestampOrNull($row['last_touched']);
         }
 
         return $idAndVersionPairs;
@@ -121,11 +112,21 @@ class Provider
             [$tablename, $primaryKey]
         );
 
-        if ($lastTouched === false) {
+        return $this->getTimestampOrNull($lastTouched);
+    }
+
+    /**
+     * @param string|null|boolean $fetchValue string in "YYYY-m-d H:i:s" format or some "not queryable" value like NULL
+     * or false
+     * @return int|null UNIX timestamp or NULL
+     */
+    private function getTimestampOrNull($fetchValue)
+    {
+        if ($fetchValue === false || $fetchValue === null) {
             return null;
         }
 
-        $lastTouchedObject = new \DateTime($lastTouched);
-        return $lastTouchedObject->getTimestamp();
+        $dateTime = new \DateTime($fetchValue);
+        return $dateTime->getTimestamp();
     }
 }
