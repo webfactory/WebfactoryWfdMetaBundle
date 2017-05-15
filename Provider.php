@@ -74,7 +74,7 @@ class Provider
      * Returns all tracked data rows and their respective last changes of a given table.
      *
      * @param string $tableName
-     * @return array
+     * @return array (int id => int unix timestamp of last change)
      */
     public function getLastTouchedOfEachRow($tableName)
     {
