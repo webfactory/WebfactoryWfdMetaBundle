@@ -6,7 +6,7 @@
 
     <services>
 
-        <service id="webfactory_wfd_meta.doctrine_metadata_helper" class="Webfactory\Bundle\WfdMetaBundle\DoctrineMetadataHelper" public="false">
+        <service id="webfactory_wfd_meta.doctrine_metadata_helper" class="Webfactory\Bundle\WfdMetaBundle\DoctrineMetadataHelper">
             <argument type="expression">
                 service("doctrine.orm.entity_manager").getMetadataFactory()
             </argument>
