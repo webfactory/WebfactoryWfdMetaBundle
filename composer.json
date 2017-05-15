@@ -21,8 +21,6 @@
     "require": {
         "php": "^5.5.0 | ^7.0.0",
         "symfony/symfony": "^2.8",
-        "symfony/monolog-bundle": "~2.2",
-        "symfony/framework-bundle": "~2.2",
         "doctrine/dbal": "^2.5"
     },
     "require-dev": {
