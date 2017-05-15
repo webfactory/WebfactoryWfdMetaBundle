@@ -27,12 +27,10 @@ class Provider
     }
 
     /**
-     * Returns the unix timestamp of the last change affecting one of the tables, given as database table names or
-     * wfDynamic table IDs.
+     * Returns the last UNIX timestamp of any change on any of the given tables or 0, if no matching entry was found.
      *
-     * @param array $tables Table names or IDs
-     *
-     * @return int|null The Unix timestamp for the last change; null if the information is not available
+     * @param array $tables The table names or table ids to check for changes.
+     * @return int|null UNIX timestamp or null if no entries were found.
      */
     public function getLastTouched(array $tableNamesOrIds)
     {
@@ -45,11 +43,13 @@ class Provider
 
         foreach ($tableNamesOrIds as $t) {
             if ($t == '*') {
-                $timestamp = $this->connection->fetchColumn(
-                    'SELECT UNIX_TIMESTAMP(MAX(last_touched)) FROM wfd_meta'
-                );
+                $lastTouchOnAnyTable = $this->connection->fetchAssoc('SELECT MAX(last_touched) lastTouchedString FROM wfd_meta');
+                if ($lastTouchOnAnyTable['lastTouchedString'] === null) {
+                    return null;
+                }
 
-                return $timestamp;
+                $lastTouchedObject = new \DateTime($lastTouchOnAnyTable['lastTouchedString']);
+                return $lastTouchedObject->getTimestamp();
             } elseif (is_numeric($t)) {
                 $ids[] = $t;
             } else {
@@ -58,8 +58,8 @@ class Provider
         }
 
         if ($names || $ids) {
-            $timestamp = $this->connection->fetchColumn('
-                SELECT UNIX_TIMESTAMP(MAX(m.last_touched)) 
+            $lastTouched = $this->connection->fetchColumn('
+                SELECT MAX(m.last_touched) lastTouchedString
                 FROM wfd_meta m
                 JOIN wfd_table t on m.wfd_table_id = t.id
                 WHERE '
@@ -69,7 +69,12 @@ class Provider
                 array_merge($ids, $names)
             );
 
-            return $timestamp;
+            if ($lastTouched === null) {
+                return null;
+            }
+
+            $lastTouchedObject = new \DateTime($lastTouched);
+            return $lastTouchedObject->getTimestamp();
         }
     }
 
@@ -97,5 +102,49 @@ class Provider
 
         $lastTouchedObject = new \DateTime($lastTouched);
         return $lastTouchedObject->getTimestamp();
+    }
+
+    protected function cache(array $namesOrIds)
+    {
+        $ids = array();
+        $names = array();
+
+        foreach ($namesOrIds as $t) {
+            $this->cache[$t] = 0; // prevent re-query
+            if ($t == '*') {
+                $lastTouchOnAnyTable = $this->connection->fetchAssoc('SELECT MAX(last_touched) lastTouchedString FROM wfd_meta');
+
+                if ($lastTouchOnAnyTable['lastTouchedString'] === false) {
+                    $this->cache['*'] = null;
+                } else {
+                    $lastTouchedObject = new \DateTime($lastTouchOnAnyTable['lastTouchedString']);
+                    $this->cache['*'] = $lastTouchedObject->getTimestamp();
+                }
+            } elseif (is_numeric($t)) {
+                $ids[] = $t;
+            } else {
+                $names[] = $t;
+            }
+        }
+
+        if ($names || $ids) {
+            $result = $this->connection->fetchAll('
+                    SELECT t.id, t.tablename, MAX(m.last_touched) lastTouchedString
+                    FROM wfd_meta m
+                    JOIN wfd_table t on m.wfd_table_id = t.id
+                    WHERE '
+                    .($ids ? ('t.id IN ('.implode(', ', array_fill(0, count($ids), '?')).')') : '')
+                    .(($ids && $names) ? ' OR ' : '')
+                    .($names ? ('t.tablename IN ('.implode(', ', array_fill(0, count($names), '?')).')') : '').'
+                    GROUP BY t.id
+                ',
+                array_merge($ids, $names)
+            );
+
+            foreach ($result as $row) {
+                $lastTouchedObject = new \DateTime($row['lastTouchedString']);
+                $this->cache[$row['id']] = $this->cache[$row['tablename']] = $lastTouchedObject->getTimestamp();
+            }
+        }
     }
 }

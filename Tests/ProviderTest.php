@@ -79,6 +79,75 @@ final class ProviderTest extends \PHPUnit_Framework_TestCase
             INSERT INTO `wfd_meta` (wfd_table_id, data_id, last_touched) VALUES (1, 1, '2000-01-01 00:00:00');
         ");
 
-        $this->assertEquals(946681200, $this->provider->getLastTouchedRow('myTable', 1));
+        $this->assertEquals(
+            mktime(0, 0, 0, 1, 1, 2000),
+            $this->provider->getLastTouchedRow('myTable', 1)
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function getLastTouchedReturnsNullIfNoEntriesExist()
+    {
+        $this->assertNull($this->provider->getLastTouched(['myTable']));
+    }
+
+    /**
+     * @test
+     */
+    public function getLastTouchedReturnsZeroIfNoMatchingEntriesExist()
+    {
+        $this->connection->exec("
+            -- wrong table
+            INSERT INTO `wfd_table` (id, tablename) VALUES (1, 'wrongTable');
+            INSERT INTO `wfd_meta` (wfd_table_id, data_id, last_touched) VALUES (1, 1, '2000-01-01 00:00:00');
+        ");
+
+        $this->assertEquals(0, $this->provider->getLastTouched(['myTable']));
+    }
+
+    /**
+     * @test
+     */
+    public function getLastTouchedReturnsTimestampOfLastChangeOfAnyGivenTable()
+    {
+        $this->connection->exec("
+            INSERT INTO `wfd_table` (id, tablename) VALUES (1, 'myTable');
+            INSERT INTO `wfd_meta` (wfd_table_id, data_id, last_touched) VALUES (1, 1, '1999-01-01 00:00:00');
+            
+            INSERT INTO `wfd_table` (id, tablename) VALUES (2, 'myOtherTable');
+            INSERT INTO `wfd_meta` (wfd_table_id, data_id, last_touched) VALUES (2, 1, '2000-01-01 00:00:00');
+            
+            INSERT INTO `wfd_table` (id, tablename) VALUES (3, 'myThirdTable');
+            INSERT INTO `wfd_meta` (wfd_table_id, data_id, last_touched) VALUES (3, 1, '2001-01-01 00:00:00');
+        ");
+
+        $this->assertEquals(
+            mktime(0, 0, 0, 1, 1, 2001),
+            $this->provider->getLastTouched(['myTable', 'myOtherTable', 'myThirdTable'])
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function getLastTouchedReturnsTimestampOfLastChangeOfWildcard()
+    {
+        $this->connection->exec("
+            INSERT INTO `wfd_table` (id, tablename) VALUES (1, 'myTable');
+            INSERT INTO `wfd_meta` (wfd_table_id, data_id, last_touched) VALUES (1, 1, '1999-01-01 00:00:00');
+
+            INSERT INTO `wfd_table` (id, tablename) VALUES (2, 'myOtherTable');
+            INSERT INTO `wfd_meta` (wfd_table_id, data_id, last_touched) VALUES (2, 1, '2000-01-01 00:00:00');
+
+            INSERT INTO `wfd_table` (id, tablename) VALUES (3, 'myThirdTable');
+            INSERT INTO `wfd_meta` (wfd_table_id, data_id, last_touched) VALUES (3, 1, '2001-01-01 00:00:00');
+        ");
+
+        $this->assertEquals(
+            mktime(0, 0, 0, 1, 1, 2001),
+            $this->provider->getLastTouched(['*'])
+        );
     }
 }
