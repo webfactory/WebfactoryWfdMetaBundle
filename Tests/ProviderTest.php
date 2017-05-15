@@ -145,9 +145,44 @@ final class ProviderTest extends \PHPUnit_Framework_TestCase
             INSERT INTO `wfd_meta` (wfd_table_id, data_id, last_touched) VALUES (3, 1, '2001-01-01 00:00:00');
         ");
 
+        $timestamp = $this->provider->getLastTouched(['*']);
+
         $this->assertEquals(
             mktime(0, 0, 0, 1, 1, 2001),
-            $this->provider->getLastTouched(['*'])
+            $timestamp
         );
+    }
+
+    /**
+     * @test
+     */
+    public function getLastTouchedOfEachRowReturnsEmptyArrayIfNoEntriesExist()
+    {
+        $result = $this->provider->getLastTouchedOfEachRow('myTable');
+        $this->assertInternalType('array', $result);
+        $this->assertEmpty($result);
+    }
+
+    /**
+     * @test
+     */
+    public function getLastTouchedOfEachRowReturnsTimestampOfLastChangeOfAnyGivenTable()
+    {
+        $this->connection->exec("
+            INSERT INTO `wfd_table` (id, tablename) VALUES (1, 'myTable');
+            INSERT INTO `wfd_meta` (wfd_table_id, data_id, last_touched) VALUES (1, 1, '1999-01-01 00:00:00');
+            INSERT INTO `wfd_meta` (wfd_table_id, data_id, last_touched) VALUES (1, 2, '2000-01-01 00:00:00');
+            INSERT INTO `wfd_meta` (wfd_table_id, data_id, last_touched) VALUES (1, 3, '2001-01-01 00:00:00');
+        ");
+
+        $idsAndTimestamps = $this->provider->getLastTouchedOfEachRow('myTable');
+
+        $this->assertCount(3, $idsAndTimestamps);
+        $this->assertArrayHasKey(1, $idsAndTimestamps);
+        $this->assertArrayHasKey(2, $idsAndTimestamps);
+        $this->assertArrayHasKey(3, $idsAndTimestamps);
+        $this->assertContains(mktime(0, 0, 0, 1, 1, 1999), $idsAndTimestamps);
+        $this->assertContains(mktime(0, 0, 0, 1, 1, 2000), $idsAndTimestamps);
+        $this->assertContains(mktime(0, 0, 0, 1, 1, 2001), $idsAndTimestamps);
     }
 }

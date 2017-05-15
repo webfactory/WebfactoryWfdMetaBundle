@@ -79,6 +79,31 @@ class Provider
     }
 
     /**
+     * Returns all tracked data rows and their respective last changes of a given table.
+     *
+     * @param string $tableName
+     * @return array
+     */
+    public function getLastTouchedOfEachRow($tableName)
+    {
+        $lastTouchedData = $this->connection->fetchAll('
+            SELECT m.data_id, m.last_touched
+            FROM wfd_meta m
+            JOIN wfd_table t on m.wfd_table_id = t.id
+            WHERE t.tablename = ?',
+            [$tableName]
+        );
+
+        $idAndVersionParis = [];
+        foreach ($lastTouchedData as $row) {
+            $lastTouchedObject = new \DateTime($row['last_touched']);
+            $idAndVersionParis[$row['data_id']] = $lastTouchedObject->getTimestamp();
+        }
+
+        return $idAndVersionParis;
+    }
+
+    /**
      * Returns the Unix timestamp for the last change of a single row in a given table.
      *
      * @param string $tablename  The table containing the data row in question
