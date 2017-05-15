@@ -1,5 +1,9 @@
 # CHANGELOG for WebfactoryWfdMetaBundle
 
+## Version 3.1
+
+* Added ```Provider->getLastTouchedOfEachRow($tableName)``` and tests. 
+
 ## Version 3.0
 
 * Removed internal caching in the `Provider` class.  
