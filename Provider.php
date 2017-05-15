@@ -42,13 +42,13 @@ class Provider
         $names = array();
 
         foreach ($tableNamesOrIds as $t) {
-            if ($t == '*') {
-                $lastTouchOnAnyTable = $this->connection->fetchAssoc('SELECT MAX(last_touched) lastTouchedString FROM wfd_meta');
-                if ($lastTouchOnAnyTable['lastTouchedString'] === null) {
+            if ($t === '*') {
+                $lastTouchOnAnyTable = $this->connection->fetchColumn('SELECT MAX(last_touched) FROM wfd_meta');
+                if ($lastTouchOnAnyTable === null) {
                     return null;
                 }
 
-                $lastTouchedObject = new \DateTime($lastTouchOnAnyTable['lastTouchedString']);
+                $lastTouchedObject = new \DateTime($lastTouchOnAnyTable);
                 return $lastTouchedObject->getTimestamp();
             } elseif (is_numeric($t)) {
                 $ids[] = $t;
