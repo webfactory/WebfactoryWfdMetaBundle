@@ -16,23 +16,23 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 class MetaQuery
 {
-
     /** @var Provider */
-    protected $provider;
+    private $provider;
 
     /** @var ContainerInterface */
-    protected $container;
+    private $container;
 
-    protected $tables = array();
+    private $tables = [];
 
     /**
      * @var string[]
      */
-    protected $classnames = array();
+    private $classnames = [];
 
     /**
      * MetaQuery constructor.
-     * @param Provider $provider
+     *
+     * @param Provider           $provider
      * @param ContainerInterface $container
      */
     public function __construct(Provider $provider, ContainerInterface $container)
@@ -54,12 +54,14 @@ class MetaQuery
         if (is_string($entity)) {
             @trigger_error("Passing FQCNs to addEntity() is deprecated; use addEntityClass() instead.", E_USER_DEPRECATED);
             $this->addEntityClass($entity);
+
             return;
         }
 
         if (is_array($entity) && is_string($entity[0])) {
             @trigger_error("Passing an array of FQCNs to addEntity() is deprecated; use addEntityClasses() instead.", E_USER_DEPRECATED);
             $this->addEntityClasses($entity);
+
             return;
         }
     }
@@ -81,7 +83,21 @@ class MetaQuery
      */
     public function addEntityClasses(array $classnames)
     {
-        $this->classnames = array_unique(array_merge($this->classnames,$classnames));
+        $this->classnames = array_unique(array_merge($this->classnames, $classnames));
+    }
+
+    public function addTable($tableName)
+    {
+        foreach ((array)$tableName as $t) {
+            $this->tables[$t] = true;
+        }
+    }
+
+    public function getLastTouched()
+    {
+        $this->setupTablesForEntities();
+
+        return $this->provider->getLastTouched(array_keys($this->tables));
     }
 
     private function setupTablesForEntities()
@@ -95,21 +111,7 @@ class MetaQuery
             }
         }
 
-        $this->classnames = array();
+        $this->classnames = [];
     }
-
-    public function addTable($tableName)
-    {
-        foreach ((array)$tableName as $t) {
-            $this->tables[$t] = true;
-        }
-    }
-
-    public function getLastTouched()
-    {
-        $this->setupTablesForEntities();
-        return $this->provider->getLastTouched(array_keys($this->tables));
-    }
-
 
 }

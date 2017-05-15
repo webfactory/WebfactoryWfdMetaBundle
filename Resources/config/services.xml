@@ -6,7 +6,7 @@
 
     <services>
 
-        <service id="webfactory_wfd_meta.doctrine_metadata_helper" class="Webfactory\Bundle\WfdMetaBundle\DoctrineMetadataHelper">
+        <service id="webfactory_wfd_meta.doctrine_metadata_helper" class="Webfactory\Bundle\WfdMetaBundle\DoctrineMetadataHelper" public="false">
             <argument type="expression">
                 service("doctrine.orm.entity_manager").getMetadataFactory()
             </argument>
@@ -48,6 +48,10 @@
             <argument>%kernel.debug%</argument>
          </service>
 
+        <service id="webfactory_wfd_meta.config_cache_factory" class="Webfactory\Bundle\WfdMetaBundle\Config\WfdMetaConfigCacheFactory" decorates="config_cache_factory" public="false">
+            <argument type="service" id="webfactory_wfd_meta.config_cache_factory.inner"/>
+            <argument type="service" id="webfactory_wfd_meta.meta_query_factory"/>
+        </service>
 
     </services>
 </container>

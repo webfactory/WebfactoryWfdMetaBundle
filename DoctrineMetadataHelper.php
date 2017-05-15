@@ -6,9 +6,12 @@ use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\Mapping\ClassMetadataFactory;
 use Doctrine\Common\Persistence\Mapping\MappingException;
 
+/**
+ * Helper class to obtain the root table name for a given Doctrine entity FQCN.
+ * Can also provide the primary key value for any given Doctrine entity.
+ */
 class DoctrineMetadataHelper
 {
-
     /**
      * @var ClassMetadataFactory
      */

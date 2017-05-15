@@ -11,14 +11,15 @@ namespace Webfactory\Bundle\WfdMetaBundle;
 use Doctrine\DBAL\Connection;
 
 /**
- * Kapselt die wfd_meta-Tabelle und gibt auf ihrer Basis den Zeitpunkt der letzten Änderung
- * eines Datensatzes zurück.
+ * Encapsulates the wfd_meta table. Use it to query the timestamp of the last change (change
+ * or deletion) in one or several tables identified by their table names or wfDynamic table IDs.
+ *
+ * Can also be used to query this information for a single record (row in a particular table).
  */
 class Provider
 {
-
-    protected $connection;
-    protected $cache = array();
+    /** @var Connection */
+    private $connection;
 
     public function __construct(Connection $connection)
     {
@@ -26,24 +27,50 @@ class Provider
     }
 
     /**
-     * Gibt den Unix-Timestamp der letzten Änderung in einer der genannten Tabellen zurück.
+     * Returns the unix timestamp of the last change affecting one of the tables, given as database table names or
+     * wfDynamic table IDs.
      *
-     * @param array $tables Die zu überprüfenden Tabellen, entweder als Tabellenname oder als wfDynamic table-ID.
-     * @return mixed Der Unix-Timestamp der letzten Änderung in einer der Tabellen.
+     * @param array $tables Table names or IDs
+     *
+     * @return int|null The Unix timestamp for the last change; null if the information is not available
      */
-    public function getLastTouched(array $tables)
+    public function getLastTouched(array $tableNamesOrIds)
     {
-        if (!$tables) {
+        if (!$tableNamesOrIds) {
             return 0;
         }
 
-        $flip = array_flip($tables);
+        $ids = array();
+        $names = array();
 
-        if ($cacheMiss = array_diff_key($flip, $this->cache)) {
-            $this->cache(array_keys($cacheMiss));
+        foreach ($tableNamesOrIds as $t) {
+            if ($t == '*') {
+                $timestamp = $this->connection->fetchColumn(
+                    'SELECT UNIX_TIMESTAMP(MAX(last_touched)) FROM wfd_meta'
+                );
+
+                return $timestamp;
+            } elseif (is_numeric($t)) {
+                $ids[] = $t;
+            } else {
+                $names[] = $t;
+            }
         }
 
-        return max((array)array_intersect_key($this->cache, $flip));
+        if ($names || $ids) {
+            $timestamp = $this->connection->fetchColumn('
+                SELECT UNIX_TIMESTAMP(MAX(m.last_touched)) 
+                FROM wfd_meta m
+                JOIN wfd_table t on m.wfd_table_id = t.id
+                WHERE '
+                . ($ids ? ('t.id IN (' . implode(', ', array_fill(0, count($ids), '?')) . ')') : '')
+                . (($ids && $names) ? ' OR ' : '')
+                . ($names ? ('t.tablename IN (' . implode(', ', array_fill(0, count($names), '?')) . ')') : ''),
+                array_merge($ids, $names)
+            );
+
+            return $timestamp;
+        }
     }
 
     /**
@@ -62,42 +89,4 @@ class Provider
             JOIN wfd_table t on m.wfd_table_id = t.id
             WHERE t.tablename = ? AND m.data_id = ?', [$tablename, $primaryKey]);
     }
-
-    protected function cache(array $namesOrIds)
-    {
-        $ids = array();
-        $names = array();
-
-        foreach ($namesOrIds as $t) {
-            $this->cache[$t] = 0; // prevent re-query
-            if ($t == '*') {
-                $lastTouchOnAnyTable = $this->connection->fetchAssoc(
-                    'SELECT UNIX_TIMESTAMP(MAX(last_touched)) timestamp FROM wfd_meta'
-                );
-                $this->cache['*'] = $lastTouchOnAnyTable['timestamp'];
-            } elseif (is_numeric($t)) {
-                $ids[] = $t;
-            } else {
-                $names[] = $t;
-            }
-        }
-
-        if ($names || $ids) {
-            $result = $this->connection->fetchAll('
-                SELECT t.id, t.tablename, UNIX_TIMESTAMP(MAX(m.last_touched)) timestamp
-                FROM wfd_meta m
-                JOIN wfd_table t on m.wfd_table_id = t.id
-                WHERE '
-                .($ids ? ('t.id IN ('.implode(', ', array_fill(0, count($ids), '?')).')') : '')
-                .(($ids && $names) ? ' OR ' : '')
-                .($names ? ('t.tablename IN ('.implode(', ', array_fill(0, count($names), '?')).')') : '').'
-                GROUP BY t.id'
-                , array_merge($ids, $names));
-
-            foreach ($result as $row) {
-                $this->cache[$row['id']] = $this->cache[$row['tablename']] = $row['timestamp'];
-            }
-        }
-    }
-
 }

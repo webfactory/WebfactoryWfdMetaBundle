@@ -16,10 +16,10 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class MetaQueryFactory
 {
     /** @var Provider */
-    protected $metaProvider;
+    private $metaProvider;
 
     /** @var ContainerInterface */
-    protected $container;
+    private $container;
 
     public function __construct(Provider $provider, ContainerInterface $container)
     {

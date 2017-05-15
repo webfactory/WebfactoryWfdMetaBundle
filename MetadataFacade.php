@@ -4,7 +4,6 @@ namespace Webfactory\Bundle\WfdMetaBundle;
 
 class MetadataFacade
 {
-
     /**
      * @var Provider
      */

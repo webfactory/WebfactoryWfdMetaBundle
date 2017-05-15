@@ -12,16 +12,16 @@ use Symfony\Component\Filesystem\LockHandler;
 use Symfony\Component\HttpKernel\Log\LoggerInterface;
 
 /**
- * Stellt sicher, dass ein bestimmter Code-Abschnitt *von unterschiedlichen Prozessen
- * auf dem gleichen System* sequentiell durchlaufen wird.
+ * Make sure that code - provided as a closure - is being run sequentially by different
+ * operating-system level processes on this machine.
  *
- * Basis der Synchronisation ist eine Datei, die an execute() übergeben wird. Alle
- * Prozesse, die CriticalSection auf Basis der gleichen Datei ausführen, werden
- * synchronisiert - unabhängig davon, was sie im callback tun.
+ * Synchronization is based on a file name that has to be passed to `execute()`. All processes
+ * that call this method providing the same file will be run in sequence - regardless of what
+ * they do in the closure.
  *
- * CriticalSection ist re-entrant, d. h. wenn ein Prozess seinen callback zur Ausführung
- * bringt kann er für die gleiche Synchronisationsdatei weitere CriticalSection-Aufrufe
- * ausführen, die nicht blockieren werden.
+ * The critical section is re-entrant. That means that once a process has entered the section and the closure
+ * is being executed, this process can perform additional CriticalSection tasks (based on the same synchronization
+ * file!), possibly using other callbacks, without being blocked.
  */
 class CriticalSection
 {
@@ -32,7 +32,7 @@ class CriticalSection
      *
      * @var array<string, LockHandler>
      */
-    protected static $locks = array();
+    private static $locks = array();
 
     /**
      * Counts how often a specific lock was requested.
@@ -41,12 +41,12 @@ class CriticalSection
      *
      * @var array<string, integer>
      */
-    protected static $entranceCount = array();
+    private static $entranceCount = array();
 
     /**
      * @var LoggerInterface|null
      */
-    protected $logger = null;
+    private $logger = null;
 
     /**
      * Sets a logger that is used to send debugging messages.
@@ -59,8 +59,12 @@ class CriticalSection
     }
 
     /**
+     * Blocks until no other process on this machine is executing a critical section
+     * linked to the given file. Then, enter the critical section and execute the given callback.
+     *
      * @param string $file File path that is used as lock name.
      * @param \Closure $callback
+     *
      * @return mixed Return value of the callback.
      */
     public function execute($file, \Closure $callback)
@@ -76,7 +80,7 @@ class CriticalSection
     /**
      * @param string $lockName
      */
-    protected function lock($lockName)
+    private function lock($lockName)
     {
         $this->debug("Requesting lock $lockName");
         if (!$this->getLock($lockName)->lock(true)) {
@@ -93,7 +97,7 @@ class CriticalSection
     /**
      * @param string $lockName
      */
-    protected function release($lockName)
+    private function release($lockName)
     {
         self::$entranceCount[$lockName]--;
         if (self::$entranceCount[$lockName] === 0) {
@@ -111,7 +115,7 @@ class CriticalSection
      * @param string $name
      * @return LockHandler
      */
-    protected function getLock($name)
+    private function getLock($name)
     {
         if (!isset(self::$locks[$name])) {
             self::$locks[$name] = new LockHandler($name);
@@ -124,7 +128,7 @@ class CriticalSection
      *
      * @param string $message
      */
-    protected function debug($message)
+    private function debug($message)
     {
         if ($this->logger) {
             $this->logger->debug($message, array('pid' => getmypid()));
