@@ -83,10 +83,19 @@ class Provider
      */
     public function getLastTouchedRow($tablename, $primaryKey)
     {
-        return $this->connection->fetchColumn('
-            SELECT UNIX_TIMESTAMP(m.last_touched) timestamp
+        $lastTouched = $this->connection->fetchColumn('
+            SELECT m.last_touched
             FROM wfd_meta m
             JOIN wfd_table t on m.wfd_table_id = t.id
-            WHERE t.tablename = ? AND m.data_id = ?', [$tablename, $primaryKey]);
+            WHERE t.tablename = ? AND m.data_id = ?',
+            [$tablename, $primaryKey]
+        );
+
+        if ($lastTouched === false) {
+            return null;
+        }
+
+        $lastTouchedObject = new \DateTime($lastTouched);
+        return $lastTouchedObject->getTimestamp();
     }
 }
