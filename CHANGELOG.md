@@ -1,5 +1,9 @@
 # CHANGELOG for WebfactoryWfdMetaBundle
 
+## Version 3.1.1
+
+* * Made `webfactory_wfd_meta.doctrine_metadata_helper` service public again. MetaQuery instances need to perform a lazy lookup of this service in the DIC.
+
 ## Version 3.1.0
 
 * Added ```Provider->getLastTouchedOfEachRow($tableName)``` and tests. 
