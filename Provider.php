@@ -27,12 +27,10 @@ class Provider
     }
 
     /**
-     * Returns the unix timestamp of the last change affecting one of the tables, given as database table names or
-     * wfDynamic table IDs.
+     * Returns the last UNIX timestamp of any change on any of the given tables or 0, if no matching entry was found.
      *
-     * @param array $tables Table names or IDs
-     *
-     * @return int|null The Unix timestamp for the last change; null if the information is not available
+     * @param array $tables The table names or table ids to check for changes.
+     * @return int|null UNIX timestamp or null if no entries were found.
      */
     public function getLastTouched(array $tableNamesOrIds)
     {
@@ -44,13 +42,12 @@ class Provider
         $names = array();
 
         foreach ($tableNamesOrIds as $t) {
-            if ($t == '*') {
-                $timestamp = $this->connection->fetchColumn(
-                    'SELECT UNIX_TIMESTAMP(MAX(last_touched)) FROM wfd_meta'
-                );
+            if ($t === '*') {
+                $lastTouchOnAnyTable = $this->connection->fetchColumn('SELECT MAX(last_touched) FROM wfd_meta');
+                return $this->getTimestampOrNull($lastTouchOnAnyTable);
+            }
 
-                return $timestamp;
-            } elseif (is_numeric($t)) {
+            if (is_numeric($t)) {
                 $ids[] = $t;
             } else {
                 $names[] = $t;
@@ -58,8 +55,8 @@ class Provider
         }
 
         if ($names || $ids) {
-            $timestamp = $this->connection->fetchColumn('
-                SELECT UNIX_TIMESTAMP(MAX(m.last_touched)) 
+            $lastTouched = $this->connection->fetchColumn('
+                SELECT MAX(m.last_touched) lastTouchedString
                 FROM wfd_meta m
                 JOIN wfd_table t on m.wfd_table_id = t.id
                 WHERE '
@@ -69,8 +66,32 @@ class Provider
                 array_merge($ids, $names)
             );
 
-            return $timestamp;
+            return $this->getTimestampOrNull($lastTouched);
         }
+    }
+
+    /**
+     * Returns all tracked data rows and their respective last changes of a given table.
+     *
+     * @param string $tableName
+     * @return array
+     */
+    public function getLastTouchedOfEachRow($tableName)
+    {
+        $lastTouchedData = $this->connection->fetchAll('
+            SELECT m.data_id, m.last_touched
+            FROM wfd_meta m
+            JOIN wfd_table t on m.wfd_table_id = t.id
+            WHERE t.tablename = ?',
+            [$tableName]
+        );
+
+        $idAndVersionPairs = [];
+        foreach ($lastTouchedData as $row) {
+            $idAndVersionPairs[$row['data_id']] = $this->getTimestampOrNull($row['last_touched']);
+        }
+
+        return $idAndVersionPairs;
     }
 
     /**
@@ -83,10 +104,29 @@ class Provider
      */
     public function getLastTouchedRow($tablename, $primaryKey)
     {
-        return $this->connection->fetchColumn('
-            SELECT UNIX_TIMESTAMP(m.last_touched) timestamp
+        $lastTouched = $this->connection->fetchColumn('
+            SELECT m.last_touched
             FROM wfd_meta m
             JOIN wfd_table t on m.wfd_table_id = t.id
-            WHERE t.tablename = ? AND m.data_id = ?', [$tablename, $primaryKey]);
+            WHERE t.tablename = ? AND m.data_id = ?',
+            [$tablename, $primaryKey]
+        );
+
+        return $this->getTimestampOrNull($lastTouched);
+    }
+
+    /**
+     * @param string|null|boolean $fetchValue string in "YYYY-m-d H:i:s" format or some "not queryable" value like NULL
+     * or false
+     * @return int|null UNIX timestamp or NULL
+     */
+    private function getTimestampOrNull($fetchValue)
+    {
+        if ($fetchValue === false || $fetchValue === null) {
+            return null;
+        }
+
+        $dateTime = new \DateTime($fetchValue);
+        return $dateTime->getTimestamp();
     }
 }
