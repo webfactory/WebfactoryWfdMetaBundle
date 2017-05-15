@@ -94,13 +94,13 @@ class Provider
             [$tableName]
         );
 
-        $idAndVersionParis = [];
+        $idAndVersionPairs = [];
         foreach ($lastTouchedData as $row) {
             $lastTouchedObject = new \DateTime($row['last_touched']);
-            $idAndVersionParis[$row['data_id']] = $lastTouchedObject->getTimestamp();
+            $idAndVersionPairs[$row['data_id']] = $lastTouchedObject->getTimestamp();
         }
 
-        return $idAndVersionParis;
+        return $idAndVersionPairs;
     }
 
     /**
