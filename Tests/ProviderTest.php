@@ -96,7 +96,7 @@ final class ProviderTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function getLastTouchedReturnsZeroIfNoMatchingEntriesExist()
+    public function getLastTouchedReturnsNullIfNoMatchingEntriesExist()
     {
         $this->connection->exec("
             -- wrong table
@@ -104,7 +104,7 @@ final class ProviderTest extends \PHPUnit_Framework_TestCase
             INSERT INTO `wfd_meta` (wfd_table_id, data_id, last_touched) VALUES (1, 1, '2000-01-01 00:00:00');
         ");
 
-        $this->assertEquals(0, $this->provider->getLastTouched(['myTable']));
+        $this->assertNull($this->provider->getLastTouched(['myTable']));
     }
 
     /**
@@ -132,7 +132,7 @@ final class ProviderTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function getLastTouchedReturnsTimestampOfLastChangeOfWildcard()
+    public function getLastTouchedReturnsTimestampOfLastChangeForWildcard()
     {
         $this->connection->exec("
             INSERT INTO `wfd_table` (id, tablename) VALUES (1, 'myTable');
