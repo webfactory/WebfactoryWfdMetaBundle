@@ -102,9 +102,13 @@ class WfdMetaConfigCache implements ConfigCacheInterface
         $mode = 0666;
         $umask = umask();
         $filesystem = new Filesystem();
-        $filesystem->dumpFile($this->file . '.wfd_meta', $content, null);
+
+        $filename = $this->file . '.wfd_meta';
+
+        $filesystem->dumpFile($filename, $content, null);
+
         try {
-            $filesystem->chmod($this->file, $mode, $umask);
+            $filesystem->chmod($filename, $mode, $umask);
         } catch (IOException $e) {
             // discard chmod failure (some filesystem may not support it)
         }
