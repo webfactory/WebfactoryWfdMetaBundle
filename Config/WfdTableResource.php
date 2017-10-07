@@ -24,7 +24,7 @@ class WfdTableResource implements ResourceInterface, WfdMetaResource
     
     public function __construct($tablename)
     {
-        $this->tablename = $classname;
+        $this->tablename = $tablename;
     }
 
     public function register(MetaQuery $query)
