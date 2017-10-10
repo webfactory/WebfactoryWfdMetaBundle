@@ -97,19 +97,20 @@ class Provider
     /**
      * Returns the Unix timestamp for the last change of a single row in a given table.
      *
-     * @param string $tablename  The table containing the data row in question
-     * @param int    $primaryKey The data-id of the row in question
+     * @param string $tableNameOrId The table name or ID containing the data row in question
+     * @param int    $primaryKey    The data-id of the row in question
      *
-     * @return int|null The Unix timestamp for the last change of the given row; null if the information is not available
+     * @return int|null The Unix timestamp for the last change of the given row; null if the information is not
+     *                  available
      */
-    public function getLastTouchedRow($tablename, $primaryKey)
+    public function getLastTouchedRow($tableNameOrId, $primaryKey)
     {
         $lastTouched = $this->connection->fetchColumn('
             SELECT m.last_touched
             FROM wfd_meta m
             JOIN wfd_table t on m.wfd_table_id = t.id
-            WHERE t.tablename = ? AND m.data_id = ?',
-            [$tablename, $primaryKey]
+            WHERE (t.id = ? OR t.tablename = ?) AND m.data_id = ?',
+            [$tableNameOrId, $tableNameOrId, $primaryKey]
         );
 
         return $this->getTimestampOrNull($lastTouched);
