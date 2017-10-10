@@ -1,8 +1,14 @@
-# CHANGELOG for WebfactoryWfdMetaBundle
+## Version 3.2.0
 
-## Version 3.1.2
+* Also accept table-IDs in Provider::getLastTouchedRow()
+
+## Version 3.1.3
 
 * Bugfix: Used wrong variable name in WfdTableResource
+
+## Vesion 3.1.2
+
+* Merge pull request #9 from webfactory/fix-chmod
 
 ## Version 3.1.1
 
