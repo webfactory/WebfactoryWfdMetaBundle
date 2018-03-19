@@ -23,6 +23,11 @@
         "symfony/symfony": "^2.8",
         "doctrine/dbal": "^2.5"
     },
+
+    "suggest": {
+        "webfactory/http-cache-bundle": "HTTP cache invalidation mechamism extracted from wfdmeta-bundle"
+    },
+
     "require-dev": {
         "phpunit/phpunit": "^4.8"
     }

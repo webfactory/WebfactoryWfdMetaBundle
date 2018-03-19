@@ -15,6 +15,9 @@ use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpFoundation\Response;
 use Doctrine\Common\Annotations\Reader;
 
+/**
+ * @deprecated Use WebfactoryHttpCachingBundle instead.
+ */
 class EventListener
 {
 

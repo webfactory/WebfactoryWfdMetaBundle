@@ -24,35 +24,16 @@ Use a `MetaQuery` to separate concerns when the code that knows *what* changes t
 
 Either create a `MetaQuery` instance for a particular purpose as a DIC service; you can inherit from the abstract `webfactory_wfd_meta.meta_query` service to do so. Alternatively, call the `create()` method on the `webfactory_wfd_meta.meta_query_factory` service.
 
-### The `Send304IfNotModified` annotation to allow HTTP cache validation based on `wfd_meta` data
+### HTTP cache validation based on `wfd_meta` data
 
-Let's start with an example:
+The Send304IfNotModified annotation is deprecated as we wanted to allow the combination of multiple "ressource watchers" - e.g. one watching wfdMeta data, one watching non-wfd-meta-tracked data and one watching e.g. the date (for resetting at a certain date).
 
-```php
-<?php
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
-use Webfactory\Bundle\WfdMetaBundle\Caching\Annotation as WfdMeta;
- 
-class MyController extends Controller {
-     
-    /**
-     * ...
-     * @WfdMeta\Send304IfNotModified(tables = {"*", "tablename", "42", ...}, entities = {"AcmeBundle:BlogPost"}, tableIdConstants = {"MEDIA_TABLE_ID"})
-     * @Cache(smaxage="0") // think before copy! See note below.
-     */
-    public function someAction(...) { ... 
-```
+Additionally, we wanted to inverse the dependency direction: a caching bundle should be able to make use of the wfdMetaBundle (and many others), but the wfdMetaBundle should not take care about caching.
 
-This annotation does two things:
+This resulted in the concept of "Last Modified Determinators" in the new [WebfactoryHttpCacheBundle](https://github.com/webfactory/WebfactoryHttpCacheBundle).
 
-* It uses `wfd_meta` data to obtain the last change in one of the given tables. This information will be sent in the `Last-Modified` header.
-* **If `kernel.debug` is `false`** and the client sent an `If-Modified-Since` header, `wfd_meta` information will be used for cache validation: If no change was recorded in `wfd_meta`, the controller will *not*  be executed and a 304 (not modified) response be returned instead.
- 
-The annotation can be used to specify table names or IDs (the `tables` attribute), Doctrine entity FQCNs (`entities`) or table IDs defined as constants (`tableIdConstants`).
+You can quickly convert deprecated Send304IfNotModified annotations to a LastModifiedDeterminator by using [WfdMetaQueries](Caching/WfdMetaQueries.php) . This conversion does not fully embrace the concept of LastModifiedDeterminators (especially not when using resetInterval; see the bundle's readme), but if you're in a hurry, maybe you don't want to be bothered with that.
 
-*Note:* `@Send304IfNotModified` does not alter or add `Cache-Control` header settings. So, by default your response will remain `private` and end up in browser caches only. If you want it to be kept in surrogate caches (like Varnish or the Symfony Http Cache), you can add `@Cache(smaxage="0")` as shown above. This will make the response `public`, but also requires a revalidation on every request as the response is *always*  considered stale. [Learn more about Symonfy's HTTP caching mechanisms.](http://symfony.com/doc/current/book/http_cache.html)
- 
 #### Using a `resetInterval`
 
 The annotation features an additional setting named `resetInterval` with defaults to 2419200 seconds (28 days).

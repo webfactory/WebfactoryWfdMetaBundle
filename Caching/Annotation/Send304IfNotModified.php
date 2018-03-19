@@ -13,6 +13,7 @@ use Webfactory\Bundle\WfdMetaBundle\MetaQueryFactory;
 
 /**
  * @Annotation
+ * @deprecated Use WebfactoryHttpCachingBundle and its LastModifiedDeterminators instead. If in a hurry, @see \Webfactory\Bundle\WfdMetaBundle\Caching\WfdMetaQueries for a quick conversion.
  */
 class Send304IfNotModified
 {
@@ -21,6 +22,11 @@ class Send304IfNotModified
 
     public function __construct($values)
     {
+        trigger_error(
+            'The ' . __CLASS__ . ' annotation is deprecated. Use WebfactoryHttpCachingBundle and its LastModifiedDeterminators instead. If in a hurry, @see \Webfactory\Bundle\WfdMetaBundle\Caching\WfdMetaQueries for a quick conversion.',
+            E_USER_DEPRECATED
+        );
+
         $this->lastmodHelper = new LastmodHelper();
 
         foreach ($values as $key => $value) {
