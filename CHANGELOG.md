@@ -1,3 +1,7 @@
+## Version 3.3.0
+
+* Deprecate Send304IfNotModified annotation. Use WebfactoryHttpCachingBundle and its LastModifiedDeterminators instead. If in a hurry, @see \Webfactory\Bundle\WfdMetaBundle\Caching\WfdMetaQueries for a quick conversion.
+
 ## Version 3.2.0
 
 * Also accept table-IDs in Provider::getLastTouchedRow()
