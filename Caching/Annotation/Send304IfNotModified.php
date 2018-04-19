@@ -22,7 +22,7 @@ class Send304IfNotModified
 
     public function __construct($values)
     {
-        trigger_error(
+        @trigger_error(
             'The ' . __CLASS__ . ' annotation is deprecated. Use WebfactoryHttpCachingBundle and its LastModifiedDeterminators instead. If in a hurry, @see \Webfactory\Bundle\WfdMetaBundle\Caching\WfdMetaQueries for a quick conversion.',
             E_USER_DEPRECATED
         );
