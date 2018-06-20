@@ -53,9 +53,7 @@ class LastmodHelper
             if ($this->tableIdConstants) {
                 $metaQuery->addTable(
                     array_map(
-                        function ($x) {
-                            return constant($x);
-                        },
+                        'constant',
                         $this->tableIdConstants
                     )
                 );
@@ -67,7 +65,7 @@ class LastmodHelper
 
         } catch (\Exception $e) {
             throw new \RuntimeException(
-                "Exception während der Konfiguration von MetaQuery durch ".get_class($this),
+                'Exception während der Konfiguration von MetaQuery durch ' .get_class($this),
                 0,
                 $e
             );

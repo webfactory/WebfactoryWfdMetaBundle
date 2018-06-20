@@ -9,6 +9,7 @@
 namespace Webfactory\Bundle\WfdMetaBundle\Config;
 
 use Symfony\Component\Config\ConfigCacheInterface;
+use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Filesystem\Filesystem;
 use Webfactory\Bundle\WfdMetaBundle\MetaQueryFactory;
 

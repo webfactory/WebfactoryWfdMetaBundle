@@ -92,7 +92,7 @@ class EventListener
     }
 
     /**
-     * @param $callback A PHP callback (array) pointing to the method to reflect on.
+     * @param $callback array A PHP callback (array) pointing to the method to reflect on.
      * @return Send304IfNotModified|null The annotation, if found. Null otherwise.
      */
     protected function findAnnotation($callback)

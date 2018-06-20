@@ -63,7 +63,8 @@ class ExpirableConfigCache extends ConfigCache
             ->notName("#{$basename}_{$this->timestamp}#");
 
         foreach ($files as $file) {
-            @unlink($file->getRealpath());
+            /** @var $file \SplFileInfo */
+            @unlink($file->getRealPath());
         }
     }
 }

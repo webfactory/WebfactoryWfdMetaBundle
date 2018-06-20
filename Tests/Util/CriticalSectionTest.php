@@ -11,7 +11,7 @@ class CriticalSectionTest extends \PHPUnit_Framework_TestCase
      *
      * @var CriticalSection
      */
-    private $criticalSection = null;
+    private $criticalSection;
 
     /**
      * Initializes the test environment.

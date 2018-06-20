@@ -8,8 +8,8 @@
 
 namespace Webfactory\Bundle\WfdMetaBundle\Util;
 
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Filesystem\LockHandler;
-use Symfony\Component\HttpKernel\Log\LoggerInterface;
 
 /**
  * Make sure that code - provided as a closure - is being run sequentially by different
@@ -46,7 +46,7 @@ class CriticalSection
     /**
      * @var LoggerInterface|null
      */
-    private $logger = null;
+    private $logger;
 
     /**
      * Sets a logger that is used to send debugging messages.
@@ -69,11 +69,11 @@ class CriticalSection
      */
     public function execute($file, \Closure $callback)
     {
-        self::lock($file);
+        $this->lock($file);
         try {
             return $callback();
         } finally {
-            self::release($file);
+            $this->release($file);
         }
     }
 

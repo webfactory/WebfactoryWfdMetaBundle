@@ -29,7 +29,7 @@ class Provider
     /**
      * Returns the last UNIX timestamp of any change on any of the given tables or 0, if no matching entry was found.
      *
-     * @param array $tables The table names or table ids to check for changes.
+     * @param array $tableNamesOrIds The table names or table ids to check for changes.
      * @return int|null UNIX timestamp or null if no entries were found.
      */
     public function getLastTouched(array $tableNamesOrIds)
@@ -68,6 +68,8 @@ class Provider
 
             return $this->getTimestampOrNull($lastTouched);
         }
+
+        return null;
     }
 
     /**
