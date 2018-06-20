@@ -9,9 +9,9 @@
 namespace Webfactory\Bundle\WfdMetaBundle\Caching;
 
 use Symfony\Component\HttpFoundation\Request;
-use Webfactory\HttpCacheBundle\NotModified\LastModifiedDeterminator;
 use Webfactory\Bundle\WfdMetaBundle\Helper\LastmodHelper;
 use Webfactory\Bundle\WfdMetaBundle\MetaQueryFactory;
+use Webfactory\HttpCacheBundle\NotModified\LastModifiedDeterminator;
 
 /**
  * This class can be used to quickly convert an old Send304IfNotModified annotation of the WfdMetaBundle to a

@@ -10,7 +10,6 @@ namespace Webfactory\Bundle\WfdMetaBundle\Config;
 
 use Symfony\Component\Config\ConfigCacheFactoryInterface;
 use Symfony\Component\Config\ConfigCacheInterface;
-use Webfactory\Bundle\WfdMetaBundle\MetaQuery;
 use Webfactory\Bundle\WfdMetaBundle\MetaQueryFactory;
 use Webfactory\Bundle\WfdMetaBundle\Util\CriticalSection;
 

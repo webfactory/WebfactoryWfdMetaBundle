@@ -8,12 +8,12 @@
 
 namespace Webfactory\Bundle\WfdMetaBundle\Caching;
 
-use Webfactory\Bundle\WfdMetaBundle\Caching\Annotation\Send304IfNotModified;
-use Webfactory\Bundle\WfdMetaBundle\MetaQueryFactory;
+use Doctrine\Common\Annotations\Reader;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
-use Symfony\Component\HttpFoundation\Response;
-use Doctrine\Common\Annotations\Reader;
+use Webfactory\Bundle\WfdMetaBundle\Caching\Annotation\Send304IfNotModified;
+use Webfactory\Bundle\WfdMetaBundle\MetaQueryFactory;
 
 /**
  * @deprecated Use WebfactoryHttpCachingBundle instead.
