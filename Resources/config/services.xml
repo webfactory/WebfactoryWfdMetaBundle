@@ -12,7 +12,7 @@
             </argument>
         </service>
 
-        <service id="webfactory_wfd_meta.provider" class="Webfactory\Bundle\WfdMetaBundle\Provider">
+        <service id="webfactory_wfd_meta.provider" class="Webfactory\Bundle\WfdMetaBundle\Provider" public="true">
             <argument type="service" id="database_connection"/>
         </service>
 
