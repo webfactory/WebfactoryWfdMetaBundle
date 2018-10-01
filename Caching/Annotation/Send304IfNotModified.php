@@ -11,22 +11,21 @@ namespace Webfactory\Bundle\WfdMetaBundle\Caching\Annotation;
 use Webfactory\Bundle\WfdMetaBundle\Helper\LastmodHelper;
 use Webfactory\Bundle\WfdMetaBundle\MetaQueryFactory;
 
+@trigger_error(
+    'The Send304IfNotModified annotation is deprecated. Use WebfactoryHttpCachingBundle and its LastModifiedDeterminators instead. If in a hurry, @see \Webfactory\Bundle\WfdMetaBundle\Caching\WfdMetaQueries for a quick conversion.',
+    E_USER_DEPRECATED
+);
+
 /**
  * @Annotation
  * @deprecated Use WebfactoryHttpCachingBundle and its LastModifiedDeterminators instead. If in a hurry, @see \Webfactory\Bundle\WfdMetaBundle\Caching\WfdMetaQueries for a quick conversion.
  */
 class Send304IfNotModified
 {
-
     protected $lastmodHelper;
 
     public function __construct($values)
     {
-        @trigger_error(
-            'The ' . __CLASS__ . ' annotation is deprecated. Use WebfactoryHttpCachingBundle and its LastModifiedDeterminators instead. If in a hurry, @see \Webfactory\Bundle\WfdMetaBundle\Caching\WfdMetaQueries for a quick conversion.',
-            E_USER_DEPRECATED
-        );
-
         $this->lastmodHelper = new LastmodHelper();
 
         foreach ($values as $key => $value) {
@@ -42,5 +41,4 @@ class Send304IfNotModified
     {
         return $this->lastmodHelper->calculateLastModified($metaQueryFactory);
     }
-
 }
