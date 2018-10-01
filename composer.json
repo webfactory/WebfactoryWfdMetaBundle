@@ -14,22 +14,33 @@
         }
     ],
 
-    "autoload": {
-        "psr-4": { "Webfactory\\Bundle\\WfdMetaBundle\\": "" }
+    "require": {
+        "doctrine/common": "^2.3",
+        "doctrine/dbal": "^2.5",
+        "doctrine/orm": "^2.3",
+        "php": "^5.5.0 || ^7.0.0",
+        "psr/log": "^1.0",
+        "symfony/config": "^2.8 || ^3.0",
+        "symfony/dependency-injection": "^2.8 || ^3.0",
+        "symfony/filesystem": "^2.8 || ^3.0",
+        "symfony/finder": "^2.8 || ^3.0",
+        "symfony/framework-bundle": "^2.8 || ^3.0",
+        "symfony/http-foundation": "^2.8 || ^3.0",
+        "symfony/http-kernel": "^2.8 || ^3.0",
+        "symfony/lock": "^3.4"
     },
 
-    "require": {
-        "php": "^5.5.0 | ^7.0.0",
-        "symfony/symfony": "^2.8 | ^3.0",
-        "doctrine/dbal": "^2.5",
-        "doctrine/orm": "^2.3"
+    "require-dev": {
+        "phpunit/phpunit": "^4.8"
     },
 
     "suggest": {
         "webfactory/http-cache-bundle": "HTTP cache invalidation mechamism extracted from wfdmeta-bundle"
     },
 
-    "require-dev": {
-        "phpunit/phpunit": "^4.8"
+    "autoload": {
+        "psr-4": {
+            "Webfactory\\Bundle\\WfdMetaBundle\\": ""
+        }
     }
 }

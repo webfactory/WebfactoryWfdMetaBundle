@@ -10,6 +10,8 @@ namespace Webfactory\Bundle\WfdMetaBundle\Util;
 
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Filesystem\LockHandler;
+use Symfony\Component\Lock\Factory;
+use Symfony\Component\Lock\Lock;
 
 /**
  * Make sure that code - provided as a closure - is being run sequentially by different
@@ -26,11 +28,16 @@ use Symfony\Component\Filesystem\LockHandler;
 class CriticalSection
 {
     /**
+     * @var Factory
+     */
+    private $lockFactory;
+
+    /**
      * List of active locks.
      *
      * The lock name is used as key.
      *
-     * @var array<string, LockHandler>
+     * @var array<string, Lock>
      */
     private static $locks = array();
 
@@ -47,6 +54,14 @@ class CriticalSection
      * @var LoggerInterface|null
      */
     private $logger;
+
+    /**
+     * @param Factory $lockFactory
+     */
+    public function __construct(Factory $lockFactory)
+    {
+        $this->lockFactory = $lockFactory;
+    }
 
     /**
      * Sets a logger that is used to send debugging messages.
@@ -83,7 +98,7 @@ class CriticalSection
     private function lock($lockName)
     {
         $this->debug("Requesting lock $lockName");
-        if (!$this->getLock($lockName)->lock(true)) {
+        if (!$this->getLock($lockName)->acquire(true)) {
             $this->debug("Failed to get lock $lockName");
             throw new \RuntimeException("Failed to get lock $lockName");
         }
@@ -113,12 +128,13 @@ class CriticalSection
      * This method will *not* automatically acquire the lock.
      *
      * @param string $name
-     * @return LockHandler
+     * @return Lock
      */
     private function getLock($name)
     {
         if (!isset(self::$locks[$name])) {
-            self::$locks[$name] = new LockHandler($name);
+            $lock = $this->lockFactory->createLock($name);
+            self::$locks[$name] = $lock;
         }
         return self::$locks[$name];
     }

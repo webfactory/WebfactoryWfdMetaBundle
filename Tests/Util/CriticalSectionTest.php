@@ -2,6 +2,8 @@
 
 namespace Webfactory\Bundle\WfdMetaBundle\Tests\Util;
 
+use Symfony\Component\Lock\Factory;
+use Symfony\Component\Lock\Store\FlockStore;
 use Webfactory\Bundle\WfdMetaBundle\Util\CriticalSection;
 
 class CriticalSectionTest extends \PHPUnit_Framework_TestCase
@@ -19,7 +21,8 @@ class CriticalSectionTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         parent::setUp();
-        $this->criticalSection = new CriticalSection();
+        $lockFactory = new Factory(new FlockStore());
+        $this->criticalSection = new CriticalSection($lockFactory);
     }
 
     /**

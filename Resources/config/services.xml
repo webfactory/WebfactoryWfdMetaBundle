@@ -31,8 +31,7 @@
             <factory service="webfactory_wfd_meta.meta_query_factory" method="create" />
         </service>
 
-        <service id="webfactory_wfd_meta.caching.event_listener"
-                 class="Webfactory\Bundle\WfdMetaBundle\Caching\EventListener">
+        <service id="webfactory_wfd_meta.caching.event_listener" class="Webfactory\Bundle\WfdMetaBundle\Caching\EventListener">
             <argument type="service" id="annotation_reader"/>
             <argument type="service" id="webfactory_wfd_meta.meta_query_factory"/>
             <argument>%kernel.debug%</argument>
@@ -41,8 +40,7 @@
             <tag name="kernel.event_listener" event="kernel.response" method="onKernelResponse"/>
         </service>
 
-        <service id="webfactory_wfd_meta.controller.template"
-                 class="Webfactory\Bundle\WfdMetaBundle\Controller\TemplateController">
+        <service id="webfactory_wfd_meta.controller.template" class="Webfactory\Bundle\WfdMetaBundle\Controller\TemplateController">
             <argument type="service" id="templating"/>
             <argument type="service" id="webfactory_wfd_meta.meta_query_factory"/>
             <argument>%kernel.debug%</argument>
@@ -51,6 +49,17 @@
         <service id="webfactory_wfd_meta.config_cache_factory" class="Webfactory\Bundle\WfdMetaBundle\Config\WfdMetaConfigCacheFactory" decorates="config_cache_factory" public="false">
             <argument type="service" id="webfactory_wfd_meta.config_cache_factory.inner"/>
             <argument type="service" id="webfactory_wfd_meta.meta_query_factory"/>
+            <argument type="service">
+                <service class="Symfony\Component\Lock\Factory">
+                    <argument type="service">
+                        <service class="Symfony\Component\Lock\Store\FlockStore" />
+                    </argument>
+                    <call method="setLogger">
+                        <argument type="service" id="logger" on-invalid="ignore" />
+                    </call>
+                    <tag name="monolog.logger" channel="webfactory_wfd_meta" />
+                </service>
+            </argument>
         </service>
 
     </services>

@@ -10,6 +10,7 @@ namespace Webfactory\Bundle\WfdMetaBundle\Config;
 
 use Symfony\Component\Config\ConfigCacheFactoryInterface;
 use Symfony\Component\Config\ConfigCacheInterface;
+use Symfony\Component\Lock\Factory;
 use Webfactory\Bundle\WfdMetaBundle\MetaQueryFactory;
 use Webfactory\Bundle\WfdMetaBundle\Util\CriticalSection;
 
@@ -26,11 +27,17 @@ class WfdMetaConfigCacheFactory implements ConfigCacheFactoryInterface
 
     /** @var MetaQueryFactory */
     private $metaQueryFactory;
+
+    /**
+     * @var Factory
+     */
+    private $lockFactory;
     
-    public function __construct(ConfigCacheFactoryInterface $configCacheFactory, MetaQueryFactory $metaQueryFactory)
+    public function __construct(ConfigCacheFactoryInterface $configCacheFactory, MetaQueryFactory $metaQueryFactory, Factory $lockFactory)
     {
         $this->configCacheFactory = $configCacheFactory;
         $this->metaQueryFactory = $metaQueryFactory;
+        $this->lockFactory = $lockFactory;
     }
 
     public function cache($file, $callback)
@@ -68,7 +75,7 @@ class WfdMetaConfigCacheFactory implements ConfigCacheFactoryInterface
     private function fillCache($callback, ConfigCacheInterface $cache) 
     {
         // Make sure only one process (on this host) will rebuild the cache, others wait for it
-        $cs = new CriticalSection();
+        $cs = new CriticalSection($this->lockFactory);
         $cs->execute($cache->getPath(), function () use ($callback, $cache) {
             if (!$cache->isFresh()) {
                 // Our turn and the cache is still stale. Rebuild. */
