@@ -10,16 +10,16 @@ class MetadataFacade
     private $provider;
 
     /**
-     * @var DoctrineMetadataHelper
+     * @var DoctrineMetadataHelper|null
      */
     private $doctrineMetadataHelper;
 
     /**
      * MetadataFacade constructor.
      * @param Provider $provider
-     * @param DoctrineMetadataHelper $doctrineMetadataHelper
+     * @param DoctrineMetadataHelper|null $doctrineMetadataHelper
      */
-    public function __construct(Provider $provider, DoctrineMetadataHelper $doctrineMetadataHelper)
+    public function __construct(Provider $provider, DoctrineMetadataHelper $doctrineMetadataHelper = null)
     {
         $this->provider = $provider;
         $this->doctrineMetadataHelper = $doctrineMetadataHelper;
@@ -31,6 +31,10 @@ class MetadataFacade
      */
     public function getLastTouchedForEntity($entity)
     {
+        if (!$this->doctrineMetadataHelper) {
+            throw new \RuntimeException('DoctrineMetadataHelper must be available to query information for Doctrine Entities. Tip: Is Doctrine ORM enabled and the doctrine.orm.entity_manager service available in the DIC?');
+        }
+
         return $this->provider->getLastTouchedRow(
             $this->doctrineMetadataHelper->getRootTableName(get_class($entity)),
             $this->doctrineMetadataHelper->getPrimaryKey($entity)
@@ -43,6 +47,10 @@ class MetadataFacade
      */
     public function getLastTouchedForEntityClass($classname)
     {
+        if (!$this->doctrineMetadataHelper) {
+            throw new \RuntimeException('DoctrineMetadataHelper must be available to query information for Doctrine Entities. Tip: Is Doctrine ORM enabled and the doctrine.orm.entity_manager service available in the DIC?');
+        }
+
         return $this->getLastTouchedForTableName(
             $this->doctrineMetadataHelper->getRootTableName($classname)
         );

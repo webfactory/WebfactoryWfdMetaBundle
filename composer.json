@@ -17,7 +17,6 @@
     "require": {
         "doctrine/common": "^2.3",
         "doctrine/dbal": "^2.5",
-        "doctrine/orm": "^2.3",
         "php": "^5.5.0 || ^7.0.0",
         "psr/log": "^1.0",
         "symfony/config": "^2.8 || ^3.0",
@@ -35,7 +34,8 @@
     },
 
     "suggest": {
-        "webfactory/http-cache-bundle": "HTTP cache invalidation mechamism extracted from wfdmeta-bundle"
+        "webfactory/http-cache-bundle": "HTTP cache invalidation mechamism extracted from wfdmeta-bundle",
+        "doctrine/orm": "Necessary to query WfdMeta-information of Doctrine entities."
     },
 
     "autoload": {

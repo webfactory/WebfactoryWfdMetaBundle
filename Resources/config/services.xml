@@ -18,7 +18,9 @@
 
         <service id="webfactory_wfd_meta.metadata_facade" class="Webfactory\Bundle\WfdMetaBundle\MetadataFacade">
             <argument type="service" id="webfactory_wfd_meta.provider"/>
-            <argument type="service" id="webfactory_wfd_meta.doctrine_metadata_helper"/>
+            <argument type="expression">
+                container.has('doctrine.orm.entity_manager') ? service("webfactory_wfd_meta.doctrine_metadata_helper") : null
+            </argument>
         </service>
 
         <service id="webfactory_wfd_meta.meta_query_factory" class="Webfactory\Bundle\WfdMetaBundle\MetaQueryFactory">
@@ -44,7 +46,7 @@
             <argument type="service" id="templating"/>
             <argument type="service" id="webfactory_wfd_meta.meta_query_factory"/>
             <argument>%kernel.debug%</argument>
-         </service>
+        </service>
 
         <service id="webfactory_wfd_meta.config_cache_factory" class="Webfactory\Bundle\WfdMetaBundle\Config\WfdMetaConfigCacheFactory" decorates="config_cache_factory" public="false">
             <argument type="service" id="webfactory_wfd_meta.config_cache_factory.inner"/>
