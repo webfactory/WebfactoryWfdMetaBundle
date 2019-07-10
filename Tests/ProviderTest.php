@@ -160,7 +160,7 @@ final class ProviderTest extends TestCase
     public function getLastTouchedOfEachRowReturnsEmptyArrayIfNoEntriesExist()
     {
         $result = $this->provider->getLastTouchedOfEachRow('myTable');
-        $this->assertInternalType('array', $result);
+        $this->assertIsArray($result);
         $this->assertEmpty($result);
     }
 
