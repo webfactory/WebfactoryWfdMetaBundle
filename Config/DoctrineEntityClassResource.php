@@ -18,7 +18,7 @@ use Webfactory\Bundle\WfdMetaBundle\MetaQuery;
 class DoctrineEntityClassResource implements ResourceInterface, WfdMetaResource
 {
     private $classname;
-    
+
     public function __construct($classname)
     {
         $this->classname = $classname;
@@ -31,7 +31,7 @@ class DoctrineEntityClassResource implements ResourceInterface, WfdMetaResource
 
     public function __toString()
     {
-        return self::class . ' ' . $this->classname;
+        return self::class.' '.$this->classname;
     }
 
     /**

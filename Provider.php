@@ -30,6 +30,7 @@ class Provider
      * Returns the last UNIX timestamp of any change on any of the given tables or 0, if no matching entry was found.
      *
      * @param array $tableNamesOrIds The table names or table ids to check for changes.
+     *
      * @return int|null UNIX timestamp or null if no entries were found.
      */
     public function getLastTouched(array $tableNamesOrIds)
@@ -42,8 +43,9 @@ class Provider
         $names = array();
 
         foreach ($tableNamesOrIds as $t) {
-            if ($t === '*') {
+            if ('*' === $t) {
                 $lastTouchOnAnyTable = $this->connection->fetchColumn('SELECT MAX(last_touched) FROM wfd_meta');
+
                 return $this->getTimestampOrNull($lastTouchOnAnyTable);
             }
 
@@ -60,9 +62,9 @@ class Provider
                 FROM wfd_meta m
                 JOIN wfd_table t on m.wfd_table_id = t.id
                 WHERE '
-                . ($ids ? ('t.id IN (' . implode(', ', array_fill(0, count($ids), '?')) . ')') : '')
-                . (($ids && $names) ? ' OR ' : '')
-                . ($names ? ('t.tablename IN (' . implode(', ', array_fill(0, count($names), '?')) . ')') : ''),
+                .($ids ? ('t.id IN ('.implode(', ', array_fill(0, \count($ids), '?')).')') : '')
+                .(($ids && $names) ? ' OR ' : '')
+                .($names ? ('t.tablename IN ('.implode(', ', array_fill(0, \count($names), '?')).')') : ''),
                 array_merge($ids, $names)
             );
 
@@ -76,6 +78,7 @@ class Provider
      * Returns all tracked data rows and their respective last changes of a given table.
      *
      * @param string $tableName
+     *
      * @return array (int id => int unix timestamp of last change)
      */
     public function getLastTouchedOfEachRow($tableName)
@@ -119,17 +122,19 @@ class Provider
     }
 
     /**
-     * @param string|null|boolean $fetchValue string in "YYYY-m-d H:i:s" format or some "not queryable" value like NULL
-     * or false
+     * @param string|bool|null $fetchValue string in "YYYY-m-d H:i:s" format or some "not queryable" value like NULL
+     *                                     or false
+     *
      * @return int|null UNIX timestamp or NULL
      */
     private function getTimestampOrNull($fetchValue)
     {
-        if ($fetchValue === false || $fetchValue === null) {
+        if (false === $fetchValue || null === $fetchValue) {
             return null;
         }
 
         $dateTime = new \DateTime($fetchValue);
+
         return $dateTime->getTimestamp();
     }
 }

@@ -4,12 +4,13 @@ namespace Webfactory\Bundle\WfdMetaBundle\Tests;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Driver\PDOSqlite\Driver;
+use PHPUnit\Framework\TestCase;
 use Webfactory\Bundle\WfdMetaBundle\Provider;
 
 /**
  * Tests for the Provider.
  */
-final class ProviderTest extends \PHPUnit_Framework_TestCase
+final class ProviderTest extends TestCase
 {
     /** @var Provider */
     private $provider;
@@ -21,10 +22,10 @@ final class ProviderTest extends \PHPUnit_Framework_TestCase
     {
         // Possible parameters are documented at {@link http://docs.doctrine-project.org/projects/doctrine-dbal/en/latest/reference/configuration.html}.
         $connectionParameter = array(
-            'driver'   => 'pdo_sqlite',
-            'user'     => 'root',
+            'driver' => 'pdo_sqlite',
+            'user' => 'root',
             'password' => '',
-            'memory'   => true
+            'memory' => true,
         );
         $this->connection = new Connection($connectionParameter, new Driver());
 
@@ -65,7 +66,7 @@ final class ProviderTest extends \PHPUnit_Framework_TestCase
             INSERT INTO `wfd_table` (id, tablename) VALUES (2, 'wrongTable');
             INSERT INTO `wfd_meta` (wfd_table_id, data_id, last_touched) VALUES (2, 1, '2000-01-01 00:00:00');
         ");
-        
+
         $this->assertNull($this->provider->getLastTouchedRow('myTable', 1));
     }
 

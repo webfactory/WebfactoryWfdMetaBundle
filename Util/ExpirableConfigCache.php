@@ -25,7 +25,9 @@ use Symfony\Component\Finder\Finder;
  */
 class ExpirableConfigCache extends ConfigCache
 {
-    protected $timestamp, $baseFilename, $timestampedFile;
+    protected $timestamp;
+    protected $baseFilename;
+    protected $timestampedFile;
 
     public function __construct($baseFilename, $debug, $timestamp)
     {
@@ -57,13 +59,13 @@ class ExpirableConfigCache extends ConfigCache
         $finder = new Finder();
         $basename = basename($this->baseFilename);
         $files = $finder->files()
-            ->in(dirname($this->baseFilename))
+            ->in(\dirname($this->baseFilename))
             ->depth('== 0')
             ->name("#{$basename}_#")
             ->notName("#{$basename}_{$this->timestamp}#");
 
         foreach ($files as $file) {
-            /** @var $file \SplFileInfo */
+            /* @var $file \SplFileInfo */
             @unlink($file->getRealPath());
         }
     }

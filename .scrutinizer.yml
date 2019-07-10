@@ -1,0 +1,35 @@
+build:
+    environment:
+        php: '7.2'
+        timezone: 'Europe/Berlin'
+        postgresql: false
+        node: false
+        redis: false
+        variables:
+            COMPOSER_MEMORY_LIMIT: -1
+            SYMFONY_DEPRECATIONS_HELPER: weak
+
+    tests:
+        override:
+        -   command: 'vendor/bin/phpunit --coverage-clover=clover.xml'
+            coverage:
+                file: 'clover.xml'
+                format: 'clover'
+
+    nodes:
+
+        deps_lowest:
+            # Checkt gleichzeitig, dass alle benötigten Symfony-Komponenten deklariert sind.
+            # Die anderen Tests machen der Einfachheit halber ein "require symfony/symfony", 
+            # was alle Komponenten holt.
+            dependencies:
+                before:
+                    - command: composer update --prefer-lowest
+                      idle_timeout: 600
+
+        symfony_34:
+            dependencies:
+                before:
+                    - composer require symfony/symfony 3.4.*
+                    
+        deps_highest:

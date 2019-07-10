@@ -16,7 +16,8 @@ class MetadataFacade
 
     /**
      * MetadataFacade constructor.
-     * @param Provider $provider
+     *
+     * @param Provider                    $provider
      * @param DoctrineMetadataHelper|null $doctrineMetadataHelper
      */
     public function __construct(Provider $provider, DoctrineMetadataHelper $doctrineMetadataHelper = null)
@@ -27,6 +28,7 @@ class MetadataFacade
 
     /**
      * @param object $entity
+     *
      * @return int Unix timestamp
      */
     public function getLastTouchedForEntity($entity)
@@ -36,13 +38,14 @@ class MetadataFacade
         }
 
         return $this->provider->getLastTouchedRow(
-            $this->doctrineMetadataHelper->getRootTableName(get_class($entity)),
+            $this->doctrineMetadataHelper->getRootTableName(\get_class($entity)),
             $this->doctrineMetadataHelper->getPrimaryKey($entity)
         );
     }
 
     /**
      * @param string $classname
+     *
      * @return int Unix timestamp
      */
     public function getLastTouchedForEntityClass($classname)
@@ -58,6 +61,7 @@ class MetadataFacade
 
     /**
      * @param string $tablename
+     *
      * @return int Unix timestamp
      */
     public function getLastTouchedForTableName($tablename)

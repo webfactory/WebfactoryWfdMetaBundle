@@ -13,7 +13,6 @@ use Webfactory\Bundle\WfdMetaBundle\MetaQueryFactory;
 
 class LastmodHelper
 {
-
     protected $tables;
     protected $tableIdConstants;
     protected $entities;
@@ -39,10 +38,9 @@ class LastmodHelper
     protected function configure(MetaQuery $metaQuery)
     {
         try {
-
             if (!$this->tables && !$this->tableIdConstants && !$this->entities) {
                 throw new \RuntimeException(
-                    get_class($this).' wurde weder mit Tabellennamen, Tabellen-Ids oder Entitätsnamen konfiguriert.'
+                    \get_class($this).' wurde weder mit Tabellennamen, Tabellen-Ids oder Entitätsnamen konfiguriert.'
                 );
             }
 
@@ -62,10 +60,9 @@ class LastmodHelper
             if ($this->entities) {
                 $metaQuery->addEntityClasses($this->entities);
             }
-
         } catch (\Exception $e) {
             throw new \RuntimeException(
-                'Exception während der Konfiguration von MetaQuery durch ' .get_class($this),
+                'Exception während der Konfiguration von MetaQuery durch '.\get_class($this),
                 0,
                 $e
             );
@@ -91,5 +88,4 @@ class LastmodHelper
     {
         $this->tables = $tables;
     }
-
 }

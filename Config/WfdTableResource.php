@@ -21,7 +21,7 @@ class WfdTableResource implements ResourceInterface, WfdMetaResource
      * @var string
      */
     private $tablename;
-    
+
     public function __construct($tablename)
     {
         $this->tablename = $tablename;
@@ -34,7 +34,7 @@ class WfdTableResource implements ResourceInterface, WfdMetaResource
 
     public function __toString()
     {
-        return self::class . ' ' . $this->tablename;
+        return self::class.' '.$this->tablename;
     }
 
     /**

@@ -51,14 +51,14 @@ class MetaQuery
      */
     public function addEntity($entity)
     {
-        if (is_string($entity)) {
+        if (\is_string($entity)) {
             @trigger_error('Passing FQCNs to addEntity() is deprecated; use addEntityClass() instead.', E_USER_DEPRECATED);
             $this->addEntityClass($entity);
 
             return;
         }
 
-        if (is_array($entity) && is_string($entity[0])) {
+        if (\is_array($entity) && \is_string($entity[0])) {
             @trigger_error('Passing an array of FQCNs to addEntity() is deprecated; use addEntityClasses() instead.', E_USER_DEPRECATED);
             $this->addEntityClasses($entity);
 
@@ -88,7 +88,7 @@ class MetaQuery
 
     public function addTable($tableName)
     {
-        foreach ((array)$tableName as $t) {
+        foreach ((array) $tableName as $t) {
             $this->tables[$t] = true;
         }
     }
@@ -113,5 +113,4 @@ class MetaQuery
 
         $this->classnames = [];
     }
-
 }
