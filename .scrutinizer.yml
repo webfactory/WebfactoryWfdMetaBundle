@@ -18,6 +18,14 @@ build:
 
     nodes:
 
+        analysis:
+            project_setup:
+                override:
+                    - 'true'
+            tests:
+                override:
+                    - php-scrutinizer-run
+                        
         deps_lowest:
             # Checkt gleichzeitig, dass alle benötigten Symfony-Komponenten deklariert sind.
             # Die anderen Tests machen der Einfachheit halber ein "require symfony/symfony", 
