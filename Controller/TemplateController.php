@@ -15,10 +15,9 @@ use Webfactory\Bundle\WfdMetaBundle\Helper\LastmodHelper;
 use Webfactory\Bundle\WfdMetaBundle\MetaQueryFactory;
 
 /**
- *
  * Ein generischer Controller zum Ausliefern von Templates, ähnlich dem
  * FrameworkBundle:Template:template-Controller
- * (http://symfony.com/doc/current/cookbook/templating/render_without_controller.html)
+ * (http://symfony.com/doc/current/cookbook/templating/render_without_controller.html).
  *
  * Der Unterschied ist, dass diese Version hier noch wfd_meta-Informationen berücksichtigen
  * kann.
@@ -27,11 +26,9 @@ use Webfactory\Bundle\WfdMetaBundle\MetaQueryFactory;
  * benötigt, aber zum Beispiel (über eine TwigExtension) Seiten-Content abruft. Dann kann nämlich eine
  * Auslieferung durch diesen Controller hier + einen Cache + z. B. einen s-maxage=0-Header die Seite
  * so lange im public cache halten, bis sich in wfd_meta etwas ändert.
- *
  */
 class TemplateController
 {
-
     /** @var EngineInterface */
     protected $templating;
 
@@ -65,7 +62,6 @@ class TemplateController
         $response = null;
 
         if ($metaTables || $metaTableConstants || $metaEntities) {
-
             $lastmodHelper = new LastmodHelper();
 
             if ($metaTables) {
@@ -114,7 +110,7 @@ class TemplateController
 
         if ($private) {
             $response->setPrivate();
-        } elseif ($private === false || (null === $private && ($maxAge || $sharedAge))) {
+        } elseif (false === $private || (null === $private && ($maxAge || $sharedAge))) {
             $response->setPublic();
         }
 

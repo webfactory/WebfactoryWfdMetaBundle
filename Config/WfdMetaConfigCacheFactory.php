@@ -32,7 +32,7 @@ class WfdMetaConfigCacheFactory implements ConfigCacheFactoryInterface
      * @var Factory
      */
     private $lockFactory;
-    
+
     public function __construct(ConfigCacheFactoryInterface $configCacheFactory, MetaQueryFactory $metaQueryFactory, Factory $lockFactory)
     {
         $this->configCacheFactory = $configCacheFactory;
@@ -42,22 +42,22 @@ class WfdMetaConfigCacheFactory implements ConfigCacheFactoryInterface
 
     public function cache($file, $callback)
     {
-        if (!is_callable($callback)) {
-            throw new \InvalidArgumentException(sprintf('Invalid type for callback argument. Expected callable, but got "%s".', gettype($callback)));
+        if (!\is_callable($callback)) {
+            throw new \InvalidArgumentException(sprintf('Invalid type for callback argument. Expected callable, but got "%s".', \gettype($callback)));
         }
 
         $wfdMetaCache = null;
-        
+
         $innerCache = $this->configCacheFactory->cache($file, function (ConfigCacheInterface $innerCache) use ($file, $callback, &$wfdMetaCache) {
             $wfdMetaCache = $this->createCache($file, $innerCache);
             $this->fillCache($callback, $wfdMetaCache);
         });
-        
+
         if ($wfdMetaCache) {
             // Cache has been refreshed since the "inner" cache was outdated
             return $wfdMetaCache;
         }
-        
+
         // The "inner" cache was fresh. Now, wrap a WfdMetaConfigCache around it and validate the wfd_meta resources.
         $wfdMetaCache = $this->createCache($file, $innerCache);
         if (!$wfdMetaCache->isWfdMetaFresh()) {
@@ -71,15 +71,15 @@ class WfdMetaConfigCacheFactory implements ConfigCacheFactoryInterface
     {
         return new WfdMetaConfigCache($file, $innerCache, $this->metaQueryFactory);
     }
-    
-    private function fillCache($callback, ConfigCacheInterface $cache) 
+
+    private function fillCache($callback, ConfigCacheInterface $cache)
     {
         // Make sure only one process (on this host) will rebuild the cache, others wait for it
         $cs = new CriticalSection($this->lockFactory);
         $cs->execute($cache->getPath(), function () use ($callback, $cache) {
             if (!$cache->isFresh()) {
                 // Our turn and the cache is still stale. Rebuild. */
-                call_user_func($callback, $cache);
+                \call_user_func($callback, $cache);
             } // else: Our turn, but cache is fresh. Must have been rebuilt while we were blocked. Use it.
         });
     }

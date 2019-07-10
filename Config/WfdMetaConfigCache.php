@@ -50,7 +50,7 @@ class WfdMetaConfigCache implements ConfigCacheInterface
 
     public function isWfdMetaFresh()
     {
-        $wfdMetaFile = $this->file . '.wfd_meta';
+        $wfdMetaFile = $this->file.'.wfd_meta';
 
         if (!is_file($wfdMetaFile)) {
             return false;
@@ -63,7 +63,7 @@ class WfdMetaConfigCache implements ConfigCacheInterface
         }
 
         $metaQuery = $this->metaQueryFactory->create();
-        
+
         foreach ($wfdMetaResources['resources'] as $wfdMetaResource) {
             $wfdMetaResource->register($metaQuery);
         }
@@ -79,7 +79,7 @@ class WfdMetaConfigCache implements ConfigCacheInterface
         foreach ($metadata as $key => $resource) {
             if ($resource instanceof WfdMetaResource) {
                 unset($metadata[$key]);
-                $wfdMetaResources[(string)$resource] = $resource; // use key to dedup resource
+                $wfdMetaResources[(string) $resource] = $resource; // use key to dedup resource
             }
         }
 
@@ -104,7 +104,7 @@ class WfdMetaConfigCache implements ConfigCacheInterface
         $umask = umask();
         $filesystem = new Filesystem();
 
-        $filename = $this->file . '.wfd_meta';
+        $filename = $this->file.'.wfd_meta';
 
         $filesystem->dumpFile($filename, $content, null);
 

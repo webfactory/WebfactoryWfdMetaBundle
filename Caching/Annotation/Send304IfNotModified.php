@@ -18,6 +18,7 @@ use Webfactory\Bundle\WfdMetaBundle\MetaQueryFactory;
 
 /**
  * @Annotation
+ *
  * @deprecated Use WebfactoryHttpCachingBundle and its LastModifiedDeterminators instead. If in a hurry, @see \Webfactory\Bundle\WfdMetaBundle\Caching\WfdMetaQueries for a quick conversion.
  */
 class Send304IfNotModified
@@ -32,7 +33,7 @@ class Send304IfNotModified
             if (method_exists($this->lastmodHelper, $name = 'set'.ucfirst($key))) {
                 $this->lastmodHelper->$name($value);
             } else {
-                throw new \Exception('Die Annotation '.get_class($this).' kann die Eigentschaft "'.$key.'" nicht setzen.');
+                throw new \Exception('Die Annotation '.\get_class($this).' kann die Eigentschaft "'.$key.'" nicht setzen.');
             }
         }
     }

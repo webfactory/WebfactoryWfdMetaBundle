@@ -2,11 +2,12 @@
 
 namespace Webfactory\Bundle\WfdMetaBundle\Tests\Util;
 
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\Lock\Factory;
 use Symfony\Component\Lock\Store\FlockStore;
 use Webfactory\Bundle\WfdMetaBundle\Util\CriticalSection;
 
-class CriticalSectionTest extends \PHPUnit_Framework_TestCase
+class CriticalSectionTest extends TestCase
 {
     /**
      * System under test.
@@ -36,7 +37,7 @@ class CriticalSectionTest extends \PHPUnit_Framework_TestCase
 
     public function testExecuteReturnsValueFromCallback()
     {
-        $result = $this->criticalSection->execute(__DIR__ . '/my/virtual/file', function () {
+        $result = $this->criticalSection->execute(__DIR__.'/my/virtual/file', function () {
             return 42;
         });
 
@@ -45,14 +46,14 @@ class CriticalSectionTest extends \PHPUnit_Framework_TestCase
 
     public function testInvokesCallbacksWithDifferentLocks()
     {
-        $this->criticalSection->execute(__DIR__ . '/my/virtual/file1', $this->createCallbackThatMustBeInvoked());
-        $this->criticalSection->execute(__DIR__ . '/my/virtual/file2', $this->createCallbackThatMustBeInvoked());
+        $this->criticalSection->execute(__DIR__.'/my/virtual/file1', $this->createCallbackThatMustBeInvoked());
+        $this->criticalSection->execute(__DIR__.'/my/virtual/file2', $this->createCallbackThatMustBeInvoked());
     }
 
     public function testInvokesCallbackWithSameLock()
     {
-        $this->criticalSection->execute(__DIR__ . '/my/virtual/file1', $this->createCallbackThatMustBeInvoked());
-        $this->criticalSection->execute(__DIR__ . '/my/virtual/file1', $this->createCallbackThatMustBeInvoked());
+        $this->criticalSection->execute(__DIR__.'/my/virtual/file1', $this->createCallbackThatMustBeInvoked());
+        $this->criticalSection->execute(__DIR__.'/my/virtual/file1', $this->createCallbackThatMustBeInvoked());
     }
 
     /**
@@ -60,8 +61,8 @@ class CriticalSectionTest extends \PHPUnit_Framework_TestCase
      */
     public function testCallbackCanAcquireSameLockAgain()
     {
-        $this->criticalSection->execute(__DIR__ . '/my/virtual/file1', function () {
-            $this->criticalSection->execute(__DIR__ . '/my/virtual/file1', $this->createCallbackThatMustBeInvoked());
+        $this->criticalSection->execute(__DIR__.'/my/virtual/file1', function () {
+            $this->criticalSection->execute(__DIR__.'/my/virtual/file1', $this->createCallbackThatMustBeInvoked());
         });
     }
 
@@ -72,11 +73,12 @@ class CriticalSectionTest extends \PHPUnit_Framework_TestCase
      */
     private function createCallbackThatMustBeInvoked()
     {
-        $mock = $this->getMock(\stdClass::class, array('__invoke'));
+        $mock = $this->getMockBuilder(\stdClass::class)->setMethods(['__invoke'])->getMock();
         $mock->expects($this->once())
             ->method('__invoke');
+
         return function () use ($mock) {
-            call_user_func($mock);
+            \call_user_func(/** @scrutinizer ignore-type */ $mock);
         };
     }
 }

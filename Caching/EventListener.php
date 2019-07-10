@@ -20,7 +20,6 @@ use Webfactory\Bundle\WfdMetaBundle\MetaQueryFactory;
  */
 class EventListener
 {
-
     protected $reader;
 
     /** @var MetaQueryFactory */
@@ -41,7 +40,6 @@ class EventListener
 
     public function onKernelController(FilterControllerEvent $event)
     {
-
         $controller = $event->getController();
         $request = $event->getRequest();
 
@@ -93,12 +91,12 @@ class EventListener
 
     /**
      * @param $callback array A PHP callback (array) pointing to the method to reflect on.
+     *
      * @return Send304IfNotModified|null The annotation, if found. Null otherwise.
      */
     protected function findAnnotation($callback)
     {
-        if (is_array($callback)) {
-
+        if (\is_array($callback)) {
             $object = new \ReflectionObject($callback[0]);
             $method = $object->getMethod($callback[1]);
 
