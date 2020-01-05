@@ -40,4 +40,9 @@ build:
                 before:
                     - composer require symfony/symfony 3.4.*
                     
+        symfony_44:
+            dependencies:
+                before:
+                    - composer require symfony/symfony 4.4.*
+
         deps_highest:

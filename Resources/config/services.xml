@@ -6,51 +6,52 @@
 
     <services>
 
-        <service id="webfactory_wfd_meta.doctrine_metadata_helper" class="Webfactory\Bundle\WfdMetaBundle\DoctrineMetadataHelper" public="true">
+        <defaults autoconfigure="true" autowire="true" public="false" />
+
+        <service id="Webfactory\Bundle\WfdMetaBundle\DoctrineMetadataHelper">
             <argument type="expression">
                 service("doctrine.orm.entity_manager").getMetadataFactory()
             </argument>
         </service>
 
-        <service id="webfactory_wfd_meta.provider" class="Webfactory\Bundle\WfdMetaBundle\Provider" public="true">
-            <argument type="service" id="database_connection"/>
+        <service id="Webfactory\Bundle\WfdMetaBundle\Provider">
+            <argument type="service" id="database_connection" />
         </service>
 
-        <service id="webfactory_wfd_meta.metadata_facade" class="Webfactory\Bundle\WfdMetaBundle\MetadataFacade">
-            <argument type="service" id="webfactory_wfd_meta.provider"/>
+        <service id="Webfactory\Bundle\WfdMetaBundle\MetadataFacade">
+            <argument type="service" id="Webfactory\Bundle\WfdMetaBundle\Provider" />
             <argument type="expression">
-                container.has('doctrine.orm.entity_manager') ? service("webfactory_wfd_meta.doctrine_metadata_helper") : null
+                container.has('doctrine.orm.entity_manager') ? service("Webfactory\Bundle\WfdMetaBundle\DoctrineMetadataHelper") : null
             </argument>
         </service>
 
-        <service id="webfactory_wfd_meta.meta_query_factory" class="Webfactory\Bundle\WfdMetaBundle\MetaQueryFactory">
-            <argument type="service" id="webfactory_wfd_meta.provider"/>
-            <argument type="service" id="service_container"/>
+        <service id="Webfactory\Bundle\WfdMetaBundle\MetaQueryFactory">
+            <argument type="service" id="Webfactory\Bundle\WfdMetaBundle\Provider" />
+            <argument type="service" id="service_container" />
         </service>
 
-
-        <service id="webfactory_wfd_meta.meta_query" abstract="true" class="Webfactory\Bundle\WfdMetaBundle\MetaQuery">
-            <factory service="webfactory_wfd_meta.meta_query_factory" method="create" />
+        <service id="Webfactory\Bundle\WfdMetaBundle\MetaQuery" abstract="true">
+            <factory service="Webfactory\Bundle\WfdMetaBundle\MetaQueryFactory" method="create" />
         </service>
 
-        <service id="webfactory_wfd_meta.caching.event_listener" class="Webfactory\Bundle\WfdMetaBundle\Caching\EventListener">
-            <argument type="service" id="annotation_reader"/>
-            <argument type="service" id="webfactory_wfd_meta.meta_query_factory"/>
+        <service id="Webfactory\Bundle\WfdMetaBundle\Caching\EventListener">
+            <argument type="service" id="annotation_reader" />
+            <argument type="service" id="Webfactory\Bundle\WfdMetaBundle\MetaQueryFactory" />
             <argument>%kernel.debug%</argument>
 
             <tag name="kernel.event_listener" event="kernel.controller" method="onKernelController" priority="-200" />
-            <tag name="kernel.event_listener" event="kernel.response" method="onKernelResponse"/>
+            <tag name="kernel.event_listener" event="kernel.response" method="onKernelResponse" />
         </service>
 
-        <service id="webfactory_wfd_meta.controller.template" class="Webfactory\Bundle\WfdMetaBundle\Controller\TemplateController">
-            <argument type="service" id="templating"/>
-            <argument type="service" id="webfactory_wfd_meta.meta_query_factory"/>
+        <service id="Webfactory\Bundle\WfdMetaBundle\Controller\TemplateController">
+            <argument type="service" id="templating" />
+            <argument type="service" id="Webfactory\Bundle\WfdMetaBundle\MetaQueryFactory" />
             <argument>%kernel.debug%</argument>
         </service>
 
-        <service id="webfactory_wfd_meta.config_cache_factory" class="Webfactory\Bundle\WfdMetaBundle\Config\WfdMetaConfigCacheFactory" decorates="config_cache_factory" public="false">
-            <argument type="service" id="webfactory_wfd_meta.config_cache_factory.inner"/>
-            <argument type="service" id="webfactory_wfd_meta.meta_query_factory"/>
+        <service id="Webfactory\Bundle\WfdMetaBundle\Config\WfdMetaConfigCacheFactory" decorates="config_cache_factory">
+            <argument type="service" id="Webfactory\Bundle\WfdMetaBundle\Config\WfdMetaConfigCacheFactory.inner" />
+            <argument type="service" id="Webfactory\Bundle\WfdMetaBundle\MetaQueryFactory" />
             <argument type="service">
                 <service class="Symfony\Component\Lock\Factory">
                     <argument type="service">
