@@ -23,6 +23,10 @@ class WebfactoryWfdMetaExtension extends Extension
         $xmlLoader = new XmlFileLoader($container, $fileLocator);
         $xmlLoader->load('services.xml');
 
+        if ($container->hasParameter('doctrine.entity_managers')) {
+            $xmlLoader->load('orm.xml');
+        }
+
         $yamlLoader = new YamlFileLoader($container, $fileLocator);
         $yamlLoader->load('legacy_aliases.yml');
     }

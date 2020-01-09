@@ -3,10 +3,6 @@ services:
     _defaults:
         public: true
 
-    webfactory_wfd_meta.doctrine_metadata_helper:
-        alias: 'Webfactory\Bundle\WfdMetaBundle\DoctrineMetadataHelper'
-        deprecated: ~
-
     webfactory_wfd_meta.provider:
         alias: 'Webfactory\Bundle\WfdMetaBundle\Provider'
         deprecated: ~

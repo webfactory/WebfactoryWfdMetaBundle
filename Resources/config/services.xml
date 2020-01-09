@@ -8,21 +8,13 @@
 
         <defaults autoconfigure="true" autowire="true" public="false" />
 
-        <service id="Webfactory\Bundle\WfdMetaBundle\DoctrineMetadataHelper">
-            <argument type="expression">
-                service("doctrine.orm.entity_manager").getMetadataFactory()
-            </argument>
-        </service>
-
         <service id="Webfactory\Bundle\WfdMetaBundle\Provider">
             <argument type="service" id="database_connection" />
         </service>
 
         <service id="Webfactory\Bundle\WfdMetaBundle\MetadataFacade">
             <argument type="service" id="Webfactory\Bundle\WfdMetaBundle\Provider" />
-            <argument type="expression">
-                container.has('doctrine.orm.entity_manager') ? service("Webfactory\Bundle\WfdMetaBundle\DoctrineMetadataHelper") : null
-            </argument>
+            <argument type="service" id="Webfactory\Bundle\WfdMetaBundle\DoctrineMetadataHelper" on-invalid="null" />
         </service>
 
         <service id="Webfactory\Bundle\WfdMetaBundle\MetaQueryFactory">
