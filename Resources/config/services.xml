@@ -36,7 +36,7 @@
         </service>
 
         <service id="Webfactory\Bundle\WfdMetaBundle\Controller\TemplateController">
-            <argument type="service" id="templating" />
+            <argument type="service" id="twig" />
             <argument type="service" id="Webfactory\Bundle\WfdMetaBundle\MetaQueryFactory" />
             <argument>%kernel.debug%</argument>
         </service>

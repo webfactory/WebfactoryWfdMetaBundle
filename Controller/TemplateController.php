@@ -8,9 +8,9 @@
 
 namespace Webfactory\Bundle\WfdMetaBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Twig\Environment;
 use Webfactory\Bundle\WfdMetaBundle\Helper\LastmodHelper;
 use Webfactory\Bundle\WfdMetaBundle\MetaQueryFactory;
 
@@ -29,17 +29,17 @@ use Webfactory\Bundle\WfdMetaBundle\MetaQueryFactory;
  */
 class TemplateController
 {
-    /** @var EngineInterface */
-    protected $templating;
+    /** @var Environment */
+    protected $twig;
 
     /** @var MetaQueryFactory */
     protected $metaQueryFactory;
 
     protected $debug;
 
-    public function __construct(EngineInterface $templating, MetaQueryFactory $metaQueryFactory, $debug)
+    public function __construct(Environment $twig, MetaQueryFactory $metaQueryFactory, $debug)
     {
-        $this->templating = $templating;
+        $this->twig = $twig;
         $this->metaQueryFactory = $metaQueryFactory;
         $this->debug = $debug;
     }
@@ -93,7 +93,7 @@ class TemplateController
         }
 
         if (!$response) {
-            $response = $this->templating->renderResponse($template);
+            $response = new Response($this->twig->render($template));
 
             if ($lastmod) {
                 $response->setLastModified($lastmod);

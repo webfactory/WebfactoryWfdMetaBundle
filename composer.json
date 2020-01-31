@@ -23,10 +23,10 @@
         "symfony/dependency-injection": "3.4.*|^4.3",
         "symfony/filesystem": "3.4.*|^4.3",
         "symfony/finder": "3.4.*|^4.3",
-        "symfony/framework-bundle": "3.4.*|^4.3",
         "symfony/http-foundation": "3.4.*|^4.3",
         "symfony/http-kernel": "3.4.*|^4.3",
-        "symfony/lock": "3.4.*|^4.3"
+        "symfony/lock": "3.4.*|^4.3",
+        "symfony/twig-bundle": "3.4.*|^4.3"
     },
 
     "require-dev": {
