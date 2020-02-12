@@ -9,6 +9,8 @@
 namespace Webfactory\Bundle\WfdMetaBundle;
 
 use Doctrine\DBAL\Connection;
+use Psr\Container\ContainerInterface;
+use Symfony\Component\DependencyInjection\ServiceSubscriberInterface;
 
 /**
  * Encapsulates the wfd_meta table. Use it to query the timestamp of the last change (change
@@ -16,14 +18,29 @@ use Doctrine\DBAL\Connection;
  *
  * Can also be used to query this information for a single record (row in a particular table).
  */
-class Provider
+class Provider implements ServiceSubscriberInterface
 {
-    /** @var Connection */
-    private $connection;
+    /**
+     * @var ContainerInterface
+     */
+    private $container;
 
-    public function __construct(Connection $connection)
+    public static function getSubscribedServices()
     {
-        $this->connection = $connection;
+        return [Connection::class];
+    }
+
+    public function __construct(ContainerInterface $container)
+    {
+        $this->container = $container;
+    }
+
+    /**
+     * @return Connection
+     */
+    private function getConnection()
+    {
+        return $this->container->get(Connection::class);
     }
 
     /**
@@ -44,7 +61,7 @@ class Provider
 
         foreach ($tableNamesOrIds as $t) {
             if ('*' === $t) {
-                $lastTouchOnAnyTable = $this->connection->fetchColumn('SELECT MAX(last_touched) FROM wfd_meta');
+                $lastTouchOnAnyTable = $this->getConnection()->fetchColumn('SELECT MAX(last_touched) FROM wfd_meta');
 
                 return $this->getTimestampOrNull($lastTouchOnAnyTable);
             }
@@ -57,7 +74,7 @@ class Provider
         }
 
         if ($names || $ids) {
-            $lastTouched = $this->connection->fetchColumn('
+            $lastTouched = $this->getConnection()->fetchColumn('
                 SELECT MAX(m.last_touched) lastTouchedString
                 FROM wfd_meta m
                 JOIN wfd_table t on m.wfd_table_id = t.id
@@ -83,7 +100,7 @@ class Provider
      */
     public function getLastTouchedOfEachRow($tableName)
     {
-        $lastTouchedData = $this->connection->fetchAll('
+        $lastTouchedData = $this->getConnection()->fetchAll('
             SELECT m.data_id, m.last_touched
             FROM wfd_meta m
             JOIN wfd_table t on m.wfd_table_id = t.id
@@ -110,7 +127,7 @@ class Provider
      */
     public function getLastTouchedRow($tableNameOrId, $primaryKey)
     {
-        $lastTouched = $this->connection->fetchColumn('
+        $lastTouched = $this->getConnection()->fetchColumn('
             SELECT m.last_touched
             FROM wfd_meta m
             JOIN wfd_table t on m.wfd_table_id = t.id
