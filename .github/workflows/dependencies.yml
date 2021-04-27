@@ -18,10 +18,6 @@ jobs:
                 with:
                     ssh-private-key: ${{ secrets.ORG_SSH_PRIVATE_KEY }}
             -   uses: actions/checkout@v2
-            -   name: Configure Composer
-                run: |
-                    mkdir -p ~/.composer/cache
-                    umask 077 && cat > ~/.composer/auth.json <<< '${{ secrets.ORG_COMPOSER_AUTH_JSON }}'
             -   name: Konfiguriere PHP-Version und -Einstellungen im Worker-Node
                 uses: shivammathur/setup-php@v2
                 with:
