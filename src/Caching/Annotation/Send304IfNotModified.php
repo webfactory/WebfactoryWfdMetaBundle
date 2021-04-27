@@ -33,7 +33,7 @@ class Send304IfNotModified
             if (method_exists($this->lastmodHelper, $name = 'set'.ucfirst($key))) {
                 $this->lastmodHelper->$name($value);
             } else {
-                throw new \Exception('Die Annotation '.\get_class($this).' kann die Eigentschaft "'.$key.'" nicht setzen.');
+                throw new \Exception('Die Annotation '.static::class.' kann die Eigentschaft "'.$key.'" nicht setzen.');
             }
         }
     }

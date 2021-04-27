@@ -5,6 +5,7 @@ namespace Webfactory\Bundle\WfdMetaBundle\Tests;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Driver\PDOSqlite\Driver;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\DependencyInjection\Container;
 use Webfactory\Bundle\WfdMetaBundle\Provider;
 
 /**
@@ -21,12 +22,12 @@ final class ProviderTest extends TestCase
     protected function setUp()
     {
         // Possible parameters are documented at {@link http://docs.doctrine-project.org/projects/doctrine-dbal/en/latest/reference/configuration.html}.
-        $connectionParameter = array(
+        $connectionParameter = [
             'driver' => 'pdo_sqlite',
             'user' => 'root',
             'password' => '',
             'memory' => true,
-        );
+        ];
         $this->connection = new Connection($connectionParameter, new Driver());
 
         $this->connection->exec("
@@ -41,7 +42,10 @@ final class ProviderTest extends TestCase
             );
         ");
 
-        $this->provider = new Provider($this->connection);
+        $container = new Container();
+        $container->set(Connection::class, $this->connection);
+
+        $this->provider = new Provider($container);
     }
 
     /**
@@ -49,7 +53,7 @@ final class ProviderTest extends TestCase
      */
     public function getLastTouchedRowReturnsNullIfNoEntriesExist()
     {
-        $this->assertNull($this->provider->getLastTouchedRow('myTable', 1));
+        self::assertNull($this->provider->getLastTouchedRow('myTable', 1));
     }
 
     /**
@@ -67,7 +71,7 @@ final class ProviderTest extends TestCase
             INSERT INTO `wfd_meta` (wfd_table_id, data_id, last_touched) VALUES (2, 1, '2000-01-01 00:00:00');
         ");
 
-        $this->assertNull($this->provider->getLastTouchedRow('myTable', 1));
+        self::assertNull($this->provider->getLastTouchedRow('myTable', 1));
     }
 
     /**
@@ -80,7 +84,7 @@ final class ProviderTest extends TestCase
             INSERT INTO `wfd_meta` (wfd_table_id, data_id, last_touched) VALUES (1, 1, '2000-01-01 00:00:00');
         ");
 
-        $this->assertEquals(
+        self::assertEquals(
             mktime(0, 0, 0, 1, 1, 2000),
             $this->provider->getLastTouchedRow('myTable', 1)
         );
@@ -91,7 +95,7 @@ final class ProviderTest extends TestCase
      */
     public function getLastTouchedReturnsNullIfNoEntriesExist()
     {
-        $this->assertNull($this->provider->getLastTouched(['myTable']));
+        self::assertNull($this->provider->getLastTouched(['myTable']));
     }
 
     /**
@@ -105,7 +109,7 @@ final class ProviderTest extends TestCase
             INSERT INTO `wfd_meta` (wfd_table_id, data_id, last_touched) VALUES (1, 1, '2000-01-01 00:00:00');
         ");
 
-        $this->assertNull($this->provider->getLastTouched(['myTable']));
+        self::assertNull($this->provider->getLastTouched(['myTable']));
     }
 
     /**
@@ -124,7 +128,7 @@ final class ProviderTest extends TestCase
             INSERT INTO `wfd_meta` (wfd_table_id, data_id, last_touched) VALUES (3, 1, '2001-01-01 00:00:00');
         ");
 
-        $this->assertEquals(
+        self::assertEquals(
             mktime(0, 0, 0, 1, 1, 2001),
             $this->provider->getLastTouched(['myTable', 'myOtherTable', 'myThirdTable'])
         );
@@ -148,7 +152,7 @@ final class ProviderTest extends TestCase
 
         $timestamp = $this->provider->getLastTouched(['*']);
 
-        $this->assertEquals(
+        self::assertEquals(
             mktime(0, 0, 0, 1, 1, 2001),
             $timestamp
         );
@@ -160,8 +164,8 @@ final class ProviderTest extends TestCase
     public function getLastTouchedOfEachRowReturnsEmptyArrayIfNoEntriesExist()
     {
         $result = $this->provider->getLastTouchedOfEachRow('myTable');
-        $this->assertIsArray($result);
-        $this->assertEmpty($result);
+        self::assertIsArray($result);
+        self::assertEmpty($result);
     }
 
     /**

@@ -78,7 +78,7 @@ class CriticalSectionTest extends TestCase
             ->method('__invoke');
 
         return function () use ($mock) {
-            \call_user_func(/** @scrutinizer ignore-type */ $mock);
+            \call_user_func($mock);
         };
     }
 }

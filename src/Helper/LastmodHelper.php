@@ -39,9 +39,7 @@ class LastmodHelper
     {
         try {
             if (!$this->tables && !$this->tableIdConstants && !$this->entities) {
-                throw new \RuntimeException(
-                    \get_class($this).' wurde weder mit Tabellennamen, Tabellen-Ids oder Entitätsnamen konfiguriert.'
-                );
+                throw new \RuntimeException(static::class.' wurde weder mit Tabellennamen, Tabellen-Ids oder Entitätsnamen konfiguriert.');
             }
 
             if ($this->tables) {
@@ -61,11 +59,7 @@ class LastmodHelper
                 $metaQuery->addEntityClasses($this->entities);
             }
         } catch (\Exception $e) {
-            throw new \RuntimeException(
-                'Exception während der Konfiguration von MetaQuery durch '.\get_class($this),
-                0,
-                $e
-            );
+            throw new \RuntimeException('Exception während der Konfiguration von MetaQuery durch '.static::class, 0, $e);
         }
     }
 

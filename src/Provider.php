@@ -56,8 +56,8 @@ class Provider implements ServiceSubscriberInterface
             return 0;
         }
 
-        $ids = array();
-        $names = array();
+        $ids = [];
+        $names = [];
 
         foreach ($tableNamesOrIds as $t) {
             if ('*' === $t) {

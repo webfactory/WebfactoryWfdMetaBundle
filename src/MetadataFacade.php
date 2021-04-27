@@ -16,9 +16,6 @@ class MetadataFacade
 
     /**
      * MetadataFacade constructor.
-     *
-     * @param Provider                    $provider
-     * @param DoctrineMetadataHelper|null $doctrineMetadataHelper
      */
     public function __construct(Provider $provider, DoctrineMetadataHelper $doctrineMetadataHelper = null)
     {
