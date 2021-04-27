@@ -32,7 +32,7 @@ Additionally, we wanted to inverse the dependency direction: a caching bundle sh
 
 This resulted in the concept of "Last Modified Determinators" in the new [WebfactoryHttpCacheBundle](https://github.com/webfactory/WebfactoryHttpCacheBundle).
 
-You can quickly convert deprecated Send304IfNotModified annotations to a LastModifiedDeterminator by using [WfdMetaQueries](Caching/WfdMetaQueries.php) . This conversion does not fully embrace the concept of LastModifiedDeterminators (especially not when using resetInterval; see the bundle's readme), but if you're in a hurry, maybe you don't want to be bothered with that.
+You can quickly convert deprecated Send304IfNotModified annotations to a LastModifiedDeterminator by using [WfdMetaQueries](src/Caching/WfdMetaQueries.php) . This conversion does not fully embrace the concept of LastModifiedDeterminators (especially not when using resetInterval; see the bundle's readme), but if you're in a hurry, maybe you don't want to be bothered with that.
 
 #### Using a `resetInterval`
 

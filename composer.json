@@ -43,7 +43,7 @@
 
     "autoload": {
         "psr-4": {
-            "Webfactory\\Bundle\\WfdMetaBundle\\": ""
+            "Webfactory\\Bundle\\WfdMetaBundle\\": "src"
         }
     },
     
