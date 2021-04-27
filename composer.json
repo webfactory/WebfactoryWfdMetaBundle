@@ -15,8 +15,11 @@
     ],
 
     "require": {
+        "doctrine/annotations": "^1.12",
         "doctrine/common": "^2.3",
         "doctrine/dbal": "^2.5",
+        "doctrine/persistence": "^1.3|^2.1",
+        "doctrine/orm": "^2.0",
         "php": "^7.2",
         "psr/container": "^1.0",
         "psr/log": "^1.0",
@@ -27,18 +30,14 @@
         "symfony/http-foundation": "3.4.*|^4.3",
         "symfony/http-kernel": "3.4.*|^4.3",
         "symfony/lock": "3.4.*|^4.3",
-        "symfony/twig-bundle": "3.4.*|^4.3"
+        "symfony/twig-bundle": "3.4.*|^4.3",
+        "twig/twig": "^1.0|^2.0|3.0",
+        "webfactory/http-cache-bundle": "^1.0"
     },
 
     "require-dev": {
         "phpunit/phpunit": "^7.5",
-        "symfony/phpunit-bridge": "*",
-        "webfactory/http-cache-bundle": "^1.0"
-    },
-
-    "suggest": {
-        "webfactory/http-cache-bundle": "HTTP cache invalidation mechamism extracted from wfdmeta-bundle",
-        "doctrine/orm": "Necessary to query WfdMeta-information of Doctrine entities."
+        "symfony/phpunit-bridge": "*"
     },
 
     "autoload": {
