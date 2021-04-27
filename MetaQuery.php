@@ -31,9 +31,6 @@ class MetaQuery
 
     /**
      * MetaQuery constructor.
-     *
-     * @param Provider           $provider
-     * @param ContainerInterface $container
      */
     public function __construct(Provider $provider, ContainerInterface $container)
     {

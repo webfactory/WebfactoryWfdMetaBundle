@@ -38,7 +38,7 @@ class CriticalSection
      *
      * @var array<string, Lock>
      */
-    private static $locks = array();
+    private static $locks = [];
 
     /**
      * Counts how often a specific lock was requested.
@@ -47,16 +47,13 @@ class CriticalSection
      *
      * @var array<string, integer>
      */
-    private static $entranceCount = array();
+    private static $entranceCount = [];
 
     /**
      * @var LoggerInterface|null
      */
     private $logger;
 
-    /**
-     * @param Factory $lockFactory
-     */
     public function __construct(Factory $lockFactory)
     {
         $this->lockFactory = $lockFactory;
@@ -64,8 +61,6 @@ class CriticalSection
 
     /**
      * Sets a logger that is used to send debugging messages.
-     *
-     * @param LoggerInterface $logger
      */
     public function setLogger(LoggerInterface $logger)
     {
@@ -76,8 +71,7 @@ class CriticalSection
      * Blocks until no other process on this machine is executing a critical section
      * linked to the given file. Then, enter the critical section and execute the given callback.
      *
-     * @param string   $file     File path that is used as lock name.
-     * @param \Closure $callback
+     * @param string $file File path that is used as lock name.
      *
      * @return mixed Return value of the callback.
      */
@@ -148,7 +142,7 @@ class CriticalSection
     private function debug($message)
     {
         if ($this->logger) {
-            $this->logger->debug($message, array('pid' => getmypid()));
+            $this->logger->debug($message, ['pid' => getmypid()]);
         }
     }
 }

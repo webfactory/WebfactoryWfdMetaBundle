@@ -18,7 +18,7 @@ class WebfactoryWfdMetaExtension extends Extension
 {
     public function load(array $configs, ContainerBuilder $container)
     {
-        $fileLocator = new FileLocator(__DIR__ . '/../Resources/config');
+        $fileLocator = new FileLocator(__DIR__.'/../Resources/config');
 
         $xmlLoader = new XmlFileLoader($container, $fileLocator);
         $xmlLoader->load('services.xml');

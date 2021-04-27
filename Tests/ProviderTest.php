@@ -22,12 +22,12 @@ final class ProviderTest extends TestCase
     protected function setUp()
     {
         // Possible parameters are documented at {@link http://docs.doctrine-project.org/projects/doctrine-dbal/en/latest/reference/configuration.html}.
-        $connectionParameter = array(
+        $connectionParameter = [
             'driver' => 'pdo_sqlite',
             'user' => 'root',
             'password' => '',
             'memory' => true,
-        );
+        ];
         $this->connection = new Connection($connectionParameter, new Driver());
 
         $this->connection->exec("
