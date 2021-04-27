@@ -35,4 +35,4 @@ jobs:
             -   run: |
                     composer install --no-interaction --no-scripts --no-progress --no-suggest
                     composer show
-            -   run: vendor/phpunit/phpunit/phpunit
+            -   run: vendor/phpunit/phpunit/phpunit -c phpunit.ci.xml
