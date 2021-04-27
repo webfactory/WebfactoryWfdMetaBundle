@@ -2,9 +2,9 @@
 
 namespace Webfactory\Bundle\WfdMetaBundle;
 
-use Doctrine\Common\Persistence\Mapping\MappingException;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\Mapping\ClassMetadataFactory;
+use Doctrine\Persistence\Mapping\MappingException;
 
 /**
  * Helper class to obtain the root table name for a given Doctrine entity FQCN.
