@@ -18,7 +18,7 @@ class ValidUntilLastTouched extends Send304IfNotModified
     {
         @trigger_error(
             'The ValidUntilLastTouched annotation is deprecated. Use Send304IfNotModified instead.',
-            E_USER_DEPRECATED
+            \E_USER_DEPRECATED
         );
 
         parent::__construct($values);

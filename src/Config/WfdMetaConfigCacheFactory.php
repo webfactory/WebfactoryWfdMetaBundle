@@ -8,6 +8,7 @@
 
 namespace Webfactory\Bundle\WfdMetaBundle\Config;
 
+use InvalidArgumentException;
 use Symfony\Component\Config\ConfigCacheFactoryInterface;
 use Symfony\Component\Config\ConfigCacheInterface;
 use Symfony\Component\Lock\Factory;
@@ -43,7 +44,7 @@ class WfdMetaConfigCacheFactory implements ConfigCacheFactoryInterface
     public function cache($file, $callback)
     {
         if (!\is_callable($callback)) {
-            throw new \InvalidArgumentException(sprintf('Invalid type for callback argument. Expected callable, but got "%s".', \gettype($callback)));
+            throw new InvalidArgumentException(sprintf('Invalid type for callback argument. Expected callable, but got "%s".', \gettype($callback)));
         }
 
         $wfdMetaCache = null;

@@ -8,6 +8,9 @@
 
 namespace Webfactory\Bundle\WfdMetaBundle\Helper;
 
+use DateTime;
+use Exception;
+use RuntimeException;
 use Webfactory\Bundle\WfdMetaBundle\MetaQuery;
 use Webfactory\Bundle\WfdMetaBundle\MetaQueryFactory;
 
@@ -29,7 +32,7 @@ class LastmodHelper
 
             $ts = $now - ($age % $this->resetInterval);
 
-            return new \DateTime("@$ts");
+            return new DateTime("@$ts");
         }
 
         return null;
@@ -39,7 +42,7 @@ class LastmodHelper
     {
         try {
             if (!$this->tables && !$this->tableIdConstants && !$this->entities) {
-                throw new \RuntimeException(static::class.' wurde weder mit Tabellennamen, Tabellen-Ids oder Entitätsnamen konfiguriert.');
+                throw new RuntimeException(static::class.' wurde weder mit Tabellennamen, Tabellen-Ids oder Entitätsnamen konfiguriert.');
             }
 
             if ($this->tables) {
@@ -58,8 +61,8 @@ class LastmodHelper
             if ($this->entities) {
                 $metaQuery->addEntityClasses($this->entities);
             }
-        } catch (\Exception $e) {
-            throw new \RuntimeException('Exception während der Konfiguration von MetaQuery durch '.static::class, 0, $e);
+        } catch (Exception $e) {
+            throw new RuntimeException('Exception während der Konfiguration von MetaQuery durch '.static::class, 0, $e);
         }
     }
 

@@ -65,7 +65,7 @@ final class ProviderTest extends TestCase
             -- correct table, wrong primary key
             INSERT INTO `wfd_table` (id, tablename) VALUES (1, 'myTable');
             INSERT INTO `wfd_meta` (wfd_table_id, data_id, last_touched) VALUES (1, 2, '2000-01-01 00:00:00');
-            
+
             -- correct primary key, wrong table
             INSERT INTO `wfd_table` (id, tablename) VALUES (2, 'wrongTable');
             INSERT INTO `wfd_meta` (wfd_table_id, data_id, last_touched) VALUES (2, 1, '2000-01-01 00:00:00');
@@ -120,10 +120,10 @@ final class ProviderTest extends TestCase
         $this->connection->exec("
             INSERT INTO `wfd_table` (id, tablename) VALUES (1, 'myTable');
             INSERT INTO `wfd_meta` (wfd_table_id, data_id, last_touched) VALUES (1, 1, '1999-01-01 00:00:00');
-            
+
             INSERT INTO `wfd_table` (id, tablename) VALUES (2, 'myOtherTable');
             INSERT INTO `wfd_meta` (wfd_table_id, data_id, last_touched) VALUES (2, 1, '2000-01-01 00:00:00');
-            
+
             INSERT INTO `wfd_table` (id, tablename) VALUES (3, 'myThirdTable');
             INSERT INTO `wfd_meta` (wfd_table_id, data_id, last_touched) VALUES (3, 1, '2001-01-01 00:00:00');
         ");

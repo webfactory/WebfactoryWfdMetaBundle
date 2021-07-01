@@ -9,6 +9,8 @@
 namespace Webfactory\Bundle\WfdMetaBundle\Caching;
 
 use Doctrine\Common\Annotations\Reader;
+use ReflectionObject;
+use SplObjectStorage;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
@@ -27,7 +29,7 @@ class EventListener
 
     protected $debug;
 
-    /** @var \SplObjectStorage */
+    /** @var SplObjectStorage */
     protected $lastTouchedResults;
 
     public function __construct(Reader $reader, MetaQueryFactory $metaQueryFactory, $debug)
@@ -35,7 +37,7 @@ class EventListener
         $this->reader = $reader;
         $this->metaQueryFactory = $metaQueryFactory;
         $this->debug = $debug;
-        $this->lastTouchedResults = new \SplObjectStorage();
+        $this->lastTouchedResults = new SplObjectStorage();
     }
 
     public function onKernelController(FilterControllerEvent $event)
@@ -97,7 +99,7 @@ class EventListener
     protected function findAnnotation($callback)
     {
         if (\is_array($callback)) {
-            $object = new \ReflectionObject($callback[0]);
+            $object = new ReflectionObject($callback[0]);
             $method = $object->getMethod($callback[1]);
 
             foreach ($this->reader->getMethodAnnotations($method) as $configuration) {

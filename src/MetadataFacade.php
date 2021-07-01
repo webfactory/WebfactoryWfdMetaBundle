@@ -2,6 +2,8 @@
 
 namespace Webfactory\Bundle\WfdMetaBundle;
 
+use RuntimeException;
+
 class MetadataFacade
 {
     /**
@@ -31,7 +33,7 @@ class MetadataFacade
     public function getLastTouchedForEntity($entity)
     {
         if (!$this->doctrineMetadataHelper) {
-            throw new \RuntimeException('DoctrineMetadataHelper must be available to query information for Doctrine Entities. Tip: Is Doctrine ORM enabled and the doctrine.orm.entity_manager service available in the DIC?');
+            throw new RuntimeException('DoctrineMetadataHelper must be available to query information for Doctrine Entities. Tip: Is Doctrine ORM enabled and the doctrine.orm.entity_manager service available in the DIC?');
         }
 
         return $this->provider->getLastTouchedRow(
@@ -48,7 +50,7 @@ class MetadataFacade
     public function getLastTouchedForEntityClass($classname)
     {
         if (!$this->doctrineMetadataHelper) {
-            throw new \RuntimeException('DoctrineMetadataHelper must be available to query information for Doctrine Entities. Tip: Is Doctrine ORM enabled and the doctrine.orm.entity_manager service available in the DIC?');
+            throw new RuntimeException('DoctrineMetadataHelper must be available to query information for Doctrine Entities. Tip: Is Doctrine ORM enabled and the doctrine.orm.entity_manager service available in the DIC?');
         }
 
         return $this->getLastTouchedForTableName(
