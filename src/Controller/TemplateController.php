@@ -8,6 +8,7 @@
 
 namespace Webfactory\Bundle\WfdMetaBundle\Controller;
 
+use DateTime;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Twig\Environment;
@@ -55,7 +56,7 @@ class TemplateController
         $metaEntities = null,
         $metaResetInterval = null
     ) {
-        /** @var \DateTime $lastmod */
+        /** @var DateTime $lastmod */
         $lastmod = null;
 
         /** @var $response \Symfony\Component\HttpFoundation\Response */

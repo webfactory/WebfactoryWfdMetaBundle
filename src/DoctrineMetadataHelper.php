@@ -5,6 +5,7 @@ namespace Webfactory\Bundle\WfdMetaBundle;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\Mapping\ClassMetadataFactory;
 use Doctrine\Persistence\Mapping\MappingException;
+use RuntimeException;
 
 /**
  * Helper class to obtain the root table name for a given Doctrine entity FQCN.
@@ -43,7 +44,7 @@ class DoctrineMetadataHelper
 
             return $meta->getTableName();
         } catch (MappingException $e) {
-            throw new \RuntimeException("Could not resolve root table name for '$classname'. Check that this is a Doctrine entity class.", 0, $e);
+            throw new RuntimeException("Could not resolve root table name for '$classname'. Check that this is a Doctrine entity class.", 0, $e);
         }
     }
 

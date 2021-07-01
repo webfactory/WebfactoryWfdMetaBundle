@@ -8,6 +8,7 @@
 
 namespace Webfactory\Bundle\WfdMetaBundle;
 
+use DateTime;
 use Doctrine\DBAL\Connection;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\DependencyInjection\ServiceSubscriberInterface;
@@ -150,7 +151,7 @@ class Provider implements ServiceSubscriberInterface
             return null;
         }
 
-        $dateTime = new \DateTime($fetchValue);
+        $dateTime = new DateTime($fetchValue);
 
         return $dateTime->getTimestamp();
     }

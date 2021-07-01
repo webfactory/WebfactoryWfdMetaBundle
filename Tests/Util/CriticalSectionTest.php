@@ -2,7 +2,9 @@
 
 namespace Webfactory\Bundle\WfdMetaBundle\Tests\Util;
 
+use Closure;
 use PHPUnit\Framework\TestCase;
+use stdClass;
 use Symfony\Component\Lock\Factory;
 use Symfony\Component\Lock\Store\FlockStore;
 use Webfactory\Bundle\WfdMetaBundle\Util\CriticalSection;
@@ -69,11 +71,11 @@ class CriticalSectionTest extends TestCase
     /**
      * Creates a closure that must be called, otherwise the test fails.
      *
-     * @return \Closure
+     * @return Closure
      */
     private function createCallbackThatMustBeInvoked()
     {
-        $mock = $this->getMockBuilder(\stdClass::class)->setMethods(['__invoke'])->getMock();
+        $mock = $this->getMockBuilder(stdClass::class)->setMethods(['__invoke'])->getMock();
         $mock->expects($this->once())
             ->method('__invoke');
 

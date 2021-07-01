@@ -8,12 +8,13 @@
 
 namespace Webfactory\Bundle\WfdMetaBundle\Caching\Annotation;
 
+use Exception;
 use Webfactory\Bundle\WfdMetaBundle\Helper\LastmodHelper;
 use Webfactory\Bundle\WfdMetaBundle\MetaQueryFactory;
 
 @trigger_error(
     'The Send304IfNotModified annotation is deprecated. Use WebfactoryHttpCachingBundle and its LastModifiedDeterminators instead. If in a hurry, @see \Webfactory\Bundle\WfdMetaBundle\Caching\WfdMetaQueries for a quick conversion.',
-    E_USER_DEPRECATED
+    \E_USER_DEPRECATED
 );
 
 /**
@@ -33,7 +34,7 @@ class Send304IfNotModified
             if (method_exists($this->lastmodHelper, $name = 'set'.ucfirst($key))) {
                 $this->lastmodHelper->$name($value);
             } else {
-                throw new \Exception('Die Annotation '.static::class.' kann die Eigentschaft "'.$key.'" nicht setzen.');
+                throw new Exception('Die Annotation '.static::class.' kann die Eigentschaft "'.$key.'" nicht setzen.');
             }
         }
     }

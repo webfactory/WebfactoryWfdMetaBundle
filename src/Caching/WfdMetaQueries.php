@@ -8,6 +8,7 @@
 
 namespace Webfactory\Bundle\WfdMetaBundle\Caching;
 
+use Exception;
 use Symfony\Component\HttpFoundation\Request;
 use Webfactory\Bundle\WfdMetaBundle\Helper\LastmodHelper;
 use Webfactory\Bundle\WfdMetaBundle\MetaQueryFactory;
@@ -67,7 +68,7 @@ final class WfdMetaQueries implements LastModifiedDeterminator
             if (method_exists($this->lastmodHelper, $name = 'set'.ucfirst($key))) {
                 $this->lastmodHelper->$name($value);
             } else {
-                throw new \Exception('Die Annotation '.static::class.' kann die Eigentschaft "'.$key.'" nicht setzen.');
+                throw new Exception('Die Annotation '.static::class.' kann die Eigentschaft "'.$key.'" nicht setzen.');
             }
         }
     }

@@ -8,7 +8,9 @@
 
 namespace Webfactory\Bundle\WfdMetaBundle\Util;
 
+use Closure;
 use Psr\Log\LoggerInterface;
+use RuntimeException;
 use Symfony\Component\Lock\Factory;
 use Symfony\Component\Lock\Lock;
 
@@ -75,7 +77,7 @@ class CriticalSection
      *
      * @return mixed Return value of the callback.
      */
-    public function execute($file, \Closure $callback)
+    public function execute($file, Closure $callback)
     {
         $this->lock($file);
         try {
@@ -93,7 +95,7 @@ class CriticalSection
         $this->debug("Requesting lock $lockName");
         if (!$this->getLock($lockName)->acquire(true)) {
             $this->debug("Failed to get lock $lockName");
-            throw new \RuntimeException("Failed to get lock $lockName");
+            throw new RuntimeException("Failed to get lock $lockName");
         }
         if (!isset(self::$entranceCount[$lockName])) {
             self::$entranceCount[$lockName] = 0;
