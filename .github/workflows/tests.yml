@@ -14,7 +14,7 @@ env:
 jobs:
     PHPUnit:
         name: PHPUnit
-        runs-on: ubuntu-18.04
+        runs-on: ubuntu-20.04
         steps:
             -   uses: actions/checkout@v2
             -   run: mkdir --mode=777 -p $GITHUB_WORKSPACE/{tmp,logs}
