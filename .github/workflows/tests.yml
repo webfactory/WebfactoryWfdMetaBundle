@@ -9,7 +9,7 @@ on:
 env:
     APP_ENV: test
     TEMP: ${{ github.workspace }}/tmp
-    SYMFONY_DEPRECATIONS_HELPER: disabled=1
+    SYMFONY_DEPRECATIONS_HELPER: weak
 
 jobs:
     PHPUnit:
