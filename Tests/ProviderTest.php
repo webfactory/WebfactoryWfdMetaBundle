@@ -19,7 +19,7 @@ final class ProviderTest extends TestCase
     /** @var Connection */
     private $connection;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         // Possible parameters are documented at {@link http://docs.doctrine-project.org/projects/doctrine-dbal/en/latest/reference/configuration.html}.
         $connectionParameter = [
