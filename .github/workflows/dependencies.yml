@@ -7,7 +7,7 @@ on:
     pull_request:
 
 env:
-    PHP_VERSION: 7.2
+    PHP_VERSION: 7.4
 
 jobs:
     composer-require-checker:
@@ -20,7 +20,6 @@ jobs:
                 with:
                   php-version: ${{ env.PHP_VERSION }}
                   tools: composer:v2
-                  ini-values: variables_order=EGPCS, date.timezone=Europe/Berlin
             -   name: Cache Composer Dependencies
                 uses: actions/cache@v1
                 with:

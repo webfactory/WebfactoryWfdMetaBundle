@@ -8,31 +8,35 @@ on:
 
 env:
     APP_ENV: test
-    PHP_VERSION: 7.2
     TEMP: ${{ github.workspace }}/tmp
+    SYMFONY_DEPRECATIONS_HELPER: disabled=1
 
 jobs:
     PHPUnit:
-        name: PHPUnit
         runs-on: ubuntu-20.04
+        strategy:
+            fail-fast: false
+            matrix:
+                include:
+                    - { php-version: 7.2, symfony-locked-version: none, dependency-version: prefer-lowest }
+                    - { php-version: 7.4, symfony-locked-version: 4.4.*, dependency-version: prefer-stable }
+                    - { php-version: 8.1, symfony-locked-version: none, dependency-version: prefer-stable }
+        name: PHPUnit (PHP ${{matrix.php-version}}, Symfony Version Lock ${{ matrix.symfony-locked-version }}, ${{ matrix.dependency-version }})
         steps:
-            -   uses: actions/checkout@v2
-            -   run: mkdir --mode=777 -p $GITHUB_WORKSPACE/{tmp,logs}
-            -   name: Konfiguriere PHP-Version und -Einstellungen im Worker-Node
-                uses: shivammathur/setup-php@v2
+            -   uses: shivammathur/setup-php@v2
                 with:
-                  php-version: ${{ env.PHP_VERSION }}
+                  php-version: ${{ matrix.php-version }}
                   tools: composer:v2
-                  ini-values: variables_order=EGPCS, date.timezone=Europe/Berlin
-            -   name: Cache Composer Dependencies
-                uses: actions/cache@v1
+            -   uses: actions/checkout@v2
+            -   run: VERSION=${{ matrix.symfony-locked-version }} .github/workflows/lock-symfony-version.sh
+                if: matrix.symfony-locked-version != 'none'
+            -   uses: actions/cache@v2
                 with:
-                    path: vendor/
-                    key: composer-${{ env.PHP_VERSION }}-${{ hashFiles('composer.*') }}
+                    path: vendor
+                    key: composer-${{ runner.os }}-${{ matrix.php-version }}-${{ matrix.symfony-locked-version }}-${{ matrix.dependency-version }}-${{ hashFiles('composer.json') }}
                     restore-keys: |
-                        composer-${{ env.PHP_VERSION }}-${{ github.ref }}
-                        composer-${{ env.PHP_VERSION }}-
+                        composer-${{ runner.os }}-${{ matrix.php-version }}-${{ matrix.symfony-locked-version }}-${{ matrix.dependency-version }}-
             -   run: |
-                    composer install --no-interaction --no-scripts --no-progress --no-suggest
+                    composer install --no-interaction --no-progress --ansi --no-scripts
                     composer show
-            -   run: vendor/phpunit/phpunit/phpunit -c phpunit.ci.xml
+            -   run: vendor/bin/phpunit
