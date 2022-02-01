@@ -21,7 +21,7 @@ class CriticalSectionTest extends TestCase
     /**
      * Initializes the test environment.
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $lockFactory = new Factory(new FlockStore());
@@ -31,7 +31,7 @@ class CriticalSectionTest extends TestCase
     /**
      * Cleans up the test environment.
      */
-    protected function tearDown()
+    protected function tearDown(): void
     {
         $this->criticalSection = null;
         parent::tearDown();
