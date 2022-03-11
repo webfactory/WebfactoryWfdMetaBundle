@@ -106,7 +106,7 @@ class WfdMetaConfigCache implements ConfigCacheInterface
 
         $filename = $this->file.'.wfd_meta';
 
-        $filesystem->dumpFile($filename, $content, null);
+        $filesystem->dumpFile($filename, $content);
 
         try {
             $filesystem->chmod($filename, $mode, $umask);
