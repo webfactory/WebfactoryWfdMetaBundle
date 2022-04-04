@@ -11,7 +11,7 @@ namespace Webfactory\Bundle\WfdMetaBundle\Config;
 use InvalidArgumentException;
 use Symfony\Component\Config\ConfigCacheFactoryInterface;
 use Symfony\Component\Config\ConfigCacheInterface;
-use Symfony\Component\Lock\Factory;
+use Symfony\Component\Lock\LockFactory;
 use Webfactory\Bundle\WfdMetaBundle\MetaQueryFactory;
 use Webfactory\Bundle\WfdMetaBundle\Util\CriticalSection;
 
@@ -30,11 +30,11 @@ class WfdMetaConfigCacheFactory implements ConfigCacheFactoryInterface
     private $metaQueryFactory;
 
     /**
-     * @var Factory
+     * @var LockFactory
      */
     private $lockFactory;
 
-    public function __construct(ConfigCacheFactoryInterface $configCacheFactory, MetaQueryFactory $metaQueryFactory, Factory $lockFactory)
+    public function __construct(ConfigCacheFactoryInterface $configCacheFactory, MetaQueryFactory $metaQueryFactory, LockFactory $lockFactory)
     {
         $this->configCacheFactory = $configCacheFactory;
         $this->metaQueryFactory = $metaQueryFactory;

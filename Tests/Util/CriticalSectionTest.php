@@ -5,7 +5,7 @@ namespace Webfactory\Bundle\WfdMetaBundle\Tests\Util;
 use Closure;
 use PHPUnit\Framework\TestCase;
 use stdClass;
-use Symfony\Component\Lock\Factory;
+use Symfony\Component\Lock\LockFactory;
 use Symfony\Component\Lock\Store\FlockStore;
 use Webfactory\Bundle\WfdMetaBundle\Util\CriticalSection;
 
@@ -24,7 +24,7 @@ class CriticalSectionTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $lockFactory = new Factory(new FlockStore());
+        $lockFactory = new LockFactory(new FlockStore());
         $this->criticalSection = new CriticalSection($lockFactory);
     }
 
