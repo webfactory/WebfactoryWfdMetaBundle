@@ -11,7 +11,7 @@ namespace Webfactory\Bundle\WfdMetaBundle;
 use DateTime;
 use Doctrine\DBAL\Connection;
 use Psr\Container\ContainerInterface;
-use Symfony\Component\DependencyInjection\ServiceSubscriberInterface;
+use Symfony\Contracts\Service\ServiceSubscriberInterface;
 
 /**
  * Encapsulates the wfd_meta table. Use it to query the timestamp of the last change (change
