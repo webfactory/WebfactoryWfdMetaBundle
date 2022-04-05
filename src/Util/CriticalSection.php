@@ -11,8 +11,8 @@ namespace Webfactory\Bundle\WfdMetaBundle\Util;
 use Closure;
 use Psr\Log\LoggerInterface;
 use RuntimeException;
-use Symfony\Component\Lock\Factory;
 use Symfony\Component\Lock\Lock;
+use Symfony\Component\Lock\LockFactory;
 
 /**
  * Make sure that code - provided as a closure - is being run sequentially by different
@@ -29,7 +29,7 @@ use Symfony\Component\Lock\Lock;
 class CriticalSection
 {
     /**
-     * @var Factory
+     * @var LockFactory
      */
     private $lockFactory;
 
@@ -56,7 +56,7 @@ class CriticalSection
      */
     private $logger;
 
-    public function __construct(Factory $lockFactory)
+    public function __construct(LockFactory $lockFactory)
     {
         $this->lockFactory = $lockFactory;
     }
