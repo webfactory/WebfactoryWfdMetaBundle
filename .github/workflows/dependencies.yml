@@ -30,6 +30,8 @@ jobs:
                         composer-${{ env.PHP_VERSION }}-
             -   run: |
                     composer install --no-interaction --no-scripts --no-progress --no-suggest
+                    # Work around hacky "suggest" dependency vs. checking requirements
+                    composer require webfactory/http-cache-bundle
                     composer show
             -   name: ComposerRequireChecker
                 uses: docker://webfactory/composer-require-checker:3.2.0
