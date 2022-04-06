@@ -31,8 +31,11 @@
         "symfony/http-kernel": "^4.3|^5.0",
         "symfony/lock": "^4.3|^5.0",
         "symfony/twig-bundle": "^4.3|^5.0",
-        "twig/twig": "^1.0|^2.0|^3.0",
-        "webfactory/http-cache-bundle": "^1.0"
+        "twig/twig": "^1.0|^2.0|^3.0"
+    },
+
+    "suggest": {
+        "webfactory/http-cache-bundle": "If you want to use wfd_meta information to determine Last-Modified information for requests"
     },
 
     "require-dev": {

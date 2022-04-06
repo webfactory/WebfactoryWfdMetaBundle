@@ -12,8 +12,8 @@ use Doctrine\Common\Annotations\Reader;
 use ReflectionObject;
 use SplObjectStorage;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
-use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
+use Symfony\Component\HttpKernel\Event\ControllerEvent;
+use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Webfactory\Bundle\WfdMetaBundle\Caching\Annotation\Send304IfNotModified;
 use Webfactory\Bundle\WfdMetaBundle\MetaQueryFactory;
 
@@ -40,7 +40,7 @@ class EventListener
         $this->lastTouchedResults = new SplObjectStorage();
     }
 
-    public function onKernelController(FilterControllerEvent $event)
+    public function onKernelController(ControllerEvent $event)
     {
         $controller = $event->getController();
         $request = $event->getRequest();
@@ -81,7 +81,7 @@ class EventListener
         }
     }
 
-    public function onKernelResponse(FilterResponseEvent $event)
+    public function onKernelResponse(ResponseEvent $event)
     {
         $request = $event->getRequest();
         $response = $event->getResponse();
