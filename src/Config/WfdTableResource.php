@@ -27,27 +27,13 @@ class WfdTableResource implements ResourceInterface, WfdMetaResource
         $this->tablename = $tablename;
     }
 
-    public function register(MetaQuery $query)
+    public function register(MetaQuery $query): void
     {
         $query->addTable($this->tablename);
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         return self::class.' '.$this->tablename;
-    }
-
-    /**
-     * @deprecated, only present for BC with Symfony 2.x. Remove for Symfony 3.x.
-     */
-    public function isFresh($timestamp)
-    {
-    }
-
-    /**
-     * @deprecated, only present for BC with Symfony 2.x. Remove for Symfony 3.x.
-     */
-    public function getResource()
-    {
     }
 }

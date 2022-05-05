@@ -55,11 +55,11 @@ class TemplateController
         $metaTableConstants = null,
         $metaEntities = null,
         $metaResetInterval = null
-    ) {
+    ): Response {
         /** @var DateTime $lastmod */
         $lastmod = null;
 
-        /** @var $response \Symfony\Component\HttpFoundation\Response */
+        /** @var $response Response */
         $response = null;
 
         if ($metaTables || $metaTableConstants || $metaEntities) {

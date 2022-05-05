@@ -15,5 +15,8 @@ use Webfactory\Bundle\WfdMetaBundle\MetaQuery;
  */
 interface WfdMetaResource
 {
+    /**
+     * @return void
+     */
     public function register(MetaQuery $query);
 }

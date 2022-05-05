@@ -38,7 +38,7 @@ class ExpirableConfigCache extends ConfigCache
         parent::__construct($this->timestampedFile, $debug);
     }
 
-    public function write($content, array $metadata = null)
+    public function write(string $content, array $metadata = null): void
     {
         parent::write($content, $metadata);
 
@@ -54,7 +54,7 @@ class ExpirableConfigCache extends ConfigCache
         $this->cleanup();
     }
 
-    protected function cleanup()
+    protected function cleanup(): void
     {
         $finder = new Finder();
         $basename = basename($this->baseFilename);

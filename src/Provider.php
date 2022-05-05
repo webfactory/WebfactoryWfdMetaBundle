@@ -26,7 +26,7 @@ class Provider implements ServiceSubscriberInterface
      */
     private $container;
 
-    public static function getSubscribedServices()
+    public static function getSubscribedServices(): array
     {
         return [Connection::class];
     }
@@ -36,10 +36,7 @@ class Provider implements ServiceSubscriberInterface
         $this->container = $container;
     }
 
-    /**
-     * @return Connection
-     */
-    private function getConnection()
+    private function getConnection(): Connection
     {
         return $this->container->get(Connection::class);
     }
@@ -49,9 +46,9 @@ class Provider implements ServiceSubscriberInterface
      *
      * @param array $tableNamesOrIds The table names or table ids to check for changes.
      *
-     * @return int|null UNIX timestamp or null if no entries were found.
+     * @return ?int UNIX timestamp or null if no entries were found.
      */
-    public function getLastTouched(array $tableNamesOrIds)
+    public function getLastTouched(array $tableNamesOrIds): ?int
     {
         if (!$tableNamesOrIds) {
             return 0;
@@ -99,7 +96,7 @@ class Provider implements ServiceSubscriberInterface
      *
      * @return array (int id => int unix timestamp of last change)
      */
-    public function getLastTouchedOfEachRow($tableName)
+    public function getLastTouchedOfEachRow($tableName): array
     {
         $lastTouchedData = $this->getConnection()->fetchAll('
             SELECT m.data_id, m.last_touched
@@ -123,10 +120,10 @@ class Provider implements ServiceSubscriberInterface
      * @param string $tableNameOrId The table name or ID containing the data row in question
      * @param int    $primaryKey    The data-id of the row in question
      *
-     * @return int|null The Unix timestamp for the last change of the given row; null if the information is not
-     *                  available
+     * @return ?int The Unix timestamp for the last change of the given row; null if the information is not
+     *              available
      */
-    public function getLastTouchedRow($tableNameOrId, $primaryKey)
+    public function getLastTouchedRow($tableNameOrId, $primaryKey): ?int
     {
         $lastTouched = $this->getConnection()->fetchColumn('
             SELECT m.last_touched
@@ -143,9 +140,9 @@ class Provider implements ServiceSubscriberInterface
      * @param string|bool|null $fetchValue string in "YYYY-m-d H:i:s" format or some "not queryable" value like NULL
      *                                     or false
      *
-     * @return int|null UNIX timestamp or NULL
+     * @return ?int UNIX timestamp or NULL
      */
-    private function getTimestampOrNull($fetchValue)
+    private function getTimestampOrNull($fetchValue): ?int
     {
         if (false === $fetchValue || null === $fetchValue) {
             return null;

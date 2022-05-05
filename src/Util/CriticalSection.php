@@ -13,6 +13,7 @@ use Psr\Log\LoggerInterface;
 use RuntimeException;
 use Symfony\Component\Lock\Lock;
 use Symfony\Component\Lock\LockFactory;
+use Symfony\Component\Lock\LockInterface;
 
 /**
  * Make sure that code - provided as a closure - is being run sequentially by different
@@ -87,10 +88,7 @@ class CriticalSection
         }
     }
 
-    /**
-     * @param string $lockName
-     */
-    private function lock($lockName)
+    private function lock(string $lockName)
     {
         $this->debug("Requesting lock $lockName");
         if (!$this->getLock($lockName)->acquire(true)) {
@@ -104,10 +102,7 @@ class CriticalSection
         $this->debug("Obtained the lock $lockName");
     }
 
-    /**
-     * @param string $lockName
-     */
-    private function release($lockName)
+    private function release(string $lockName)
     {
         --self::$entranceCount[$lockName];
         if (0 === self::$entranceCount[$lockName]) {
@@ -121,12 +116,8 @@ class CriticalSection
      *
      * A new lock object will be created if it does not exist yet.
      * This method will *not* automatically acquire the lock.
-     *
-     * @param string $name
-     *
-     * @return Lock
      */
-    private function getLock($name)
+    private function getLock(string $name): LockInterface
     {
         if (!isset(self::$locks[$name])) {
             $lock = $this->lockFactory->createLock($name);
@@ -138,10 +129,8 @@ class CriticalSection
 
     /**
      * Logs the given message if a logger is available.
-     *
-     * @param string $message
      */
-    private function debug($message)
+    private function debug(string $message): void
     {
         if ($this->logger) {
             $this->logger->debug($message, ['pid' => getmypid()]);
