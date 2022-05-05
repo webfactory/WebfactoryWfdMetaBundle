@@ -30,12 +30,12 @@ class WfdMetaConfigCache implements ConfigCacheInterface
         $this->metaQueryFactory = $metaQueryFactory;
     }
 
-    public function getPath()
+    public function getPath(): string
     {
         return $this->innerCache->getPath();
     }
 
-    public function isFresh()
+    public function isFresh(): bool
     {
         if (!$this->innerCache->isFresh()) {
             return false;
@@ -71,7 +71,7 @@ class WfdMetaConfigCache implements ConfigCacheInterface
         return $metaQuery->getLastTouched() === $wfdMetaResources['timestamp'];
     }
 
-    public function write($content, array $metadata = null)
+    public function write($content, array $metadata = null): void
     {
         /** @var WfdMetaResource[] $wfdMetaResources */
         $wfdMetaResources = [];

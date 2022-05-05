@@ -36,18 +36,4 @@ class WfdTableResource implements ResourceInterface, WfdMetaResource
     {
         return self::class.' '.$this->tablename;
     }
-
-    /**
-     * @deprecated, only present for BC with Symfony 2.x. Remove for Symfony 3.x.
-     */
-    public function isFresh($timestamp)
-    {
-    }
-
-    /**
-     * @deprecated, only present for BC with Symfony 2.x. Remove for Symfony 3.x.
-     */
-    public function getResource()
-    {
-    }
 }
