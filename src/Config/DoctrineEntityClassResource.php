@@ -24,12 +24,12 @@ class DoctrineEntityClassResource implements ResourceInterface, WfdMetaResource
         $this->classname = $classname;
     }
 
-    public function register(MetaQuery $query)
+    public function register(MetaQuery $query): void
     {
         $query->addEntityClass($this->classname);
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         return self::class.' '.$this->classname;
     }

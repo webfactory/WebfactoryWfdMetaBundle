@@ -33,7 +33,7 @@ class DoctrineMetadataHelper
      *
      * @return string Database table name for the root table belonging to this entity.
      */
-    public function getRootTableName($classname)
+    public function getRootTableName(string $classname): string
     {
         try {
             /** @var $meta ClassMetadata */

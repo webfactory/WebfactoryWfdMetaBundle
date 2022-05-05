@@ -27,12 +27,12 @@ class WfdTableResource implements ResourceInterface, WfdMetaResource
         $this->tablename = $tablename;
     }
 
-    public function register(MetaQuery $query)
+    public function register(MetaQuery $query): void
     {
         $query->addTable($this->tablename);
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         return self::class.' '.$this->tablename;
     }

@@ -9,6 +9,7 @@
 namespace Webfactory\Bundle\WfdMetaBundle\Helper;
 
 use DateTime;
+use DateTimeInterface;
 use Exception;
 use RuntimeException;
 use Webfactory\Bundle\WfdMetaBundle\MetaQuery;
@@ -21,7 +22,7 @@ class LastmodHelper
     protected $entities;
     protected $resetInterval = 2419200; // Default: 28 Tage
 
-    public function calculateLastModified(MetaQueryFactory $metaQueryFactory)
+    public function calculateLastModified(MetaQueryFactory $metaQueryFactory): ?DateTimeInterface
     {
         $metaQuery = $metaQueryFactory->create();
         $this->configure($metaQuery);
@@ -38,7 +39,7 @@ class LastmodHelper
         return null;
     }
 
-    protected function configure(MetaQuery $metaQuery)
+    protected function configure(MetaQuery $metaQuery): void
     {
         try {
             if (!$this->tables && !$this->tableIdConstants && !$this->entities) {
@@ -66,22 +67,22 @@ class LastmodHelper
         }
     }
 
-    public function setResetInterval($resetInterval)
+    public function setResetInterval(int $resetInterval): void
     {
         $this->resetInterval = $resetInterval;
     }
 
-    public function setEntities($entities)
+    public function setEntities(array $entities): void
     {
         $this->entities = $entities;
     }
 
-    public function setTableIdConstants($tableIdConstants)
+    public function setTableIdConstants(array $tableIdConstants): void
     {
         $this->tableIdConstants = $tableIdConstants;
     }
 
-    public function setTables($tables)
+    public function setTables(array $tables): void
     {
         $this->tables = $tables;
     }

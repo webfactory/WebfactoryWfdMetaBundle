@@ -41,7 +41,7 @@ class WfdMetaConfigCacheFactory implements ConfigCacheFactoryInterface
         $this->lockFactory = $lockFactory;
     }
 
-    public function cache($file, $callback)
+    public function cache($file, $callback): ConfigCacheInterface
     {
         if (!\is_callable($callback)) {
             throw new InvalidArgumentException(sprintf('Invalid type for callback argument. Expected callable, but got "%s".', \gettype($callback)));
@@ -68,12 +68,12 @@ class WfdMetaConfigCacheFactory implements ConfigCacheFactoryInterface
         return $wfdMetaCache;
     }
 
-    private function createCache($file, ConfigCacheInterface $innerCache)
+    private function createCache($file, ConfigCacheInterface $innerCache): ConfigCacheInterface
     {
         return new WfdMetaConfigCache($file, $innerCache, $this->metaQueryFactory);
     }
 
-    private function fillCache($callback, ConfigCacheInterface $cache)
+    private function fillCache($callback, ConfigCacheInterface $cache): void
     {
         // Make sure only one process (on this host) will rebuild the cache, others wait for it
         $cs = new CriticalSection($this->lockFactory);

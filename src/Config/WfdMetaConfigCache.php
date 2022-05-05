@@ -48,7 +48,7 @@ class WfdMetaConfigCache implements ConfigCacheInterface
         return true;
     }
 
-    public function isWfdMetaFresh()
+    public function isWfdMetaFresh(): bool
     {
         $wfdMetaFile = $this->file.'.wfd_meta';
 
@@ -98,7 +98,7 @@ class WfdMetaConfigCache implements ConfigCacheInterface
         $this->dumpWfdMetaFile(serialize(['resources' => array_values($wfdMetaResources), 'timestamp' => $timestamp]));
     }
 
-    private function dumpWfdMetaFile($content)
+    private function dumpWfdMetaFile($content): void
     {
         $mode = 0666;
         $umask = umask();
