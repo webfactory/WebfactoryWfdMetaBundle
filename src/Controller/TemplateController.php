@@ -55,8 +55,7 @@ class TemplateController
         $metaTableConstants = null,
         $metaEntities = null,
         $metaResetInterval = null
-    ): Response
-    {
+    ): Response {
         /** @var DateTime $lastmod */
         $lastmod = null;
 

@@ -121,7 +121,7 @@ class Provider implements ServiceSubscriberInterface
      * @param int    $primaryKey    The data-id of the row in question
      *
      * @return ?int The Unix timestamp for the last change of the given row; null if the information is not
-     *                  available
+     *              available
      */
     public function getLastTouchedRow($tableNameOrId, $primaryKey): ?int
     {
