@@ -15,10 +15,7 @@
             <argument type="service" id="Webfactory\Bundle\WfdMetaBundle\DoctrineMetadataHelper" on-invalid="null" />
         </service>
 
-        <service id="Webfactory\Bundle\WfdMetaBundle\MetaQueryFactory">
-            <argument type="service" id="Webfactory\Bundle\WfdMetaBundle\Provider" />
-            <argument type="service" id="service_container" />
-        </service>
+        <service id="Webfactory\Bundle\WfdMetaBundle\MetaQueryFactory" />
 
         <service id="Webfactory\Bundle\WfdMetaBundle\MetaQuery" abstract="true">
             <factory service="Webfactory\Bundle\WfdMetaBundle\MetaQueryFactory" method="create" />

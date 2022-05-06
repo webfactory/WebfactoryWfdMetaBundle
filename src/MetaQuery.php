@@ -8,7 +8,7 @@
 
 namespace Webfactory\Bundle\WfdMetaBundle;
 
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Psr\Container\ContainerInterface;
 
 /**
  * Eine Abfrage von wfd_meta-Daten, die vorher für bestimmte Tabellen oder
@@ -101,7 +101,7 @@ class MetaQuery
     {
         if ($this->classnames) {
             /** @var DoctrineMetadataHelper $metadataHelper */
-            $metadataHelper = $this->container->get('webfactory_wfd_meta.doctrine_metadata_helper');
+            $metadataHelper = $this->container->get(DoctrineMetadataHelper::class);
 
             foreach ($this->classnames as $classname) {
                 $this->addTable($metadataHelper->getRootTableName($classname));

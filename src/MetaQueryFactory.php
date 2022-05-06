@@ -8,18 +8,26 @@
 
 namespace Webfactory\Bundle\WfdMetaBundle;
 
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Psr\Container\ContainerInterface;
+use Symfony\Contracts\Service\ServiceSubscriberInterface;
 
 /**
  * Erzeugt MetaQuery-Instanzen.
  */
-class MetaQueryFactory
+class MetaQueryFactory implements ServiceSubscriberInterface
 {
     /** @var Provider */
     private $metaProvider;
 
     /** @var ContainerInterface */
     private $container;
+
+    public static function getSubscribedServices()
+    {
+        return [
+            DoctrineMetadataHelper::class => DoctrineMetadataHelper::class,
+        ];
+    }
 
     public function __construct(Provider $provider, ContainerInterface $container)
     {
