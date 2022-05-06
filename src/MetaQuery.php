@@ -9,7 +9,6 @@
 namespace Webfactory\Bundle\WfdMetaBundle;
 
 use Psr\Container\ContainerInterface;
-use Symfony\Contracts\Service\ServiceSubscriberInterface;
 
 /**
  * Eine Abfrage von wfd_meta-Daten, die vorher für bestimmte Tabellen oder
