@@ -72,17 +72,17 @@ class LastmodHelper
         $this->resetInterval = $resetInterval;
     }
 
-    public function setEntities(array $entities): void
+    public function setEntities($entities): void
     {
         $this->entities = $entities;
     }
 
-    public function setTableIdConstants(array $tableIdConstants): void
+    public function setTableIdConstants($tableIdConstants): void
     {
         $this->tableIdConstants = $tableIdConstants;
     }
 
-    public function setTables(array $tables): void
+    public function setTables($tables): void
     {
         $this->tables = $tables;
     }
