@@ -82,7 +82,7 @@ class LastmodHelper
         $this->tableIdConstants = $tableIdConstants;
     }
 
-    public function setTables($tables): void
+    public function setTables(array|string $tables): void
     {
         $this->tables = $tables;
     }
