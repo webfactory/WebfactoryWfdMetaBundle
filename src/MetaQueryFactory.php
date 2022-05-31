@@ -22,7 +22,7 @@ class MetaQueryFactory implements ServiceSubscriberInterface
     /** @var ContainerInterface */
     private $container;
 
-    public static function getSubscribedServices()
+    public static function getSubscribedServices(): array
     {
         return [
             DoctrineMetadataHelper::class => DoctrineMetadataHelper::class,
@@ -35,7 +35,7 @@ class MetaQueryFactory implements ServiceSubscriberInterface
         $this->container = $container;
     }
 
-    public function create()
+    public function create(): MetaQuery
     {
         return new MetaQuery($this->metaProvider, $this->container);
     }
