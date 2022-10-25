@@ -28,7 +28,6 @@ use Webfactory\HttpCacheBundle\NotModified\LastModifiedDeterminator;
  * )
  *
  * becomes (without the spaces behind the "@"s):
- *
  * @ ReplaceWithNotModifiedResponse({"@ app_caching_mycontroller_myaction"})
  *
  * with the following service definition:
