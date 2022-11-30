@@ -26,7 +26,3 @@ services:
     webfactory_wfd_meta.controller.template:
         alias: 'Webfactory\Bundle\WfdMetaBundle\Controller\TemplateController'
         deprecated: ~
-
-    webfactory_wfd_meta.config_cache_factory:
-        alias: 'Webfactory\Bundle\WfdMetaBundle\Config\WfdMetaConfigCacheFactory'
-        deprecated: ~

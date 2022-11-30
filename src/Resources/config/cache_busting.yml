@@ -1,0 +1,7 @@
+services:
+
+    _defaults:
+        public: false
+
+    Webfactory\Bundle\WfdMetaBundle\Config\CacheBustingResourceChecker:
+        tags: ['config_cache.resource_checker']
