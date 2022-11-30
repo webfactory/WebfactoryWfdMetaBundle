@@ -29,5 +29,14 @@ class WebfactoryWfdMetaExtension extends Extension
 
         $yamlLoader = new YamlFileLoader($container, $fileLocator);
         $yamlLoader->load('legacy_aliases.yml');
+
+        $configuration = new Configuration();
+        $config = $this->processConfiguration($configuration, $configs);
+
+        if ($config['always_expire_wfd_meta_resources']) {
+            $yamlLoader->load('cache_busting.yml');
+        } else {
+            $xmlLoader->load('config_cache_factory.xml');
+        }
     }
 }

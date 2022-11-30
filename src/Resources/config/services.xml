@@ -36,21 +36,5 @@
             <argument>%kernel.debug%</argument>
         </service>
 
-        <service id="Webfactory\Bundle\WfdMetaBundle\Config\WfdMetaConfigCacheFactory" decorates="config_cache_factory">
-            <argument type="service" id="Webfactory\Bundle\WfdMetaBundle\Config\WfdMetaConfigCacheFactory.inner" />
-            <argument type="service" id="Webfactory\Bundle\WfdMetaBundle\MetaQueryFactory" />
-            <argument type="service">
-                <service class="Symfony\Component\Lock\LockFactory">
-                    <argument type="service">
-                        <service class="Symfony\Component\Lock\Store\FlockStore" />
-                    </argument>
-                    <call method="setLogger">
-                        <argument type="service" id="logger" on-invalid="ignore" />
-                    </call>
-                    <tag name="monolog.logger" channel="webfactory_wfd_meta" />
-                </service>
-            </argument>
-        </service>
-
     </services>
 </container>
