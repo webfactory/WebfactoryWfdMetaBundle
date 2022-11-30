@@ -13,8 +13,6 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
-use Webfactory\Bundle\WfdMetaBundle\Config\CacheBustingResourceChecker;
-use function Symfony\Component\DependencyInjection\Loader\Configurator\service;
 
 class WebfactoryWfdMetaExtension extends Extension
 {
