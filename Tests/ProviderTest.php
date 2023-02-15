@@ -3,7 +3,7 @@
 namespace Webfactory\Bundle\WfdMetaBundle\Tests;
 
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Driver\PDOSqlite\Driver;
+use Doctrine\DBAL\DriverManager;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\Container;
 use Webfactory\Bundle\WfdMetaBundle\Provider;
@@ -28,7 +28,7 @@ final class ProviderTest extends TestCase
             'password' => '',
             'memory' => true,
         ];
-        $this->connection = new Connection($connectionParameter, new Driver());
+        $this->connection = DriverManager::getConnection($connectionParameter);
 
         $this->connection->exec("
             CREATE TABLE `wfd_table` (
