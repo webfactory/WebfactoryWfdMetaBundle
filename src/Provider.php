@@ -59,7 +59,7 @@ class Provider implements ServiceSubscriberInterface
 
         foreach ($tableNamesOrIds as $t) {
             if ('*' === $t) {
-                $lastTouchOnAnyTable = $this->getConnection()->fetchColumn('SELECT MAX(last_touched) FROM wfd_meta');
+                $lastTouchOnAnyTable = $this->getConnection()->fetchOne('SELECT MAX(last_touched) FROM wfd_meta');
 
                 return $this->getTimestampOrNull($lastTouchOnAnyTable);
             }
@@ -72,7 +72,7 @@ class Provider implements ServiceSubscriberInterface
         }
 
         if ($names || $ids) {
-            $lastTouched = $this->getConnection()->fetchColumn('
+            $lastTouched = $this->getConnection()->fetchOne('
                 SELECT MAX(m.last_touched) lastTouchedString
                 FROM wfd_meta m
                 JOIN wfd_table t on m.wfd_table_id = t.id
@@ -98,7 +98,7 @@ class Provider implements ServiceSubscriberInterface
      */
     public function getLastTouchedOfEachRow($tableName): array
     {
-        $lastTouchedData = $this->getConnection()->fetchAll('
+        $result = $this->getConnection()->executeQuery('
             SELECT m.data_id, m.last_touched
             FROM wfd_meta m
             JOIN wfd_table t on m.wfd_table_id = t.id
@@ -107,7 +107,7 @@ class Provider implements ServiceSubscriberInterface
         );
 
         $idAndVersionPairs = [];
-        foreach ($lastTouchedData as $row) {
+        while ($row = $result->fetchAssociative()) {
             $idAndVersionPairs[$row['data_id']] = $this->getTimestampOrNull($row['last_touched']);
         }
 
@@ -125,7 +125,7 @@ class Provider implements ServiceSubscriberInterface
      */
     public function getLastTouchedRow($tableNameOrId, $primaryKey): ?int
     {
-        $lastTouched = $this->getConnection()->fetchColumn('
+        $lastTouched = $this->getConnection()->fetchOne('
             SELECT m.last_touched
             FROM wfd_meta m
             JOIN wfd_table t on m.wfd_table_id = t.id
