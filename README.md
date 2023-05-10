@@ -72,6 +72,20 @@ This bundle will replace, or more precisely: decorate, the `config_cache_factory
  
  The `CriticalSection` will be used to make sure only one process at a time tries to re-create the cache, while others wait and re-use the result.
 
+## Configuration
+
+This bundle has a single configuration setting:
+
+```yml
+# config_test.yml
+webfactory_wfd_meta:
+    always_expire_wfd_meta_resources: true
+```
+
+With this setting, ConfigCache instances (Symfony Router, Translator, ... maybe?) that include WfdMetaResource instances will expire immediately.
+
+This is helpful e. g. in functional tests, where you have database-backed routes, translations or similar: You can change the database values and no longer need to think about the ConfigCaches or poke wfd_meta to make the changes effective.
+
 ## Tests
 
 Run the tests with
@@ -85,4 +99,4 @@ This project was started at webfactory GmbH, Bonn.
 - <https://www.webfactory.de>
 - <https://twitter.com/webfactory>
 
-Copyright 2015-2017 webfactory GmbH, Bonn. Code released under [the MIT license](LICENSE).
+Copyright 2015-2023 webfactory GmbH, Bonn. Code released under [the MIT license](LICENSE).
