@@ -5,36 +5,24 @@ services:
 
     webfactory_wfd_meta.provider:
         alias: 'Webfactory\Bundle\WfdMetaBundle\Provider'
-        deprecated:
-            package: 'webfactory/wfdmeta-bundle'
-            version: '3.9.0'
+        deprecated: ~
 
     webfactory_wfd_meta.metadata_facade:
         alias: 'Webfactory\Bundle\WfdMetaBundle\MetadataFacade'
-        deprecated:
-            package: 'webfactory/wfdmeta-bundle'
-            version: '3.9.0'
+        deprecated: ~
 
     webfactory_wfd_meta.meta_query_factory:
         alias: 'Webfactory\Bundle\WfdMetaBundle\MetaQueryFactory'
-        deprecated:
-            package: 'webfactory/wfdmeta-bundle'
-            version: '3.9.0'
+        deprecated: ~
 
     webfactory_wfd_meta.meta_query:
         alias: 'Webfactory\Bundle\WfdMetaBundle\MetaQuery'
-        deprecated:
-            package: 'webfactory/wfdmeta-bundle'
-            version: '3.9.0'
+        deprecated: ~
 
     webfactory_wfd_meta.caching.event_listener:
         alias: 'Webfactory\Bundle\WfdMetaBundle\Caching\EventListener'
-        deprecated:
-            package: 'webfactory/wfdmeta-bundle'
-            version: '3.9.0'
+        deprecated: ~
 
     webfactory_wfd_meta.controller.template:
         alias: 'Webfactory\Bundle\WfdMetaBundle\Controller\TemplateController'
-        deprecated:
-            package: 'webfactory/wfdmeta-bundle'
-            version: '3.9.0'
+        deprecated: ~
