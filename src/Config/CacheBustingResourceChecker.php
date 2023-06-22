@@ -12,7 +12,7 @@ class CacheBustingResourceChecker implements ResourceCheckerInterface
         return $metadata instanceof WfdMetaResource;
     }
 
-    public function isFresh(ResourceInterface $resource, int $timestamp): bool
+    public function isFresh(ResourceInterface $resource, $timestamp): bool
     {
         return false;
     }
