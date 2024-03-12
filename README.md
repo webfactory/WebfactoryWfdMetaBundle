@@ -86,6 +86,8 @@ With this setting, ConfigCache instances (Symfony Router, Translator, ... maybe?
 
 This is helpful e. g. in functional tests, where you have database-backed routes, translations or similar: You can change the database values and no longer need to think about the ConfigCaches or poke wfd_meta to make the changes effective.
 
+Defaults to `false` but in a `test`-environment, where it defaults to `true`.
+
 ## Tests
 
 Run the tests with
