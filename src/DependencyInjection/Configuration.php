@@ -17,7 +17,7 @@ class Configuration implements ConfigurationInterface
             ->defaultFalse()
             ->info('When set to "true", ConfigCache instances that depend on "\Webfactory\Bundle\WfdMetaBundle\Config\WfdMetaResource" will be refreshed every time; useful during functional tests to reload routes etc.');
 
-        if('test' === $_ENV['APP_ENV']) {
+        if ('test' === $_ENV['APP_ENV']) {
             $treeBuilder->getRootNode()->defaultTrue();
         }
 
