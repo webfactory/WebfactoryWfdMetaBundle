@@ -8,7 +8,6 @@
 
 namespace Webfactory\Bundle\WfdMetaBundle\Caching;
 
-use Doctrine\Common\Annotations\Reader;
 use ReflectionObject;
 use SplObjectStorage;
 use Symfony\Component\HttpFoundation\Response;
