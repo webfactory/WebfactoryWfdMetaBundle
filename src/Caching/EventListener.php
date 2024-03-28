@@ -22,8 +22,6 @@ use Webfactory\Bundle\WfdMetaBundle\MetaQueryFactory;
  */
 class EventListener
 {
-    protected $reader;
-
     /** @var MetaQueryFactory */
     protected $metaQueryFactory;
 
@@ -32,9 +30,8 @@ class EventListener
     /** @var SplObjectStorage */
     protected $lastTouchedResults;
 
-    public function __construct(Reader $reader, MetaQueryFactory $metaQueryFactory, $debug)
+    public function __construct(MetaQueryFactory $metaQueryFactory, $debug)
     {
-        $this->reader = $reader;
         $this->metaQueryFactory = $metaQueryFactory;
         $this->debug = $debug;
         $this->lastTouchedResults = new SplObjectStorage();
