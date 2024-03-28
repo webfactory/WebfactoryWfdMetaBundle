@@ -38,6 +38,6 @@ jobs:
                     restore-keys: |
                         composer-${{ runner.os }}-${{ matrix.php-version }}-${{ matrix.symfony-locked-version }}-${{ matrix.dependency-version }}-
             -   run: |
-                    composer install --no-interaction --no-progress --ansi --no-scripts
+                    composer update --${{ matrix.dependency-version }} --no-interaction --no-scripts --no-progress --ansi
                     composer show
             -   run: vendor/bin/phpunit
