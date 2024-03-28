@@ -1,3 +1,13 @@
+## Version 4.0.0
+
+* Annotation classes from the `\Webfactory\Bundle\WfdMetaBundle\Caching\Annotation` namespace have been removed, annotation support has been removed.
+  Use attributes for configuration. 
+
+## Version 3.4.0
+
+* Using annotations to configure caching is deprecated. A new `\Webfactory\Bundle\WfdMetaBundle\Caching\Attribute\Send304IfNotModified` attribute
+  is provided to replace annotations-based configuration. Using this bundle for caching configuration remains a deprecated feature by itself.
+
 ## Version 3.3.0
 
 * Deprecate Send304IfNotModified annotation. Use WebfactoryHttpCachingBundle and its LastModifiedDeterminators instead. If in a hurry, @see \Webfactory\Bundle\WfdMetaBundle\Caching\WfdMetaQueries for a quick conversion.
