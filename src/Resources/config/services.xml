@@ -22,7 +22,6 @@
         </service>
 
         <service id="Webfactory\Bundle\WfdMetaBundle\Caching\EventListener">
-            <argument type="service" id="annotation_reader" />
             <argument type="service" id="Webfactory\Bundle\WfdMetaBundle\MetaQueryFactory" />
             <argument>%kernel.debug%</argument>
 
