@@ -8,39 +8,16 @@
 
 namespace Webfactory\Bundle\WfdMetaBundle\Caching\Annotation;
 
-use Exception;
-use Webfactory\Bundle\WfdMetaBundle\Helper\LastmodHelper;
-use Webfactory\Bundle\WfdMetaBundle\MetaQueryFactory;
-
-@trigger_error(
-    'The Send304IfNotModified annotation is deprecated. Use WebfactoryHttpCachingBundle and its LastModifiedDeterminators instead. If in a hurry, @see \Webfactory\Bundle\WfdMetaBundle\Caching\WfdMetaQueries for a quick conversion.',
-    \E_USER_DEPRECATED
-);
-
 /**
  * @Annotation
  *
- * @deprecated Use WebfactoryHttpCachingBundle and its LastModifiedDeterminators instead. If in a hurry, @see \Webfactory\Bundle\WfdMetaBundle\Caching\WfdMetaQueries for a quick conversion.
+ * @deprecated Use the \Webfactory\Bundle\WfdMetaBundle\Caching\Attribute\Send304IfNotModified attribute instead
  */
-class Send304IfNotModified
+class Send304IfNotModified extends \Webfactory\Bundle\WfdMetaBundle\Caching\Attribute\Send304IfNotModified
 {
-    protected $lastmodHelper;
-
     public function __construct($values)
     {
-        $this->lastmodHelper = new LastmodHelper();
-
-        foreach ($values as $key => $value) {
-            if (method_exists($this->lastmodHelper, $name = 'set'.ucfirst($key))) {
-                $this->lastmodHelper->$name($value);
-            } else {
-                throw new Exception('Die Annotation '.static::class.' kann die Eigentschaft "'.$key.'" nicht setzen.');
-            }
-        }
-    }
-
-    public function calculateLastModified(MetaQueryFactory $metaQueryFactory)
-    {
-        return $this->lastmodHelper->calculateLastModified($metaQueryFactory);
+        @trigger_error(sprintf('The %s annotation is deprecated, use the %s attribute instead', __CLASS__, \Webfactory\Bundle\WfdMetaBundle\Caching\Attribute\Send304IfNotModified::class), \E_USER_DEPRECATED);
+        parent::__construct(...$values);
     }
 }
