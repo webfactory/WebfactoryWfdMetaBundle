@@ -10,6 +10,7 @@ namespace Webfactory\Bundle\WfdMetaBundle\Caching\Attribute;
 
 use Attribute;
 use Exception;
+use InvalidArgumentException;
 use Webfactory\Bundle\WfdMetaBundle\Helper\LastmodHelper;
 use Webfactory\Bundle\WfdMetaBundle\MetaQueryFactory;
 
@@ -29,7 +30,7 @@ class Send304IfNotModified
         );
 
         if (!$values) {
-            throw new \InvalidArgumentException(sprintf('The %s attribute needs at least one criterion', __CLASS__));
+            throw new InvalidArgumentException(sprintf('The %s attribute needs at least one criterion', __CLASS__));
         }
 
         $this->lastmodHelper = new LastmodHelper();
