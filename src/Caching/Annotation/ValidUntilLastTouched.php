@@ -11,17 +11,13 @@ namespace Webfactory\Bundle\WfdMetaBundle\Caching\Annotation;
 /**
  * @Annotation
  *
- * @Deprecated
+ * @deprecated Use the \Webfactory\Bundle\WfdMetaBundle\Caching\Attribute\Send304IfNotModified attribute instead
  */
 class ValidUntilLastTouched extends Send304IfNotModified
 {
     public function __construct($values)
     {
-        @trigger_error(
-            'The ValidUntilLastTouched annotation is deprecated. Use Send304IfNotModified instead.',
-            \E_USER_DEPRECATED
-        );
-
-        parent::__construct($values);
+        @trigger_error(sprintf('The %s annotation is deprecated, use the %s attribute instead', __CLASS__, \Webfactory\Bundle\WfdMetaBundle\Caching\Attribute\Send304IfNotModified::class), \E_USER_DEPRECATED);
+        \Webfactory\Bundle\WfdMetaBundle\Caching\Attribute\Send304IfNotModified::__construct(...$values);
     }
 }

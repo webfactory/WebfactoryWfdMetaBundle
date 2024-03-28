@@ -45,13 +45,13 @@ class EventListener
         $controller = $event->getController();
         $request = $event->getRequest();
 
-        $annotation = $this->findAnnotation($controller);
+        $attribute = $this->findAttribute($controller);
 
-        if (!$annotation) {
+        if (!$attribute) {
             return;
         }
 
-        $lastTouched = $annotation->calculateLastModified($this->metaQueryFactory);
+        $lastTouched = $attribute->calculateLastModified($this->metaQueryFactory);
 
         if (!$lastTouched) {
             return;
@@ -94,18 +94,29 @@ class EventListener
     /**
      * @param $callback array A PHP callback (array) pointing to the method to reflect on.
      *
-     * @return Send304IfNotModified|null The annotation, if found. Null otherwise.
+     * @return Send304IfNotModified|null The attribute, if found. Null otherwise.
      */
-    protected function findAnnotation($callback)
+    protected function findAttribute($callback): ?\Webfactory\Bundle\WfdMetaBundle\Caching\Attribute\Send304IfNotModified
     {
-        if (\is_array($callback)) {
-            $object = new ReflectionObject($callback[0]);
-            $method = $object->getMethod($callback[1]);
+        if (! \is_array($callback)) {
+            return null;
+        }
 
-            foreach ($this->reader->getMethodAnnotations($method) as $configuration) {
-                if ($configuration instanceof Send304IfNotModified) {
-                    return $configuration;
-                }
+        $object = new ReflectionObject($callback[0]);
+        $method = $object->getMethod($callback[1]);
+
+        if (PHP_MAJOR_VERSION >= 8) {
+            $attributes = $method->getAttributes(\Webfactory\Bundle\WfdMetaBundle\Caching\Attribute\Send304IfNotModified::class);
+
+            if ($attributes) {
+                return $attributes[0];
+            }
+        }
+
+        foreach ($this->reader->getMethodAnnotations($method) as $configuration) {
+            if ($configuration instanceof Send304IfNotModified) {
+                @trigger_error(sprintf('Using annotations to configure wfd_meta based caching on %s::%s is deprecated, use attribute-based configuration instead.', $method->class, $method->name), E_USER_DEPRECATED);
+                return $configuration;
             }
         }
 
