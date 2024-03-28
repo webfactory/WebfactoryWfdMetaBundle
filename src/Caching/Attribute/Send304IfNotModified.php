@@ -28,6 +28,10 @@ class Send304IfNotModified
             \E_USER_DEPRECATED
         );
 
+        if (!$values) {
+            throw new \InvalidArgumentException(sprintf('The %s attribute needs at least one criterion', __CLASS__));
+        }
+
         $this->lastmodHelper = new LastmodHelper();
 
         foreach ($values as $key => $value) {

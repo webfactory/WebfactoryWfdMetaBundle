@@ -109,7 +109,7 @@ class EventListener
             $attributes = $method->getAttributes(\Webfactory\Bundle\WfdMetaBundle\Caching\Attribute\Send304IfNotModified::class);
 
             if ($attributes) {
-                return $attributes[0];
+                return $attributes[0]->newInstance();
             }
         }
 
