@@ -101,6 +101,6 @@ class EventListener
 
         $attributes = $method->getAttributes(Send304IfNotModified::class);
 
-        return $attributes ? $attributes[0] : null;
+        return $attributes ? $attributes[0]->newInstance() : null;
     }
 }

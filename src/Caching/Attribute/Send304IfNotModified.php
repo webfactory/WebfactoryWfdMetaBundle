@@ -10,6 +10,7 @@ namespace Webfactory\Bundle\WfdMetaBundle\Caching\Attribute;
 
 use Attribute;
 use Exception;
+use InvalidArgumentException;
 use Webfactory\Bundle\WfdMetaBundle\Helper\LastmodHelper;
 use Webfactory\Bundle\WfdMetaBundle\MetaQueryFactory;
 
@@ -27,6 +28,10 @@ class Send304IfNotModified
             'The Send304IfNotModified attribute is deprecated. Use WebfactoryHttpCachingBundle and its LastModifiedDeterminators instead. If in a hurry, @see \Webfactory\Bundle\WfdMetaBundle\Caching\WfdMetaQueries for a quick conversion.',
             \E_USER_DEPRECATED
         );
+
+        if (!$values) {
+            throw new InvalidArgumentException(sprintf('The %s attribute needs at least one criterion', __CLASS__));
+        }
 
         $this->lastmodHelper = new LastmodHelper();
 
