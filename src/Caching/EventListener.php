@@ -96,16 +96,16 @@ class EventListener
      *
      * @return Send304IfNotModified|null The attribute, if found. Null otherwise.
      */
-    protected function findAttribute($callback): ?\Webfactory\Bundle\WfdMetaBundle\Caching\Attribute\Send304IfNotModified
+    protected function findAttribute($callback): ?Attribute\Send304IfNotModified
     {
-        if (! \is_array($callback)) {
+        if (!\is_array($callback)) {
             return null;
         }
 
         $object = new ReflectionObject($callback[0]);
         $method = $object->getMethod($callback[1]);
 
-        if (PHP_MAJOR_VERSION >= 8) {
+        if (\PHP_MAJOR_VERSION >= 8) {
             $attributes = $method->getAttributes(\Webfactory\Bundle\WfdMetaBundle\Caching\Attribute\Send304IfNotModified::class);
 
             if ($attributes) {
@@ -115,7 +115,8 @@ class EventListener
 
         foreach ($this->reader->getMethodAnnotations($method) as $configuration) {
             if ($configuration instanceof Send304IfNotModified) {
-                @trigger_error(sprintf('Using annotations to configure wfd_meta based caching on %s::%s is deprecated, use attribute-based configuration instead.', $method->class, $method->name), E_USER_DEPRECATED);
+                @trigger_error(sprintf('Using annotations to configure wfd_meta based caching on %s::%s is deprecated, use attribute-based configuration instead.', $method->class, $method->name), \E_USER_DEPRECATED);
+
                 return $configuration;
             }
         }

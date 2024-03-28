@@ -17,7 +17,7 @@ class Send304IfNotModified extends \Webfactory\Bundle\WfdMetaBundle\Caching\Attr
 {
     public function __construct($values)
     {
-        @trigger_error(sprintf('The %s annotation is deprecated, use the %s attribute instead', __CLASS__, \Webfactory\Bundle\WfdMetaBundle\Caching\Attribute\Send304IfNotModified::class), E_USER_DEPRECATED);
+        @trigger_error(sprintf('The %s annotation is deprecated, use the %s attribute instead', __CLASS__, \Webfactory\Bundle\WfdMetaBundle\Caching\Attribute\Send304IfNotModified::class), \E_USER_DEPRECATED);
         parent::__construct(...$values);
     }
 }

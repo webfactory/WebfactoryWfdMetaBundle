@@ -8,6 +8,7 @@
 
 namespace Webfactory\Bundle\WfdMetaBundle\Caching\Attribute;
 
+use Attribute;
 use Exception;
 use Webfactory\Bundle\WfdMetaBundle\Helper\LastmodHelper;
 use Webfactory\Bundle\WfdMetaBundle\MetaQueryFactory;
@@ -15,7 +16,7 @@ use Webfactory\Bundle\WfdMetaBundle\MetaQueryFactory;
 /**
  * @deprecated Use WebfactoryHttpCachingBundle and its LastModifiedDeterminators instead. If in a hurry, @see \Webfactory\Bundle\WfdMetaBundle\Caching\WfdMetaQueries for a quick conversion.
  */
-#[\Attribute]
+#[Attribute]
 class Send304IfNotModified
 {
     protected $lastmodHelper;
