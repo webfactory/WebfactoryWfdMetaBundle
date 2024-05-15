@@ -38,3 +38,9 @@ services:
         deprecated:
             package: 'webfactory/wfdmeta-bundle'
             version: '3.9.0'
+
+    webfactory_wfd_meta.config_cache_factory:
+        alias: 'Webfactory\Bundle\WfdMetaBundle\Config\WfdMetaConfigCacheFactory'
+        deprecated:
+            package: 'webfactory/wfdmeta-bundle'
+            version: '3.9.0'
