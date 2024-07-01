@@ -73,17 +73,19 @@ class WfdMetaConfigCache implements ConfigCacheInterface
 
     public function write($content, array $metadata = null): void
     {
-        /** @var WfdMetaResource[] $wfdMetaResources */
+        $this->innerCache->write($content, $metadata);
+
+        // Create an extra cache layer by collecting all WfdMetaResources, fetching the current
+        // timestamp for the data they represent and put everything together into an extra
+        // `.wfd_meta` metadata file.
+
         $wfdMetaResources = [];
 
         foreach ($metadata as $key => $resource) {
             if ($resource instanceof WfdMetaResource) {
-                unset($metadata[$key]);
                 $wfdMetaResources[(string) $resource] = $resource; // use key to dedup resource
             }
         }
-
-        $this->innerCache->write($content, $metadata);
 
         $timestamp = null;
 
