@@ -19,7 +19,7 @@ class MetadataFacade
     /**
      * MetadataFacade constructor.
      */
-    public function __construct(Provider $provider, DoctrineMetadataHelper $doctrineMetadataHelper = null)
+    public function __construct(Provider $provider, ?DoctrineMetadataHelper $doctrineMetadataHelper = null)
     {
         $this->provider = $provider;
         $this->doctrineMetadataHelper = $doctrineMetadataHelper;
@@ -37,7 +37,7 @@ class MetadataFacade
         }
 
         return $this->provider->getLastTouchedRow(
-            $this->doctrineMetadataHelper->getRootTableName(\get_class($entity)),
+            $this->doctrineMetadataHelper->getRootTableName($entity::class),
             $this->doctrineMetadataHelper->getPrimaryKey($entity)
         );
     }

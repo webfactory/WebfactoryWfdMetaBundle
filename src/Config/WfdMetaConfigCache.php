@@ -71,7 +71,7 @@ class WfdMetaConfigCache implements ConfigCacheInterface
         return $metaQuery->getLastTouched() === $wfdMetaResources['timestamp'];
     }
 
-    public function write($content, array $metadata = null): void
+    public function write($content, ?array $metadata = null): void
     {
         $this->innerCache->write($content, $metadata);
 
