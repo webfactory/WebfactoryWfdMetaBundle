@@ -58,7 +58,7 @@ class DoctrineMetadataHelper
     public function getPrimaryKey($entity)
     {
         /** @var $meta ClassMetadata */
-        $meta = $this->metadataFactory->getMetadataFor(\get_class($entity));
+        $meta = $this->metadataFactory->getMetadataFor($entity::class);
 
         return $meta->getFieldValue($entity, $meta->getSingleIdentifierFieldName());
     }

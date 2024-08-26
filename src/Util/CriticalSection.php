@@ -48,7 +48,7 @@ class CriticalSection
      *
      * The lock name is used as key.
      *
-     * @var array<string, integer>
+     * @var array<string, int>
      */
     private static $entranceCount = [];
 

@@ -38,7 +38,7 @@ class ExpirableConfigCache extends ConfigCache
         parent::__construct($this->timestampedFile, $debug);
     }
 
-    public function write(string $content, array $metadata = null): void
+    public function write(string $content, ?array $metadata = null): void
     {
         parent::write($content, $metadata);
 
