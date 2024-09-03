@@ -23,14 +23,14 @@ class WfdMetaConfigCache implements ConfigCacheInterface
     /** @var ConfigCacheInterface */
     private $innerCache;
 
-    private bool $alwaysExpireWfdMetaResources;
+    private bool $forceExpiration;
 
-    public function __construct($file, ConfigCacheInterface $innerCache, MetaQueryFactory $metaQueryFactory, bool $alwaysExpire = false)
+    public function __construct($file, ConfigCacheInterface $innerCache, MetaQueryFactory $metaQueryFactory, bool $forceExpiration = false)
     {
         $this->file = $file;
         $this->innerCache = $innerCache;
         $this->metaQueryFactory = $metaQueryFactory;
-        $this->alwaysExpireWfdMetaResources = $alwaysExpire;
+        $this->forceExpiration = $forceExpiration;
     }
 
     public function getPath(): string
@@ -65,7 +65,7 @@ class WfdMetaConfigCache implements ConfigCacheInterface
             return true;
         }
 
-        if ($this->alwaysExpireWfdMetaResources) {
+        if ($this->forceExpiration) {
             return false;
         }
 

@@ -50,7 +50,7 @@
                     <tag name="monolog.logger" channel="webfactory_wfd_meta" />
                 </service>
             </argument>
-            <argument>%webfactory_wfd_meta.always_expire_wfd_meta_resources%</argument>
+            <argument>%webfactory_wfd_meta.expire_wfd_meta_resources%</argument>
         </service>
     </services>
 </container>
