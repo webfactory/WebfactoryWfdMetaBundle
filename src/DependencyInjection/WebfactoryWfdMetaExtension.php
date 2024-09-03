@@ -33,8 +33,6 @@ class WebfactoryWfdMetaExtension extends Extension
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
-        if ($config['always_expire_wfd_meta_resources']) {
-            $yamlLoader->load('cache_busting.yml');
-        }
+        $container->setParameter('webfactory_wfd_meta.expire_wfd_meta_resources', $config['always_expire_wfd_meta_resources']);
     }
 }

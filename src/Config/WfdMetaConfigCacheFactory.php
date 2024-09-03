@@ -34,11 +34,19 @@ class WfdMetaConfigCacheFactory implements ConfigCacheFactoryInterface
      */
     private $lockFactory;
 
-    public function __construct(ConfigCacheFactoryInterface $configCacheFactory, MetaQueryFactory $metaQueryFactory, LockFactory $lockFactory)
+    private bool $expireWfdMetaResources;
+
+    public function __construct(ConfigCacheFactoryInterface $configCacheFactory, MetaQueryFactory $metaQueryFactory, LockFactory $lockFactory, bool $expireWfdMetaResources = false)
     {
         $this->configCacheFactory = $configCacheFactory;
         $this->metaQueryFactory = $metaQueryFactory;
         $this->lockFactory = $lockFactory;
+        $this->expireWfdMetaResources = $expireWfdMetaResources;
+    }
+
+    public function expireWfdMetaResources(): void
+    {
+        $this->expireWfdMetaResources = true;
     }
 
     public function cache($file, $callback): ConfigCacheInterface
@@ -70,7 +78,7 @@ class WfdMetaConfigCacheFactory implements ConfigCacheFactoryInterface
 
     private function createCache($file, ConfigCacheInterface $innerCache): ConfigCacheInterface
     {
-        return new WfdMetaConfigCache($file, $innerCache, $this->metaQueryFactory);
+        return new WfdMetaConfigCache($file, $innerCache, $this->metaQueryFactory, $this->expireWfdMetaResources);
     }
 
     private function fillCache($callback, ConfigCacheInterface $cache): void
