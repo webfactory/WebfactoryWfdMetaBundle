@@ -7,12 +7,12 @@ on:
     pull_request:
 
 env:
-    PHP_VERSION: 8.1
+    PHP_VERSION: 8.3
 
 jobs:
     composer-require-checker:
         name: Check missing composer requirements
-        runs-on: ubuntu-22.04
+        runs-on: ubuntu-latest
         steps:
             -   uses: actions/checkout@v4
             -   name: Konfiguriere PHP-Version und -Einstellungen im Worker-Node
@@ -35,4 +35,4 @@ jobs:
                     composer require webfactory/http-cache-bundle
                     composer show
             -   name: ComposerRequireChecker
-                uses: docker://ghcr.io/webfactory/composer-require-checker:4.8.0
+                uses: docker://ghcr.io/webfactory/composer-require-checker:4.12.0
