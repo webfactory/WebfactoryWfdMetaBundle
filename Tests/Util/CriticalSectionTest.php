@@ -2,9 +2,7 @@
 
 namespace Webfactory\Bundle\WfdMetaBundle\Tests\Util;
 
-use Closure;
 use PHPUnit\Framework\TestCase;
-use stdClass;
 use Symfony\Component\Lock\LockFactory;
 use Symfony\Component\Lock\Store\FlockStore;
 use Webfactory\Bundle\WfdMetaBundle\Util\CriticalSection;
@@ -48,14 +46,30 @@ class CriticalSectionTest extends TestCase
 
     public function testInvokesCallbacksWithDifferentLocks()
     {
-        $this->criticalSection->execute(__DIR__.'/my/virtual/file1', $this->createCallbackThatMustBeInvoked());
-        $this->criticalSection->execute(__DIR__.'/my/virtual/file2', $this->createCallbackThatMustBeInvoked());
+        $invoked = false;
+
+        $this->criticalSection->execute(__DIR__.'/my/virtual/file1', function () use (&$invoked) {
+            $invoked = true;
+        });
+        $this->criticalSection->execute(__DIR__.'/my/virtual/file2', function () use (&$invoked) {
+            $invoked = true;
+        });
+
+        self::assertTrue($invoked);
     }
 
     public function testInvokesCallbackWithSameLock()
     {
-        $this->criticalSection->execute(__DIR__.'/my/virtual/file1', $this->createCallbackThatMustBeInvoked());
-        $this->criticalSection->execute(__DIR__.'/my/virtual/file1', $this->createCallbackThatMustBeInvoked());
+        $invoked = false;
+
+        $this->criticalSection->execute(__DIR__.'/my/virtual/file1', function () use (&$invoked) {
+            $invoked = true;
+        });
+        $this->criticalSection->execute(__DIR__.'/my/virtual/file1', function () use (&$invoked) {
+            $invoked = true;
+        });
+
+        self::assertTrue($invoked);
     }
 
     /**
@@ -63,24 +77,14 @@ class CriticalSectionTest extends TestCase
      */
     public function testCallbackCanAcquireSameLockAgain()
     {
-        $this->criticalSection->execute(__DIR__.'/my/virtual/file1', function () {
-            $this->criticalSection->execute(__DIR__.'/my/virtual/file1', $this->createCallbackThatMustBeInvoked());
+        $invoked = false;
+
+        $this->criticalSection->execute(__DIR__.'/my/virtual/file1', function () use (&$invoked) {
+            $this->criticalSection->execute(__DIR__.'/my/virtual/file1', function () use (&$invoked) {
+                $invoked = true;
+            });
         });
-    }
 
-    /**
-     * Creates a closure that must be called, otherwise the test fails.
-     *
-     * @return Closure
-     */
-    private function createCallbackThatMustBeInvoked()
-    {
-        $mock = $this->getMockBuilder(stdClass::class)->setMethods(['__invoke'])->getMock();
-        $mock->expects($this->once())
-            ->method('__invoke');
-
-        return function () use ($mock) {
-            \call_user_func($mock);
-        };
+        self::assertTrue($invoked);
     }
 }
