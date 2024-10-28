@@ -8,7 +8,6 @@
 
 namespace Webfactory\Bundle\WfdMetaBundle\Caching;
 
-use ReflectionObject;
 use SplObjectStorage;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\ControllerEvent;
