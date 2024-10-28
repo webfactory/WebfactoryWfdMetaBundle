@@ -38,21 +38,19 @@ class EventListener
 
     public function onKernelController(ControllerEvent $event)
     {
-        $controller = $event->getController();
-        $request = $event->getRequest();
+        $attributes = $event->getAttributes(Send304IfNotModified::class);
 
-        $attribute = $this->findAttribute($controller);
-
-        if (!$attribute) {
+        if (!$attributes) {
             return;
         }
 
-        $lastTouched = $attribute->calculateLastModified($this->metaQueryFactory);
+        $lastTouched = $attributes[0]->calculateLastModified($this->metaQueryFactory);
 
         if (!$lastTouched) {
             return;
         }
 
+        $request = $event->getRequest();
         $this->lastTouchedResults[$request] = $lastTouched;
 
         /*
@@ -73,7 +71,7 @@ class EventListener
         if ($response->isNotModified($request)) {
             $event->setController(function () use ($response) {
                 return $response;
-            });
+            }, $event->getAttributes());
         }
     }
 
