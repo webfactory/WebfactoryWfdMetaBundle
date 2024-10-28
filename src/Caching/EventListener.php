@@ -8,7 +8,6 @@
 
 namespace Webfactory\Bundle\WfdMetaBundle\Caching;
 
-use ReflectionObject;
 use SplObjectStorage;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\ControllerEvent;
@@ -38,21 +37,19 @@ class EventListener
 
     public function onKernelController(ControllerEvent $event)
     {
-        $controller = $event->getController();
-        $request = $event->getRequest();
+        $attributes = $event->getAttributes(Send304IfNotModified::class);
 
-        $attribute = $this->findAttribute($controller);
-
-        if (!$attribute) {
+        if (!$attributes) {
             return;
         }
 
-        $lastTouched = $attribute->calculateLastModified($this->metaQueryFactory);
+        $lastTouched = $attributes[0]->calculateLastModified($this->metaQueryFactory);
 
         if (!$lastTouched) {
             return;
         }
 
+        $request = $event->getRequest();
         $this->lastTouchedResults[$request] = $lastTouched;
 
         /*
@@ -73,7 +70,7 @@ class EventListener
         if ($response->isNotModified($request)) {
             $event->setController(function () use ($response) {
                 return $response;
-            });
+            }, $event->getAttributes());
         }
     }
 
@@ -85,22 +82,5 @@ class EventListener
         if (isset($this->lastTouchedResults[$request])) {
             $response->setLastModified($this->lastTouchedResults[$request]);
         }
-    }
-
-    /**
-     * @param $callback array A PHP callback (array) pointing to the method to reflect on.
-     */
-    protected function findAttribute($callback): ?Send304IfNotModified
-    {
-        if (!\is_array($callback)) {
-            return null;
-        }
-
-        $object = new ReflectionObject($callback[0]);
-        $method = $object->getMethod($callback[1]);
-
-        $attributes = $method->getAttributes(Send304IfNotModified::class);
-
-        return $attributes ? $attributes[0]->newInstance() : null;
     }
 }
