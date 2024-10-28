@@ -84,21 +84,4 @@ class EventListener
             $response->setLastModified($this->lastTouchedResults[$request]);
         }
     }
-
-    /**
-     * @param $callback array A PHP callback (array) pointing to the method to reflect on.
-     */
-    protected function findAttribute($callback): ?Send304IfNotModified
-    {
-        if (!\is_array($callback)) {
-            return null;
-        }
-
-        $object = new ReflectionObject($callback[0]);
-        $method = $object->getMethod($callback[1]);
-
-        $attributes = $method->getAttributes(Send304IfNotModified::class);
-
-        return $attributes ? $attributes[0]->newInstance() : null;
-    }
 }
