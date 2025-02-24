@@ -88,7 +88,7 @@ class WfdMetaConfigCacheFactory implements ConfigCacheFactoryInterface
         $cs->execute($cache->getPath(), function () use ($callback, $cache) {
             if (!$cache->isFresh()) {
                 // Our turn and the cache is still stale. Rebuild. */
-                \call_user_func($callback, $cache);
+                $callback($cache);
             } // else: Our turn, but cache is fresh. Must have been rebuilt while we were blocked. Use it.
         });
     }
