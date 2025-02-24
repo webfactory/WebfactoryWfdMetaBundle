@@ -132,8 +132,6 @@ class CriticalSection
      */
     private function debug(string $message): void
     {
-        if ($this->logger) {
-            $this->logger->debug($message, ['pid' => getmypid()]);
-        }
+        $this->logger?->debug($message, ['pid' => getmypid()]);
     }
 }
