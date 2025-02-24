@@ -111,7 +111,7 @@ class TemplateController
 
         if ($private) {
             $response->setPrivate();
-        } elseif (false === $private || (null === $private && ($maxAge || $sharedAge))) {
+        } elseif (false === $private || ($maxAge || $sharedAge)) {
             $response->setPublic();
         }
 
