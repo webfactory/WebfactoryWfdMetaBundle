@@ -148,8 +148,6 @@ class Provider implements ServiceSubscriberInterface
             return null;
         }
 
-        $dateTime = new DateTime($fetchValue);
-
-        return $dateTime->getTimestamp();
+        return (new DateTime($fetchValue))->getTimestamp();
     }
 }
