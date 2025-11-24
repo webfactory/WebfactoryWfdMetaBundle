@@ -11,7 +11,7 @@ namespace Webfactory\Bundle\WfdMetaBundle\DependencyInjection;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\Extension;
-use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
+use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 
 class WebfactoryWfdMetaExtension extends Extension
@@ -20,11 +20,11 @@ class WebfactoryWfdMetaExtension extends Extension
     {
         $fileLocator = new FileLocator(__DIR__.'/../Resources/config');
 
-        $xmlLoader = new XmlFileLoader($container, $fileLocator);
-        $xmlLoader->load('services.xml');
+        $phpLoader = new PhpFileLoader($container, $fileLocator);
+        $phpLoader->load('services.php');
 
         if ($container->hasParameter('doctrine.entity_managers')) {
-            $xmlLoader->load('orm.xml');
+            $phpLoader->load('orm.php');
         }
 
         $yamlLoader = new YamlFileLoader($container, $fileLocator);
