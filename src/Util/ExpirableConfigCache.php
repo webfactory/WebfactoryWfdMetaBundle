@@ -1,4 +1,5 @@
 <?php
+
 /*
  * (c) webfactory GmbH <info@webfactory.de>
  *

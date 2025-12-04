@@ -1,4 +1,5 @@
 <?php
+
 /*
  * (c) webfactory GmbH <info@webfactory.de>
  *
@@ -54,12 +55,12 @@ class TemplateController
         $metaTables = null,
         $metaTableConstants = null,
         $metaEntities = null,
-        $metaResetInterval = null
+        $metaResetInterval = null,
     ): Response {
         /** @var DateTime $lastmod */
         $lastmod = null;
 
-        /** @var $response Response */
+        /** @var Response $response */
         $response = null;
 
         if ($metaTables || $metaTableConstants || $metaEntities) {
