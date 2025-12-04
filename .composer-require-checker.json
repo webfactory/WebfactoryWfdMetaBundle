@@ -1,0 +1,3 @@
+{
+    "symbol-whitelist": ["Webfactory\\HttpCacheBundle\\NotModified\\LastModifiedDeterminator"]
+}
