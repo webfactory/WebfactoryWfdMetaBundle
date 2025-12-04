@@ -36,7 +36,7 @@ class DoctrineMetadataHelper
     public function getRootTableName(string $classname): string
     {
         try {
-            /** @var $meta ClassMetadata */
+            /** @var ClassMetadata $meta */
             $meta = $this->metadataFactory->getMetadataFor($classname);
             if (!$meta->isInheritanceTypeNone()) {
                 $meta = $this->metadataFactory->getMetadataFor($meta->rootEntityName);
@@ -57,7 +57,7 @@ class DoctrineMetadataHelper
      */
     public function getPrimaryKey($entity)
     {
-        /** @var $meta ClassMetadata */
+        /** @var ClassMetadata $meta */
         $meta = $this->metadataFactory->getMetadataFor($entity::class);
 
         return $meta->getFieldValue($entity, $meta->getSingleIdentifierFieldName());

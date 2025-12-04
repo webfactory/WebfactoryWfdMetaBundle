@@ -35,7 +35,10 @@ class CriticalSectionTest extends TestCase
         parent::tearDown();
     }
 
-    public function testExecuteReturnsValueFromCallback()
+    /**
+     * @test
+     */
+    public function executeReturnsValueFromCallback()
     {
         $result = $this->criticalSection->execute(__DIR__.'/my/virtual/file', function () {
             return 42;
@@ -44,7 +47,10 @@ class CriticalSectionTest extends TestCase
         $this->assertEquals(42, $result);
     }
 
-    public function testInvokesCallbacksWithDifferentLocks()
+    /**
+     * @test
+     */
+    public function invokesCallbacksWithDifferentLocks()
     {
         $invoked = false;
 
@@ -58,7 +64,10 @@ class CriticalSectionTest extends TestCase
         self::assertTrue($invoked);
     }
 
-    public function testInvokesCallbackWithSameLock()
+    /**
+     * @test
+     */
+    public function invokesCallbackWithSameLock()
     {
         $invoked = false;
 
@@ -74,8 +83,10 @@ class CriticalSectionTest extends TestCase
 
     /**
      *  This ensures that the critical section is re-entrant as documented.
+     *
+     * @test
      */
-    public function testCallbackCanAcquireSameLockAgain()
+    public function callbackCanAcquireSameLockAgain()
     {
         $invoked = false;
 
