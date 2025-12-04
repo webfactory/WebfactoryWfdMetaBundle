@@ -6,6 +6,9 @@
     displayDetailsOnTestsThatTriggerDeprecations="true"
     displayDetailsOnPhpunitDeprecations="true"
 >
+    <php>
+        <env name="KERNEL_CLASS" value="\Webfactory\Bundle\WfdMetaBundle\Tests\Fixtures\TestKernel" />
+    </php>
     <source ignoreSuppressionOfDeprecations="true">
         <include>
             <directory>src</directory>
