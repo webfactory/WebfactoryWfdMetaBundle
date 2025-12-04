@@ -30,7 +30,7 @@ class MetaQueryTest extends FunctionalTestCase
         $this->dbal->insert('wfd_meta', ['data_id' => 1, 'wfd_table_id' => 42, 'last_touched' => $time], ['last_touched' => Types::DATETIME_IMMUTABLE]);
 
         $metaQuery = $this->metaQueryFactory->create();
-        $metaQuery->addEntity(TestEntity::class);
+        $metaQuery->addEntityClass(TestEntity::class);
 
         self::assertEquals($time->getTimestamp(), $metaQuery->getLastTouched());
     }

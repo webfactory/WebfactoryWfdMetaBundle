@@ -12,6 +12,8 @@ doctrine:
         driver: pdo_sqlite
         memory: true
     orm:
+        controller_resolver:
+            auto_mapping: false
         mappings:
             Webfactory\Bundle\WfdMetaBundle\Tests\Fixtures\Entity:
                 type: attribute
