@@ -1,0 +1,22 @@
+framework:
+    secret: dont-tell-mum
+    test: true
+    annotations: false
+    http_method_override: false
+    handle_all_throwables: true
+    php_errors:
+        log: true
+
+doctrine:
+    dbal:
+        driver: pdo_sqlite
+        memory: true
+    orm:
+        controller_resolver:
+            auto_mapping: false
+        mappings:
+            Webfactory\Bundle\WfdMetaBundle\Tests\Fixtures\Entity:
+                type: attribute
+                dir: '%kernel.project_dir%/Entity'
+                is_bundle: false
+                prefix: Webfactory\Bundle\WfdMetaBundle\Tests\Fixtures\Entity

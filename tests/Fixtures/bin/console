@@ -1,0 +1,16 @@
+#!/usr/bin/env php
+<?php
+
+use Symfony\Component\ErrorHandler\Debug;
+use Symfony\Bundle\FrameworkBundle\Console\Application;
+use Symfony\Component\Console\Input\ArgvInput;
+
+set_time_limit(0);
+
+require dirname(__DIR__).'/../../vendor/autoload.php';
+
+Debug::enable();
+
+$kernel = new \Webfactory\Bundle\WfdMetaBundle\Tests\Fixtures\TestKernel('test', true);
+$application = new Application($kernel);
+$application->run(new ArgvInput());
