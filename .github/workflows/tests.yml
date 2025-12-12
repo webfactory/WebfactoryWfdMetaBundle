@@ -18,7 +18,6 @@ jobs:
                     - { php-version: 8.3, symfony-version: 6.4.*, orm-version: '^3.0', dependency-version: '' }
                     - { php-version: 8.4, symfony-version: 7.*, orm-version: '^2.20', dependency-version: '' }
                     - { php-version: 8.4, symfony-version: 7.*, orm-version: '^3.0', dependency-version: '' }
-                    - { php-version: 8.4, symfony-version: 8.*, orm-version: '^2.20', dependency-version: '' }
                     - { php-version: 8.4, symfony-version: 8.*, orm-version: '^3.0', dependency-version: '' }
         name: PHPUnit (PHP ${{matrix.php-version}}, Symfony version constraint ${{ matrix.symfony-version || 'none' }}, Doctrine ORM version constraint ${{ matrix.orm-version || 'none' }}, ${{ matrix.dependency-version || 'prefer-stable' }})
         steps:
