@@ -14,7 +14,7 @@ jobs:
         name: Check missing composer requirements
         runs-on: ubuntu-latest
         steps:
-            -   uses: actions/checkout@v4
+            -   uses: actions/checkout@v6
             -   name: Konfiguriere PHP-Version und -Einstellungen im Worker-Node
                 uses: shivammathur/setup-php@v2
                 with:
@@ -22,7 +22,7 @@ jobs:
                   coverage: none
                   tools: composer:v2
             -   name: Cache Composer Dependencies
-                uses: actions/cache@v4
+                uses: actions/cache@v5
                 with:
                     path: vendor/
                     key: composer-${{ env.PHP_VERSION }}-${{ hashFiles('composer.*') }}
